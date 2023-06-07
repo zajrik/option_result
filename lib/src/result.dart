@@ -23,10 +23,10 @@ sealed class Result<T, E> extends Equatable {
 	/// Returns whether or not this result is an `Err` result
 	bool isErr() => !isOk();
 
-	/// Returns the contained [Ok] value. Throws a [ResultException] if this is an [Err] value
+	/// Returns the contained [Ok] value. Throws a [ResultError] if this is an [Err] value
 	T unwrap() => switch (this) {
 		Ok(value: T value) => value,
-		Err() => throw ResultException('called `Result#unwrap()` on an `Err` value', this)
+		Err() => throw ResultError('called `Result#unwrap()` on an `Err` value', this)
 	};
 
 	/// Returns the contained [Ok] value, or the given value if this `Result` is an [Err] value
@@ -35,9 +35,9 @@ sealed class Result<T, E> extends Equatable {
 		Err() => orValue
 	};
 
-	/// Returns the contained [Err] value. Throws a [ResultException] if this is an [Ok] value
+	/// Returns the contained [Err] value. Throws a [ResultError] if this is an [Ok] value
 	E unwrapErr() => switch (this) {
-		Ok(value: T value) => throw ResultException(value, this),
+		Ok(value: T value) => throw ResultError(value, this),
 		Err(value: E value) => value
 	};
 }
@@ -82,16 +82,16 @@ class Err<T, E> extends Result<T, E> {
 	List<E> get props => [value];
 }
 
-/// Represents an exception thrown by a [Result] type value
-class ResultException<T, E> implements Exception {
+/// Represents an error thrown by a mishandled [Result] type value
+class ResultError<T, E> extends Error {
 	final dynamic message;
 	final Result<T, E>? original;
 
-	ResultException([this.message, this.original]);
+	ResultError([this.message, this.original]);
 
 	@override
 	String toString() => switch (message) {
-		null => 'ResultException',
-		_ => 'ResultException: $message'
+		null => 'ResultError',
+		_ => 'ResultError: $message'
 	};
 }

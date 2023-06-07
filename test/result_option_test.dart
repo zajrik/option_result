@@ -45,8 +45,8 @@ void main() {
 			expect(Ok(foo) == Ok(foo), equals(true));
 		});
 
-		test('Should throw ResultException when unwrapping Err()', () {
-			expect(() => Err('foo bar baz').unwrap(), throwsA(TypeMatcher<ResultException>()));
+		test('Should throw ResultError when unwrapping Err()', () {
+			expect(() => Err('foo bar baz').unwrap(), throwsA(TypeMatcher<ResultError>()));
 		});
 
 		test('Should propagate Err() values via propagateResult', () {
@@ -57,18 +57,30 @@ void main() {
 			}), equals(Err<int, String>('foo bar baz')));
 		});
 
-		test('Should throw ResultException when propagating a mismatched Err() type via propagateResult', () {
+		test('Should throw ResultError when propagating a mismatched Err() type via propagateResult', () {
 			expect(() => propagateResult(() {
 				Result<int, String> foo = Ok(1);
 				Result<bool, String> bar = Err('foo bar baz');
 				return Ok(foo.unwrap() + (bar.unwrap() ? 1 : 2));
-			}), throwsA(TypeMatcher<ResultException>()));
+			}), throwsA(TypeMatcher<ResultError>()));
 		});
 
-		test('Should rethrow ResultException when erroring on unwrapErr() on Ok() via propagateResult', () {
+		test('Should rethrow ResultError when erroring on unwrapErr() on Ok() via propagateResult', () {
 			expect(() => propagateResult<int, String>(() {
 				return Ok(Ok(1).unwrapErr());
-			}), throwsA(TypeMatcher<ResultException>()));
+			}), throwsA(TypeMatcher<ResultError>()));
+		});
+
+		test('Should rethrow any other kind of error/exception thrown inside propagateResult', () {
+			expect(() => propagateResult(() => throw RangeError('foo')), throwsRangeError);
+			expect(() => propagateResult(() => throw ArgumentError('bar')), throwsArgumentError);
+			expect(() => propagateResult(() => throw FormatException('baz')), throwsFormatException);
+		});
+
+		test('Should rethrow any other kind of error/exception thrown inside propagateResultAsync', () {
+			expect(() => propagateResultAsync(() => throw RangeError('foo')), throwsRangeError);
+			expect(() => propagateResultAsync(() => throw ArgumentError('bar')), throwsArgumentError);
+			expect(() => propagateResultAsync(() => throw FormatException('baz')), throwsFormatException);
 		});
 
 		test('Should propagate Err() values via propagateResultAsync', () async {
@@ -79,18 +91,18 @@ void main() {
 			}), equals(Err<int, String>('foo bar baz')));
 		});
 
-		test('Should throw ResultException when propagating a mismatched Err() type via propagateResultAsync', () {
+		test('Should throw ResultError when propagating a mismatched Err() type via propagateResultAsync', () {
 			expect(() => propagateResultAsync<int, String>(() {
 				Result<int, String> foo = Ok(1);
 				Result<bool, String> bar = Err('foo bar baz');
 				return Ok(foo.unwrap() + (bar.unwrap() ? 1 : 2));
-			}), throwsA(TypeMatcher<ResultException>()));
+			}), throwsA(TypeMatcher<ResultError>()));
 		});
 
-		test('Should rethrow ResultException when erroring on unwrapErr() on Ok() via propagateResultAsync', () {
+		test('Should rethrow ResultError when erroring on unwrapErr() on Ok() via propagateResultAsync', () {
 			expect(() => propagateResultAsync<int, String>(() {
 				return Ok(Ok(1).unwrapErr());
-			}), throwsA(TypeMatcher<ResultException>()));
+			}), throwsA(TypeMatcher<ResultError>()));
 		});
 	});
 
@@ -125,8 +137,20 @@ void main() {
 			expect(Some(foo) == Some(foo), equals(true));
 		});
 
-		test('Should throw OptionException when unwrapping None()', () {
-			expect(() => None().unwrap(), throwsA(TypeMatcher<OptionException>()));
+		test('Should throw OptionError when unwrapping None()', () {
+			expect(() => None().unwrap(), throwsA(TypeMatcher<OptionError>()));
+		});
+
+		test('Should rethrow any other kind of error/exception thrown inside propagateOption', () {
+			expect(() => propagateOption(() => throw RangeError('foo')), throwsRangeError);
+			expect(() => propagateOption(() => throw ArgumentError('bar')), throwsArgumentError);
+			expect(() => propagateOption(() => throw FormatException('baz')), throwsFormatException);
+		});
+
+		test('Should rethrow any other kind of error/exception thrown inside propagateOptionAsync', () {
+			expect(() => propagateOptionAsync(() => throw RangeError('foo')), throwsRangeError);
+			expect(() => propagateOptionAsync(() => throw ArgumentError('bar')), throwsArgumentError);
+			expect(() => propagateOptionAsync(() => throw FormatException('baz')), throwsFormatException);
 		});
 
 		test('Should propagate None() via propagateOption', () {

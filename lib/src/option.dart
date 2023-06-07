@@ -22,10 +22,10 @@ sealed class Option<T> extends Equatable {
 	/// Returns whether or not this `Option` holds no value ([None])
 	bool isNone() => !isSome();
 
-	/// Returns the contained [Some] value. Throws an [OptionException] if this `Option` is a [None] value
+	/// Returns the contained [Some] value. Throws an [OptionError] if this `Option` is a [None] value
 	T unwrap() => switch (this) {
 		Some(value: T value) => value,
-		None() => throw OptionException('called `Option#unwrap()` on a `None` value')
+		None() => throw OptionError('called `Option#unwrap()` on a `None` value')
 	};
 
 	/// Returns the contained [Some] value, or the given value if this `Option` is a [None] value
@@ -71,15 +71,15 @@ class None<T> extends Option<T> {
 	List<T> get props => [];
 }
 
-/// Represents an exception thrown by an [Option] type value
-class OptionException implements Exception {
+/// Represents an error thrown by a mishandled [Option] type value
+class OptionError extends Error {
 	final dynamic message;
 
-	OptionException([this.message]);
+	OptionError([this.message]);
 
 	@override
 	String toString() => switch (message) {
-		null => 'OptionException',
-		_ => 'OptionException: $message'
+		null => 'OptionError',
+		_ => 'OptionError: $message'
 	};
 }

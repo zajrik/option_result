@@ -38,7 +38,24 @@ import '../result_option.dart';
 /// Note that any other type of thrown exception other than [OptionException] will be rethrown.
 Result<T, E> propagateResult<T, E>(Result<T, E> Function() fn) {
 	try { return fn(); }
-	on ResultException catch (e) { return Err(e.message); }
+
+	// Propagate the original Err() if it's provided, otherwise create a new one
+	// from the exception message
+	on ResultException<T, E> catch (e) {
+		// If the exception came from unwrapErr() on an Ok() result, rethrow
+		if (e.original case Ok()) {
+			rethrow;
+		}
+
+		return e.original ?? Err(e.message);
+	}
+
+	// If the propagated Err() doesn't match the expected Result type, throw a new exception
+	on ResultException catch (_) {
+		throw ResultException('attempted to propagate an Err() that does not match the expected return type');
+	}
+
+	// Rethrow anything else
 	catch (_) { rethrow; }
 }
 
@@ -51,7 +68,24 @@ Result<T, E> propagateResult<T, E>(Result<T, E> Function() fn) {
 /// rather than `Result<T, E>`.
 Future<Result<T, E>> propagateResultAsync<T, E>(FutureOr<Result<T, E>> Function() fn) async {
 	try { return await fn(); }
-	on ResultException catch (e) { return Err(e.message); }
+
+	// Propagate the original Err() if it's provided, otherwise create a new one
+	// from the exception message
+	on ResultException<T, E> catch (e) {
+		// If the exception came from unwrapErr() on an Ok() result, rethrow
+		if (e.original case Ok()) {
+			rethrow;
+		}
+
+		return e.original ?? Err(e.message);
+	}
+
+	// If the propagated Err() doesn't match the expected Result type, throw a new exception
+	on ResultException catch (_) {
+		throw ResultException('attempted to propagate an Err() that does not match the expected return type');
+	}
+
+	// Rethrow anything else
 	catch (_) { rethrow; }
 }
 

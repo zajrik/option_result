@@ -26,7 +26,7 @@ sealed class Result<T, E> extends Equatable {
 	/// Returns the contained [Ok] value. Throws a [ResultException] if this is an [Err] value
 	T unwrap() => switch (this) {
 		Ok(value: T value) => value,
-		Err(value: E value) => throw ResultException(value)
+		Err() => throw ResultException('called `Result#unwrap()` on an `Err` value', this)
 	};
 
 	/// Returns the contained [Ok] value, or the given value if this `Result` is an [Err] value
@@ -37,7 +37,7 @@ sealed class Result<T, E> extends Equatable {
 
 	/// Returns the contained [Err] value. Throws a [ResultException] if this is an [Ok] value
 	E unwrapErr() => switch (this) {
-		Ok(value: T value) => throw ResultException(value),
+		Ok(value: T value) => throw ResultException(value, this),
 		Err(value: E value) => value
 	};
 }
@@ -83,14 +83,15 @@ class Err<T, E> extends Result<T, E> {
 }
 
 /// Represents an exception thrown by a [Result] type value
-class ResultException implements Exception {
+class ResultException<T, E> implements Exception {
 	final dynamic message;
+	final Result<T, E>? original;
 
-	ResultException([this.message]);
+	ResultException([this.message, this.original]);
 
 	@override
 	String toString() => switch (message) {
-		null => 'OptionException',
-		_ => 'OptionException: $message'
+		null => 'ResultException',
+		_ => 'ResultException: $message'
 	};
 }

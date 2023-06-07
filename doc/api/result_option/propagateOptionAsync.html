@@ -4,20 +4,20 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
-  <meta name="description" content="API docs for the propagateOptionAsync function from the result_option library, for the Dart programming language.">
-  <title>propagateOptionAsync function - result_option library - Dart API</title>
+  <meta name="description" content="API docs for the propagateOptionAsync function from the option_result library, for the Dart programming language.">
+  <title>propagateOptionAsync function - option_result library - Dart API</title>
 
 
-  
+
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" rel="stylesheet">
-  
+
   <link rel="stylesheet" href="../static-assets/github.css?v1">
   <link rel="stylesheet" href="../static-assets/styles.css?v1">
   <link rel="icon" href="../static-assets/favicon.png?v1">
 
-  
+
 </head>
 
 
@@ -28,8 +28,8 @@
 <header id="title">
   <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
   <ol class="breadcrumbs gt-separated dark hidden-xs">
-    <li><a href="../index.html">result_option</a></li>
-    <li><a href="../result_option/result_option-library.html">result_option</a></li>
+    <li><a href="../index.html">option_result</a></li>
+    <li><a href="../option_result/option_result-library.html">option_result</a></li>
     <li class="self-crumb">propagateOptionAsync&lt;<wbr><span class="type-parameter">T</span>&gt; function</li>
   </ol>
   <div class="self-name">propagateOptionAsync</div>
@@ -52,32 +52,32 @@
 
   <div id="dartdoc-main-content" class="main-content">
       <div>
-<h1><span class="kind-function">propagateOptionAsync&lt;<wbr><span class="type-parameter">T</span>&gt;</span> function 
- 
+<h1><span class="kind-function">propagateOptionAsync&lt;<wbr><span class="type-parameter">T</span>&gt;</span> function
+
 </h1></div>
 
     <section class="multi-line-signature">
-        
 
-<span class="returntype"><a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../result_option/Option-class.html">Option</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span>&gt;</span></span>
-<span class="name ">propagateOptionAsync</span>&lt;<wbr><span class="type-parameter">T</span>&gt;(<wbr><ol class="parameter-list"><li><span class="parameter" id="propagateOptionAsync-param-fn"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-async/FutureOr-class.html">FutureOr</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../result_option/Option-class.html">Option</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span>&gt;</span></span> <span class="parameter-name">fn</span>(<ol class="parameter-list"></ol>
+
+<span class="returntype"><a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../option_result/Option-class.html">Option</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span>&gt;</span></span>
+<span class="name ">propagateOptionAsync</span>&lt;<wbr><span class="type-parameter">T</span>&gt;(<wbr><ol class="parameter-list"><li><span class="parameter" id="propagateOptionAsync-param-fn"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-async/FutureOr-class.html">FutureOr</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../option_result/Option-class.html">Option</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span>&gt;</span></span> <span class="parameter-name">fn</span>(<ol class="parameter-list"></ol>
 )</span></li>
 </ol>)
 
-        
+
 
     </section>
-    
+
 <section class="desc markdown">
-  <p>Executes the given function, returning the returned <a href="../result_option/Option-class.html">Option</a> value.</p>
-<p>If an <a href="../result_option/OptionError-class.html">OptionError</a> is thrown during the execution of the given function,
-which occurs when a <a href="../result_option/None-class.html">None</a> value is unwrapped, <a href="../result_option/None-class.html">None</a> will be returned.</p>
-<p>Behaves identically to <a href="../result_option/propagateOption.html">propagateOption</a> but async, returning <code>Furture&lt;Option&lt;T&gt;&gt;</code>
+  <p>Executes the given function, returning the returned <a href="../option_result/Option-class.html">Option</a> value.</p>
+<p>If an <a href="../option_result/OptionError-class.html">OptionError</a> is thrown during the execution of the given function,
+which occurs when a <a href="../option_result/None-class.html">None</a> value is unwrapped, <a href="../option_result/None-class.html">None</a> will be returned.</p>
+<p>Behaves identically to <a href="../option_result/propagateOption.html">propagateOption</a> but async, returning <code>Furture&lt;Option&lt;T&gt;&gt;</code>
 rather than <code>Option&lt;T&gt;</code>.</p>
 </section>
 
 
-    
+
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">Future&lt;Option&lt;T&gt;&gt; propagateOptionAsync&lt;T&gt;(FutureOr&lt;Option&lt;T&gt;&gt; Function() fn) async {
@@ -98,37 +98,37 @@ rather than <code>Option&lt;T&gt;</code>.</p>
 </header>
 
 <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
-  <li><a href="../index.html">result_option</a></li>
-  <li><a href="../result_option/result_option-library.html">result_option</a></li>
+  <li><a href="../index.html">option_result</a></li>
+  <li><a href="../option_result/option_result-library.html">option_result</a></li>
   <li class="self-crumb">propagateOptionAsync&lt;<wbr><span class="type-parameter">T</span>&gt; function</li>
 </ol>
 
 
-    <h5>result_option library</h5>
+    <h5>option_result library</h5>
     <ol>
-      <li class="section-title"><a href="../result_option/result_option-library.html#classes">Classes</a></li>
-        <li><a href="../result_option/Err-class.html">Err</a></li>
-        <li><a href="../result_option/None-class.html">None</a></li>
-        <li><a href="../result_option/Ok-class.html">Ok</a></li>
-        <li><a href="../result_option/Option-class.html">Option</a></li>
-        <li><a href="../result_option/Result-class.html">Result</a></li>
-        <li><a href="../result_option/Some-class.html">Some</a></li>
+      <li class="section-title"><a href="../option_result/option_result-library.html#classes">Classes</a></li>
+        <li><a href="../option_result/Err-class.html">Err</a></li>
+        <li><a href="../option_result/None-class.html">None</a></li>
+        <li><a href="../option_result/Ok-class.html">Ok</a></li>
+        <li><a href="../option_result/Option-class.html">Option</a></li>
+        <li><a href="../option_result/Result-class.html">Result</a></li>
+        <li><a href="../option_result/Some-class.html">Some</a></li>
 
 
 
 
 
-      <li class="section-title"><a href="../result_option/result_option-library.html#functions">Functions</a></li>
-        <li><a href="../result_option/propagateOption.html">propagateOption</a></li>
-        <li><a href="../result_option/propagateOptionAsync.html">propagateOptionAsync</a></li>
-        <li><a href="../result_option/propagateResult.html">propagateResult</a></li>
-        <li><a href="../result_option/propagateResultAsync.html">propagateResultAsync</a></li>
+      <li class="section-title"><a href="../option_result/option_result-library.html#functions">Functions</a></li>
+        <li><a href="../option_result/propagateOption.html">propagateOption</a></li>
+        <li><a href="../option_result/propagateOptionAsync.html">propagateOptionAsync</a></li>
+        <li><a href="../option_result/propagateResult.html">propagateResult</a></li>
+        <li><a href="../option_result/propagateResultAsync.html">propagateResultAsync</a></li>
 
 
 
-      <li class="section-title"><a href="../result_option/result_option-library.html#exceptions">Exceptions</a></li>
-        <li><a href="../result_option/OptionError-class.html">OptionError</a></li>
-        <li><a href="../result_option/ResultError-class.html">ResultError</a></li>
+      <li class="section-title"><a href="../option_result/option_result-library.html#exceptions">Exceptions</a></li>
+        <li><a href="../option_result/OptionError-class.html">OptionError</a></li>
+        <li><a href="../option_result/ResultError-class.html">ResultError</a></li>
 </ol>
 
   </div><!--/.sidebar-offcanvas-left-->
@@ -140,11 +140,11 @@ rather than <code>Option&lt;T&gt;</code>.</p>
 
 <footer>
   <span class="no-break">
-    result_option
+    option_result
       0.0.1-dev-1
   </span>
 
-  
+
 </footer>
 
 
@@ -157,4 +157,3 @@ rather than <code>Option&lt;T&gt;</code>.</p>
 </body>
 
 </html>
-

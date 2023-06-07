@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the unwrapOr method from the Option class, for the Dart programming language.">
+  <title>unwrapOr method - Option class - option_result library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../../static-assets/styles.css?v1">
+  <link rel="icon" href="../../static-assets/favicon.png?v1">
+
+  
+</head>
+
+
+<body data-base-href="../../" data-using-base-href="false" class="light-theme">
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../../index.html">option_result</a></li>
+    <li><a href="../../option_result/option_result-library.html">option_result</a></li>
+    <li><a href="../../option_result/Option-class.html">Option<span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></a></li>
+    <li class="self-crumb">unwrapOr method</li>
+  </ol>
+  <div class="self-name">unwrapOr</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <div class="toggle" id="theme-button">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span id="dark-theme-button" class="material-symbols-outlined">
+        brightness_4
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        brightness_5
+      </span>
+    </label>
+  </div>
+</header>
+<main>
+
+  <div id="dartdoc-main-content" class="main-content">
+      <div>
+<h1><span class="kind-method">unwrapOr</span> method 
+</h1></div>
+
+    <section class="multi-line-signature">
+      
+
+<span class="returntype">T</span>
+<span class="name ">unwrapOr</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="unwrapOr-param-orValue"><span class="type-annotation">T</span> <span class="parameter-name">orValue</span></span></li>
+</ol>)
+
+      
+
+    </section>
+    
+<section class="desc markdown">
+  <p>Returns the contained <a href="../../option_result/Some-class.html">Some</a> value, or the given value if this <code>Option</code> is a <a href="../../option_result/None-class.html">None</a> value</p>
+</section>
+
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">T unwrapOr(T orValue) =&gt; switch (this) {
+	Some(value: T value) =&gt; value,
+	None() =&gt; orValue
+};</code></pre>
+</section>
+
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+  <li><a href="../../index.html">option_result</a></li>
+  <li><a href="../../option_result/option_result-library.html">option_result</a></li>
+  <li><a href="../../option_result/Option-class.html">Option<span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></a></li>
+  <li class="self-crumb">unwrapOr method</li>
+</ol>
+
+
+    <h5>Option class</h5>
+    <ol>
+
+        <li class="section-title"><a href="../../option_result/Option-class.html#constructors">Constructors</a></li>
+          <li><a href="../../option_result/Option/Option.html">Option</a></li>
+          <li><a href="../../option_result/Option/Option.from.html">from</a></li>
+
+
+        <li class="section-title">
+          <a href="../../option_result/Option-class.html#instance-properties">Properties</a>
+        </li>
+          <li><a href="../../option_result/Option/hashCode.html">hashCode</a></li>
+          <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></li>
+
+        <li class="section-title"><a href="../../option_result/Option-class.html#instance-methods">Methods</a></li>
+          <li><a href="../../option_result/Option/isNone.html">isNone</a></li>
+          <li><a href="../../option_result/Option/isSome.html">isSome</a></li>
+          <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
+          <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/toString.html">toString</a></li>
+          <li><a href="../../option_result/Option/unwrap.html">unwrap</a></li>
+          <li><a href="../../option_result/Option/unwrapOr.html">unwrapOr</a></li>
+
+        <li class="section-title"><a href="../../option_result/Option-class.html#operators">Operators</a></li>
+          <li><a href="../../option_result/Option/operator_equals.html">operator ==</a></li>
+
+
+
+
+</ol>
+
+  </div><!--/.sidebar-offcanvas-->
+
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div><!--/.sidebar-offcanvas-->
+
+</main>
+
+<footer>
+  <span class="no-break">
+    option_result
+      0.0.1-dev-1
+  </span>
+
+  
+</footer>
+
+
+
+<script src="../../static-assets/highlight.pack.js?v1"></script>
+<script src="../../static-assets/docs.dart.js"></script>
+
+
+
+</body>
+
+</html>
+

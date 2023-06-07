@@ -11,10 +11,10 @@ and the Flutter guide for
 [developing packages and plugins](https://flutter.dev/developing-packages).
 -->
 
-## result_option
-`result_option` is a simple Dart library for `Result` and `Option` types. Inspired by
+## option_result
+`option_result` is a simple Dart library for `Option` and `Result` types. Inspired by
 Rust, leveraging Dart 3's new pattern matching features and `sealed class` exhaustive
-switch mechanics to provide as close to Rust's `Result`/`Option` experience as possible
+switch mechanics to provide as close to Rust's `Option`/`Result` experience as possible
 without going so deep as to implement every single utility method Rust provides.
 
 > This package is a work-in-progress. I'm just adding to it as I can, but mostly
@@ -28,15 +28,15 @@ Add the dependency to your `pubspec.yaml` file in your Dart/Flutter project:
 
 ```yaml
 dependencies:
-  result_option: ^0.0.1-dev-1
+  option_result: ^0.0.1-dev-1
 ```
 
 Or via git:
 
 ```yaml
 dependencies:
-  result_option:
-    git: https://github.com/zajrik/result_option.git
+  option_result:
+    git: https://github.com/zajrik/option_result.git
 ```
 
 Then run `dart pub get` or `flutter pub get`

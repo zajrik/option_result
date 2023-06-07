@@ -1,4 +1,4 @@
-import 'package:result_option/result_option.dart';
+import 'package:option_result/option_result.dart';
 
 void main() {
 	Option<int> foo = Some(1);

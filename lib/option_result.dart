@@ -1,11 +1,11 @@
 /// Support for doing something awesome.
 ///
 /// More dartdocs go here.
-library result_option;
+library option_result;
 
 import 'dart:async';
 
-part 'src/result.dart';
-part 'src/option.dart';
 part 'src/helpers.dart';
+part 'src/option.dart';
+part 'src/result.dart';
 part 'src/util.dart';

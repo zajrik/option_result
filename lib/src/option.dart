@@ -1,4 +1,4 @@
-part of result_option;
+part of option_result;
 
 /// `Option` is a type that represents the presence ([Some]) or absence ([None]) of a value.
 ///

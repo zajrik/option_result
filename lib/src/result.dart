@@ -1,4 +1,4 @@
-part of result_option;
+part of option_result;
 
 /// `Result` is a type that represents either success ([Ok]) or failute ([Err]).
 /// A `Result` type holds either a value of type `T`, or an error value of type `E`.

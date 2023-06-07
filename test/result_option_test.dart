@@ -43,6 +43,33 @@ void main() {
 
 			Map<String, dynamic> foo = {'foo': 'bar', 'baz': 42};
 			expect(Ok(foo) == Ok(foo), equals(true));
+
+			Result<int, String> bar = Ok(1);
+			Result<int, String> baz = Ok(1);
+
+			expect(bar == baz, equals(true));
+
+			baz = Ok(2);
+
+			expect(bar == baz, equals(false));
+		});
+
+		test('Should not equate Results with equatable values but mismatched types', () {
+			Result<int, String> foo = Ok(1);
+			Result<int, int> bar = Ok(1);
+
+			// ignore: unrelated_type_equality_checks
+			expect(foo == bar, equals(false));
+		});
+
+		test('Should create appropriate Results via Result.from()', () {
+			expect(Result.from('foo', 'err'), equals(Ok<String, String>('foo')));
+			expect(Result<String, String>.from(null, 'err'), equals(Err<String, String>('err')));
+
+			Option<int> foo = Some(7);
+			Option<int> bar = None();
+
+			print(foo.runtimeType.hashCode == bar.runtimeType.hashCode);
 		});
 
 		test('Should throw ResultError when unwrapping Err()', () {
@@ -135,6 +162,24 @@ void main() {
 
 			Map<String, dynamic> foo = {'foo': 'bar', 'baz': 42};
 			expect(Some(foo) == Some(foo), equals(true));
+		});
+
+		test('Should create appropriate Options via Option.from()', () {
+			expect(Option.from('foo'), equals(Some('foo')));
+			expect(Option<int>.from(null), equals(None<int>()));
+		});
+
+		test('Should not equate Options with equatable values but mismatched types', () {
+			Option<int> foo = Some(1);
+			Option<num> bar = Some(1);
+
+			expect(foo == bar, equals(false));
+
+			Option<int> foo2 = None();
+			Option<bool> bar2 = None();
+
+			// ignore: unrelated_type_equality_checks
+			expect(foo2 == bar2, equals(false));
 		});
 
 		test('Should throw OptionError when unwrapping None()', () {

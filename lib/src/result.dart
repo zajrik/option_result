@@ -1,4 +1,4 @@
-import 'package:equatable/equatable.dart';
+part of result_option;
 
 /// `Result` is a type that represents either success ([Ok]) or failute ([Err]).
 /// A `Result` type holds either a value of type `T`, or an error value of type `E`.
@@ -13,7 +13,36 @@ import 'package:equatable/equatable.dart';
 ///   Err(value: err) => 'Error value: $err'
 /// });
 /// ```
-sealed class Result<T, E> extends Equatable {
+sealed class Result<T, E> {
+	/// The `Result` class cannot be instantiated directly. use [Ok], [Error], or
+	/// [Result.from] to create instances of `Result` variants
+	Result();
+
+	/// Compare equality between two `Result` values. `Result` values are considered
+	/// equal only if the value they hold is the same AND their runtime types are the same.
+	///
+	/// This means that a `Ok<int, String>(1)` is not equal to `Ok<int, int>(1)` even though they
+	/// are both `Ok(1)`
+	@override
+	operator ==(Object other) => switch (other) {
+		Ok(value: T value) when isOk() && _compareRuntimeTypes(this, other) => value == unwrap(),
+		Err(value: E err) when isErr() && _compareRuntimeTypes(this, other) => err == unwrapErr(),
+		_ => false
+	};
+
+	@override
+	int get hashCode => switch (this) {
+		Ok(value: T value) => value.hashCode,
+		Err(value: E err) => err.hashCode
+	};
+
+	/// Creates an [Ok] result from the given nullable `T` value. If the given value
+	/// is null, an [Err] result will be created instead using the given `E` value
+	factory Result.from(T? value, E err) => switch (value) {
+		null => Err(err),
+		_ => Ok(value)
+	};
+
 	/// Returns whether or not this result is an `Ok` result
 	bool isOk() => switch (this) {
 		Ok() => true,
@@ -57,9 +86,6 @@ class Ok<T, E> extends Result<T, E> {
 	final T value;
 
 	Ok(this.value);
-
-	@override
-	List<T> get props => [value];
 }
 
 /// Contains the error value of a [Result].
@@ -77,9 +103,6 @@ class Err<T, E> extends Result<T, E> {
 	final E value;
 
 	Err(this.value);
-
-	@override
-	List<E> get props => [value];
 }
 
 /// Represents an error thrown by a mishandled [Result] type value

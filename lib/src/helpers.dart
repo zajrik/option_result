@@ -1,6 +1,4 @@
-import 'dart:async';
-
-import '../result_option.dart';
+part of result_option;
 
 //TODO: Improve code examples for propagateResult/Option to show both outcome variants (Ok/Err and Some/None)
 

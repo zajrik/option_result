@@ -1,4 +1,4 @@
-import 'package:equatable/equatable.dart';
+part of result_option;
 
 /// `Option` is a type that represents the presence ([Some]) or absence ([None]) of a value.
 ///
@@ -12,7 +12,36 @@ import 'package:equatable/equatable.dart';
 ///   None() => 'No value!'
 /// });
 /// ```
-sealed class Option<T> extends Equatable {
+sealed class Option<T> {
+	/// The `Option` class cannot be instantiated directly. use [Some], [None], or
+	/// [Option.from] to create instances of `Option` variants
+	Option();
+
+	/// Compare equality between two `Option` values. `Option` values are considered
+	/// equal only if the value they hold is the same AND their runtime types are the same.
+	///
+	/// This means that a `None<int>()` is not equal to `None<String>()` even though they
+	/// are both None()
+	@override
+	operator ==(Object other) => switch (other) {
+		Some(value: var value) when isSome() && _compareRuntimeTypes(this, other) => value == unwrap(),
+		None() when isNone() && _compareRuntimeTypes(this, other) => true,
+		_ => false
+	};
+
+	@override
+	int get hashCode => switch (this) {
+		Some(value: T value) => value.hashCode,
+		None() => Object.hash('None()', runtimeType)
+	};
+
+	/// Creates a [Some] result from the given nullable `T` value. If the given
+	/// value is null then a [None] result will be created instead
+	factory Option.from(T? value) => switch (value) {
+		null => None(),
+		_ => Some(value)
+	};
+
 	/// Returns whether or not this `Option` holds a value ([Some])
 	bool isSome() => switch (this) {
 		Some() => true,
@@ -50,9 +79,6 @@ class Some<T> extends Option<T> {
 	final T value;
 
 	Some(this.value);
-
-	@override
-	List<T> get props => [value];
 }
 
 /// Represents the absence of a value.
@@ -66,10 +92,7 @@ class Some<T> extends Option<T> {
 ///   print('No value!');
 /// }
 /// ```
-class None<T> extends Option<T> {
-	@override
-	List<T> get props => [];
-}
+class None<T> extends Option<T> {}
 
 /// Represents an error thrown by a mishandled [Option] type value
 class OptionError extends Error {

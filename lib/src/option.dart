@@ -93,9 +93,8 @@ class OptionException implements Exception {
 	OptionException([this.message]);
 
 	@override
-	String toString() {
-		Object? message = this.message;
-		if (message == null) return "OptionException";
-		return "OptionException: $message";
-	}
+	String toString() => switch (message) {
+		null => 'OptionException',
+		_ => 'OptionException: $message'
+	};
 }

@@ -91,7 +91,7 @@ class Err<T, E> extends Result<T, E> {
 	bool isErr() => true;
 
 	@override
-	T unwrap() => throw ResultException('called `Result#unwrap()` on an `Err` value');
+	T unwrap() => throw ResultException(value);
 
 	@override
 	T unwrapOr(T orValue) => orValue;
@@ -107,9 +107,8 @@ class ResultException implements Exception {
 	ResultException([this.message]);
 
 	@override
-	String toString() {
-		Object? message = this.message;
-		if (message == null) return "ResultException";
-		return "ResultException: $message";
-	}
+	String toString() => switch (message) {
+		null => 'OptionException',
+		_ => 'OptionException: $message'
+	};
 }

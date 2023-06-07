@@ -5,3 +5,4 @@ library;
 
 export 'src/result.dart';
 export 'src/option.dart';
+export 'src/helpers.dart';

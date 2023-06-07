@@ -32,7 +32,7 @@ void main() {
 			expect(Err(['foo', 42, true]).unwrapErr(), equals(['foo', 42, true]));
 		});
 
-		test('Should return appropriate value from unwrapOr()', () {
+		test('Should return appropriate values from unwrapOr()', () {
 			expect(Ok(1).unwrapOr(2), equals(1));
 			expect(Err(1).unwrapOr(2), equals(2));
 		});

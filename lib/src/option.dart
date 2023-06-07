@@ -17,6 +17,13 @@ sealed class Option<T> {
 	/// [Option.from] to create instances of `Option` variants
 	Option();
 
+	/// Creates a [Some] result from the given nullable `T` value. If the given
+	/// value is null then a [None] result will be created instead
+	factory Option.from(T? value) => switch (value) {
+		null => None(),
+		_ => Some(value)
+	};
+
 	/// Compare equality between two `Option` values. `Option` values are considered
 	/// equal only if the value they hold is the same AND their runtime types are the same.
 	///
@@ -33,13 +40,6 @@ sealed class Option<T> {
 	int get hashCode => switch (this) {
 		Some(value: T value) => value.hashCode,
 		None() => Object.hash('None()', runtimeType)
-	};
-
-	/// Creates a [Some] result from the given nullable `T` value. If the given
-	/// value is null then a [None] result will be created instead
-	factory Option.from(T? value) => switch (value) {
-		null => None(),
-		_ => Some(value)
 	};
 
 	/// Returns whether or not this `Option` holds a value ([Some])

@@ -18,6 +18,13 @@ sealed class Result<T, E> {
 	/// [Result.from] to create instances of `Result` variants
 	Result();
 
+	/// Creates an [Ok] result from the given nullable `T` value. If the given value
+	/// is null, an [Err] result will be created instead using the given `E` value
+	factory Result.from(T? value, E err) => switch (value) {
+		null => Err(err),
+		_ => Ok(value)
+	};
+
 	/// Compare equality between two `Result` values. `Result` values are considered
 	/// equal only if the value they hold is the same AND their runtime types are the same.
 	///
@@ -34,13 +41,6 @@ sealed class Result<T, E> {
 	int get hashCode => switch (this) {
 		Ok(value: T value) => value.hashCode,
 		Err(value: E err) => err.hashCode
-	};
-
-	/// Creates an [Ok] result from the given nullable `T` value. If the given value
-	/// is null, an [Err] result will be created instead using the given `E` value
-	factory Result.from(T? value, E err) => switch (value) {
-		null => Err(err),
-		_ => Ok(value)
 	};
 
 	/// Returns whether or not this result is an `Ok` result

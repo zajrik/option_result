@@ -14,16 +14,25 @@ import 'package:equatable/equatable.dart';
 /// ```
 sealed class Option<T> extends Equatable {
 	/// Returns whether or not this `Option` holds a value ([Some])
-	bool isSome();
+	bool isSome() => switch (this) {
+		Some() => true,
+		None() => false
+	};
 
 	/// Returns whether or not this `Option` holds no value ([None])
-	bool isNone();
+	bool isNone() => !isSome();
 
 	/// Returns the contained [Some] value. Throws an [OptionException] if this `Option` is a [None] value
-	T unwrap();
+	T unwrap() => switch (this) {
+		Some(value: T value) => value,
+		None() => throw OptionException('called `Option#unwrap()` on a `None` value')
+	};
 
 	/// Returns the contained [Some] value, or the given value if this `Option` is a [None] value
-	T unwrapOr(T orValue);
+	T unwrapOr(T orValue) => switch (this) {
+		Some(value: T value) => value,
+		None() => orValue
+	};
 }
 
 /// Represents and holds some value of type `T`.
@@ -44,18 +53,6 @@ class Some<T> extends Option<T> {
 
 	@override
 	List<T> get props => [value];
-
-	@override
-	bool isSome() => true;
-
-	@override
-	bool isNone() => false;
-
-	@override
-	T unwrap() => value;
-
-	@override
-	T unwrapOr(T orValue) => value;
 }
 
 /// Represents the absence of a value.
@@ -72,18 +69,6 @@ class Some<T> extends Option<T> {
 class None<T> extends Option<T> {
 	@override
 	List<T> get props => [];
-
-	@override
-	bool isSome() => false;
-
-	@override
-	bool isNone() => true;
-
-	@override
-	T unwrap() => throw OptionException('called `Option#unwrap()` on a `None` value');
-
-	@override
-	T unwrapOr(T orValue) => orValue;
 }
 
 /// Represents an exception thrown by an [Option] type value

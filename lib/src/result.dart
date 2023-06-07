@@ -15,19 +15,31 @@ import 'package:equatable/equatable.dart';
 /// ```
 sealed class Result<T, E> extends Equatable {
 	/// Returns whether or not this result is an `Ok` result
-	bool isOk();
+	bool isOk() => switch (this) {
+		Ok() => true,
+		Err() => false,
+	};
 
 	/// Returns whether or not this result is an `Err` result
-	bool isErr();
+	bool isErr() => !isOk();
 
 	/// Returns the contained [Ok] value. Throws a [ResultException] if this is an [Err] value
-	T unwrap();
+	T unwrap() => switch (this) {
+		Ok(value: T value) => value,
+		Err(value: E value) => throw ResultException(value)
+	};
 
 	/// Returns the contained [Ok] value, or the given value if this `Result` is an [Err] value
-	T unwrapOr(T orValue);
+	T unwrapOr(T orValue) => switch (this) {
+		Ok(value: T value) => value,
+		Err() => orValue
+	};
 
 	/// Returns the contained [Err] value. Throws a [ResultException] if this is an [Ok] value
-	E unwrapErr();
+	E unwrapErr() => switch (this) {
+		Ok(value: T value) => throw ResultException(value),
+		Err(value: E value) => value
+	};
 }
 
 /// Contains the success value of a [Result]
@@ -48,21 +60,6 @@ class Ok<T, E> extends Result<T, E> {
 
 	@override
 	List<T> get props => [value];
-
-	@override
-	bool isOk() => true;
-
-	@override
-	bool isErr() => false;
-
-	@override
-	T unwrap() => value;
-
-	@override
-	T unwrapOr(T orValue) => value;
-
-	@override
-	E unwrapErr() => throw ResultException(value);
 }
 
 /// Contains the error value of a [Result].
@@ -83,21 +80,6 @@ class Err<T, E> extends Result<T, E> {
 
 	@override
 	List<E> get props => [value];
-
-	@override
-	bool isOk() => false;
-
-	@override
-	bool isErr() => true;
-
-	@override
-	T unwrap() => throw ResultException(value);
-
-	@override
-	T unwrapOr(T orValue) => orValue;
-
-	@override
-	E unwrapErr() => value;
 }
 
 /// Represents an exception thrown by a [Result] type value

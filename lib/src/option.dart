@@ -17,8 +17,8 @@ sealed class Option<T> {
 	/// [Option.from] to create instances of `Option` variants
 	Option();
 
-	/// Creates a [Some] result from the given nullable `T` value. If the given
-	/// value is null then a [None] result will be created instead
+	/// Creates a [Some] `Option` from the given nullable `T` value. If the given
+	/// value is null then a [None] `Option` will be created instead
 	factory Option.from(T? value) => switch (value) {
 		null => None(),
 		_ => Some(value)

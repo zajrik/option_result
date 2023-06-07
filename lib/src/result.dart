@@ -18,8 +18,8 @@ sealed class Result<T, E> {
 	/// [Result.from] to create instances of `Result` variants
 	Result();
 
-	/// Creates an [Ok] result from the given nullable `T` value. If the given value
-	/// is null, an [Err] result will be created instead using the given `E` value
+	/// Creates an [Ok] `Result` from the given nullable `T` value. If the given value
+	/// is null, an [Err] `Result` will be created instead using the given `E` value
 	factory Result.from(T? value, E err) => switch (value) {
 		null => Err(err),
 		_ => Ok(value)
@@ -28,7 +28,7 @@ sealed class Result<T, E> {
 	/// Compare equality between two `Result` values. `Result` values are considered
 	/// equal only if the value they hold is the same AND their runtime types are the same.
 	///
-	/// This means that a `Ok<int, String>(1)` is not equal to `Ok<int, int>(1)` even though they
+	/// This means that `Ok<int, String>(1)` is not equal to `Ok<int, int>(1)` even though they
 	/// are both `Ok(1)`
 	@override
 	operator ==(Object other) => switch (other) {

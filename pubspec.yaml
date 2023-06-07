@@ -1,6 +1,6 @@
 name: result_option
 description: A simple Dart library for Rust-like Result/Option types
-version: 1.0.0
+version: 0.0.1-dev-1
 repository: https://github.com/zajrik/result_option
 
 environment:

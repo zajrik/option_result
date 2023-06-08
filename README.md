@@ -17,10 +17,7 @@ Rust, leveraging Dart 3's new pattern matching features and `sealed class` exhau
 switch mechanics to provide as close to Rust's `Option`/`Result` experience as possible
 without going so deep as to implement every single utility method Rust provides.
 
-> This package is a work-in-progress. I'm just adding to it as I can, but mostly
-> for now it's only complete insofar as what is needed for the project I'm using
-> it for. I'd like to get some of the Rust utility methods in here eventually, like
-> `map` and `filter` but I currently have no need for them.
+> This package is a work-in-progress.
 
 ## Getting started
 
@@ -41,7 +38,7 @@ dependencies:
 
 Then run `dart pub get` or `flutter pub get`
 
-## Usage
+## Basic Usage
 
 ```dart
 // Assume getUser() returns some sort of User object
@@ -67,7 +64,7 @@ print(switch (email) {
   None() => 'User has no email set.'
 });
 
-// Pattern matching with switch is exhaustive for Result and Option, so the compiler
+// Pattern matching with switch is exhaustive for Option and Result, so the compiler
 // will give you warnings/errors to make sure you're providing cases for all potential
 // values for Ok()/Some(), either directly or via a default case, and for Err()/None(),
 // again either directly or via a default case

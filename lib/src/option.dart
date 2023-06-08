@@ -17,18 +17,21 @@ sealed class Option<T> {
 	/// [Option.from] to create instances of `Option` variants
 	Option();
 
-	/// Creates a [Some] `Option` from the given nullable `T` value. If the given
-	/// value is null then a [None] `Option` will be created instead
+	/// Creates a [Some] `Option` from the given nullable `T` value.
+	///
+	/// If the given value is null then a [None] `Option` will be created instead
 	factory Option.from(T? value) => switch (value) {
 		null => None(),
 		_ => Some(value)
 	};
 
-	/// Compare equality between two `Option` values. `Option` values are considered
-	/// equal only if the value they hold is the same AND their runtime types are the same.
+	/// Compare equality between two `Option` values.
 	///
-	/// This means that a `None<int>()` is not equal to `None<String>()` even though they
-	/// are both None()
+	/// `Option` values are considered equal only if the value they hold is the
+	/// same AND their runtime types are the same.
+	///
+	/// This means that a `None<int>()` is not equal to `None<String>()` even though
+	/// they are both None()
 	@override
 	operator ==(Object other) => switch (other) {
 		Some(value: var value) when isSome() && _compareRuntimeTypes(this, other) => value == unwrap(),
@@ -51,13 +54,16 @@ sealed class Option<T> {
 	/// Returns whether or not this `Option` holds no value ([None])
 	bool isNone() => !isSome();
 
-	/// Returns the contained [Some] value. Throws an [OptionError] if this `Option` is a [None] value
+	/// Returns the contained [Some] value.
+	///
+	/// Throws an [OptionError] if this `Option` is a [None] value
 	T unwrap() => switch (this) {
 		Some(value: T value) => value,
 		None() => throw OptionError('called `Option#unwrap()` on a `None` value')
 	};
 
-	/// Returns the contained [Some] value, or the given value if this `Option` is a [None] value
+	/// Returns the contained [Some] value, or the given value if this `Option`
+	/// is a [None] value
 	T unwrapOr(T orValue) => switch (this) {
 		Some(value: T value) => value,
 		None() => orValue

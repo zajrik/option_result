@@ -18,18 +18,22 @@ sealed class Result<T, E> {
 	/// [Result.from] to create instances of `Result` variants
 	Result();
 
-	/// Creates an [Ok] `Result` from the given nullable `T` value. If the given value
-	/// is null, an [Err] `Result` will be created instead using the given `E` value
+	/// Creates an [Ok] `Result` from the given nullable `T` value.
+	///
+	/// If the given value is null, an [Err] `Result` will be created instead using
+	/// the given `E` value
 	factory Result.from(T? value, E err) => switch (value) {
 		null => Err(err),
 		_ => Ok(value)
 	};
 
-	/// Compare equality between two `Result` values. `Result` values are considered
-	/// equal only if the value they hold is the same AND their runtime types are the same.
+	/// Compare equality between two `Result` values.
 	///
-	/// This means that `Ok<int, String>(1)` is not equal to `Ok<int, int>(1)` even though they
-	/// are both `Ok(1)`
+	/// `Result` values are considered equal only if the value they hold is the
+	/// same AND their runtime types are the same.
+	///
+	/// This means that `Ok<int, String>(1)` is not equal to `Ok<int, int>(1)` even
+	/// though they are both `Ok(1)`
 	@override
 	operator ==(Object other) => switch (other) {
 		Ok(value: T value) when isOk() && _compareRuntimeTypes(this, other) => value == unwrap(),
@@ -52,7 +56,9 @@ sealed class Result<T, E> {
 	/// Returns whether or not this result is an `Err` result
 	bool isErr() => !isOk();
 
-	/// Returns the contained [Ok] value. Throws a [ResultError] if this is an [Err] value
+	/// Returns the contained [Ok] value.
+	///
+	/// Throws a [ResultError] if this is an [Err] value
 	T unwrap() => switch (this) {
 		Ok(value: T value) => value,
 		Err() => throw ResultError('called `Result#unwrap()` on an `Err` value', this)

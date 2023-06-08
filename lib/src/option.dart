@@ -34,7 +34,7 @@ sealed class Option<T> {
 	/// they are both None()
 	@override
 	operator ==(Object other) => switch (other) {
-		Some(value: var value) when isSome() && _compareRuntimeTypes(this, other) => value == unwrap(),
+		Some(value: T value) when isSome() && _compareRuntimeTypes(this, other) => value == unwrap(),
 		None() when isNone() && _compareRuntimeTypes(this, other) => true,
 		_ => false
 	};
@@ -67,6 +67,18 @@ sealed class Option<T> {
 	T unwrapOr(T orValue) => switch (this) {
 		Some(value: T value) => value,
 		None() => orValue
+	};
+
+	/// Filters this `Option` based on the given `predicate` function.
+	///
+	/// Returns [None] if this `Option` is [None], otherwise calls `predicate` with
+	/// the held value, returning:
+	///
+	/// - `Some(value)` if `predicate` returns true (where `value` is the held value).
+	/// - `None()` if `predicate` returns `false`.
+	Option<T> filter(bool Function(T) predicate) => switch (this) {
+		None() => this,
+		Some(value: T value) => predicate(value) ? this : None()
 	};
 }
 

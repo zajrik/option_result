@@ -57,6 +57,13 @@ void main() {
 		test('Should throw OptionError when unwrapping None()', () {
 			expect(() => None().unwrap(), throwsA(TypeMatcher<OptionError>()));
 		});
+
+		test('Option#filter() should return appropriate values', () {
+			Option<int> foo = Some(5);
+
+			expect(foo.filter((value) => value < 10), equals(Some(5)));
+			expect(foo.filter((value) => value > 6), equals(None<int>()));
+		});
 	});
 
 	group('Result:', () {

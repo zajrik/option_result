@@ -1,5 +1,5 @@
-import 'package:option_result/option_result.dart';
 import 'package:test/test.dart';
+import 'package:option_result/option_result.dart';
 
 void main() {
 	group('Option helpers:', () {

@@ -65,28 +65,30 @@ and the Flutter guide for
 [developing packages and plugins](https://flutter.dev/developing-packages).
 -->
 <h2 id="option_result">option_result</h2>
-<p><code>option_result</code> is a simple Dart library for <code>Option</code> and <code>Result</code> types. Inspired by
-Rust, leveraging Dart 3's new pattern matching features and <code>sealed class</code> exhaustive
+<p><code>option_result</code> is a lightweight Dart library for <code>Option</code> and <code>Result</code> types. Inspired
+by Rust, leveraging Dart 3's new pattern matching features and <code>sealed class</code> exhaustive
 switch mechanics to provide as close to Rust's <code>Option</code>/<code>Result</code> experience as possible
 without going so deep as to implement every single utility method Rust provides.</p>
 <blockquote>
-<p>This package is a work-in-progress. I'm just adding to it as I can, but mostly
-for now it's only complete insofar as what is needed for the project I'm using
-it for. I'd like to get some of the Rust utility methods in here eventually, like
-<code>map</code> and <code>filter</code> but I currently have no need for them.</p>
+<p>This package is a work-in-progress.</p>
 </blockquote>
 <h2 id="getting-started">Getting started</h2>
 <p>Add the dependency to your <code>pubspec.yaml</code> file in your Dart/Flutter project:</p>
 <pre class="language-yaml"><code class="language-yaml">dependencies:
-  option_result: ^0.0.1-dev-1
+  option_result: ^0.0.1-dev-2
 </code></pre>
 <p>Or via git:</p>
 <pre class="language-yaml"><code class="language-yaml">dependencies:
   option_result:
     git: https://github.com/zajrik/option_result.git
 </code></pre>
-<p>Then run <code>dart pub get</code> or <code>flutter pub get</code></p>
-<h2 id="usage">Usage</h2>
+<p>Then run <code>dart pub get</code> or <code>flutter pub get</code> and import the library:</p>
+<pre class="language-dart"><code class="language-dart">import 'package:option_result/option_result.dart';
+// or import the separate types individually:
+import 'package:option_result/option.dart';
+import 'package:option_result/result.dart';
+</code></pre>
+<h2 id="basic-usage">Basic Usage</h2>
 <pre class="language-dart"><code class="language-dart">// Assume getUser() returns some sort of User object
 Result&lt;User, String&gt; user = await getUser(id: 12345);
 
@@ -110,7 +112,7 @@ print(switch (email) {
   None() =&gt; 'User has no email set.'
 });
 
-// Pattern matching with switch is exhaustive for Result and Option, so the compiler
+// Pattern matching with switch is exhaustive for Option and Result, so the compiler
 // will give you warnings/errors to make sure you're providing cases for all potential
 // values for Ok()/Some(), either directly or via a default case, and for Err()/None(),
 // again either directly or via a default case
@@ -127,11 +129,26 @@ implementation.</p>
       <section class="summary">
           <h2>Libraries</h2>
         <dl>
+          <dt id="option">
+  <span class="name"><a href="option/option-library.html">option</a></span> 
+
+</dt>
+<dd>This is the <code>option</code> library, containing only the <a href="option/Option-class.html">Option</a> type and its helpers.
+</dd>
+
           <dt id="option_result">
   <span class="name"><a href="option_result/option_result-library.html">option_result</a></span> 
 
 </dt>
-<dd>
+<dd>This is the base <code>option_result</code> library, containing both <a href="option/Option-class.html">Option</a> and <a href="result/Result-class.html">Result</a>
+types and their helpers.
+</dd>
+
+          <dt id="result">
+  <span class="name"><a href="result/result-library.html">result</a></span> 
+
+</dt>
+<dd>This is the <code>result</code> library, containing only the <a href="result/Result-class.html">Result</a> type and its helpers.
 </dd>
 
         </dl>
@@ -154,7 +171,9 @@ implementation.</p>
     <h5 class="hidden-xs"><span class="package-name">option_result</span> <span class="package-kind">package</span></h5>
     <ol>
       <li class="section-title">Libraries</li>
+      <li><a href="option/option-library.html">option</a></li>
       <li><a href="option_result/option_result-library.html">option_result</a></li>
+      <li><a href="result/result-library.html">result</a></li>
 </ol>
 
   </div>
@@ -167,7 +186,7 @@ implementation.</p>
 <footer>
   <span class="no-break">
     option_result
-      0.0.1-dev-1
+      0.0.1-dev-2
   </span>
 
   

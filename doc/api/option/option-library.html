@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
-  <meta name="description" content="option_result library API docs, for the Dart programming language.">
-  <title>option_result library - Dart API</title>
+  <meta name="description" content="option library API docs, for the Dart programming language.">
+  <title>option library - Dart API</title>
 
 
   
@@ -29,9 +29,9 @@
   <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../index.html">option_result</a></li>
-    <li class="self-crumb">option_result library</li>
+    <li class="self-crumb">option library</li>
   </ol>
-  <div class="self-name">option_result</div>
+  <div class="self-name">option</div>
   <form class="search navbar-right" role="search">
     <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
@@ -52,22 +52,19 @@
   <div id="dartdoc-main-content" class="main-content">
     
       <div>
-<h1><span class="kind-library">option_result</span> library 
+<h1><span class="kind-library">option</span> library 
  
 </h1></div>
 
     
 <section class="desc markdown">
-  <p>This is the base <code>option_result</code> library, containing both <a href="../option/Option-class.html">Option</a> and <a href="../result/Result-class.html">Result</a>
-types and their helpers.</p>
+  <p>This is the <code>option</code> library, containing only the <a href="../option/Option-class.html">Option</a> type and its helpers.</p>
 <p>This library can be imported via:</p>
-<pre class="language-dart"><code class="language-dart">import 'package:option_result/option_result.dart';
-</code></pre>
-<p>If you want to only import the <a href="../option/Option-class.html">Option</a> or the <a href="../result/Result-class.html">Result</a> types individually,
-do so via:</p>
 <pre class="language-dart"><code class="language-dart">import 'package:option_result/option.dart';
-// or
-import 'package:option_result/result.dart';
+</code></pre>
+<p>If you want to import both <code>Option</code> and <code>Result</code> types, consider importing the
+combined library:</p>
+<pre class="language-dart"><code class="language-dart">import 'package:option_result/option_result.dart';
 </code></pre>
 </section>
 
@@ -76,14 +73,6 @@ import 'package:option_result/result.dart';
       <h2>Classes</h2>
 
       <dl>
-        <dt id="Err">
-  <span class="name "><a href="../result/Err-class.html">Err</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>, <span class="type-parameter">E</span>&gt;</span></span> 
-
-</dt>
-<dd>
-  A type that represents the failure <a href="../result/Result-class.html">Result</a> of something.
-</dd>
-
         <dt id="None">
   <span class="name "><a href="../option/None-class.html">None</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span> 
 
@@ -92,28 +81,12 @@ import 'package:option_result/result.dart';
   A type that represents the absence of a value.
 </dd>
 
-        <dt id="Ok">
-  <span class="name "><a href="../result/Ok-class.html">Ok</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>, <span class="type-parameter">E</span>&gt;</span></span> 
-
-</dt>
-<dd>
-  A type that represents the successful <a href="../result/Result-class.html">Result</a> of something.
-</dd>
-
         <dt id="Option">
   <span class="name "><a href="../option/Option-class.html">Option</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span> 
 
 </dt>
 <dd>
   A type that represents the presence (<a href="../option/Some-class.html">Some</a>) or absence (<a href="../option/None-class.html">None</a>) of a value.
-</dd>
-
-        <dt id="Result">
-  <span class="name "><a href="../result/Result-class.html">Result</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>, <span class="type-parameter">E</span>&gt;</span></span> 
-
-</dt>
-<dd>
-  A type that represents the result of something, either success (<a href="../result/Ok-class.html">Ok</a>) or failure (<a href="../result/Err-class.html">Err</a>).
 </dd>
 
         <dt id="Some">
@@ -161,32 +134,6 @@ import 'package:option_result/result.dart';
 
 </dd>
 
-        <dt id="propagateResult" class="callable">
-  <span class="name"><a href="../result/propagateResult.html">propagateResult</a></span><span class="signature">&lt;<wbr><span class="type-parameter">T</span>, <span class="type-parameter">E</span>&gt;</span><span class="signature">(<wbr><span class="parameter" id="propagateResult-param-fn"><span class="type-annotation"><a href="../result/Result-class.html">Result</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>, <span class="type-parameter">E</span>&gt;</span></span> <span class="parameter-name">fn</span>()</span>)
-    <span class="returntype parameter">&#8594; <a href="../result/Result-class.html">Result</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>, <span class="type-parameter">E</span>&gt;</span></span>
-  </span>
-  
-
-</dt>
-<dd>
-  Executes the given function, returning the returned <a href="../result/Result-class.html">Result</a> value.
-  
-
-</dd>
-
-        <dt id="propagateResultAsync" class="callable">
-  <span class="name"><a href="../result/propagateResultAsync.html">propagateResultAsync</a></span><span class="signature">&lt;<wbr><span class="type-parameter">T</span>, <span class="type-parameter">E</span>&gt;</span><span class="signature">(<wbr><span class="parameter" id="propagateResultAsync-param-fn"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-async/FutureOr-class.html">FutureOr</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../result/Result-class.html">Result</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>, <span class="type-parameter">E</span>&gt;</span></span>&gt;</span></span> <span class="parameter-name">fn</span>()</span>)
-    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../result/Result-class.html">Result</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>, <span class="type-parameter">E</span>&gt;</span></span>&gt;</span></span>
-  </span>
-  
-
-</dt>
-<dd>
-  Executes the given function asynchronously, returning the returned <a href="../result/Result-class.html">Result</a> value.
-  
-
-</dd>
-
       </dl>
     </section>
 
@@ -204,14 +151,6 @@ import 'package:option_result/result.dart';
   Represents an error thrown by a mishandled <a href="../option/Option-class.html">Option</a> type value
 </dd>
 
-        <dt id="ResultError">
-  <span class="name "><a href="../result/ResultError-class.html">ResultError</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>, <span class="type-parameter">E</span>&gt;</span></span> 
-
-</dt>
-<dd>
-  Represents an error thrown by a mishandled <a href="../result/Result-class.html">Result</a> type value
-</dd>
-
       </dl>
     </section>
 
@@ -226,7 +165,7 @@ import 'package:option_result/result.dart';
 
 <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
   <li><a href="../index.html">option_result</a></li>
-  <li class="self-crumb">option_result library</li>
+  <li class="self-crumb">option library</li>
 </ol>
 
 
@@ -241,31 +180,25 @@ import 'package:option_result/result.dart';
   </div>
 
   <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
-    <h5>option_result library</h5>
+    <h5>option library</h5>
     <ol>
-      <li class="section-title"><a href="../option_result/option_result-library.html#classes">Classes</a></li>
-        <li><a href="../result/Err-class.html">Err</a></li>
+      <li class="section-title"><a href="../option/option-library.html#classes">Classes</a></li>
         <li><a href="../option/None-class.html">None</a></li>
-        <li><a href="../result/Ok-class.html">Ok</a></li>
         <li><a href="../option/Option-class.html">Option</a></li>
-        <li><a href="../result/Result-class.html">Result</a></li>
         <li><a href="../option/Some-class.html">Some</a></li>
 
 
 
 
 
-      <li class="section-title"><a href="../option_result/option_result-library.html#functions">Functions</a></li>
+      <li class="section-title"><a href="../option/option-library.html#functions">Functions</a></li>
         <li><a href="../option/propagateOption.html">propagateOption</a></li>
         <li><a href="../option/propagateOptionAsync.html">propagateOptionAsync</a></li>
-        <li><a href="../result/propagateResult.html">propagateResult</a></li>
-        <li><a href="../result/propagateResultAsync.html">propagateResultAsync</a></li>
 
 
 
-      <li class="section-title"><a href="../option_result/option_result-library.html#exceptions">Exceptions</a></li>
+      <li class="section-title"><a href="../option/option-library.html#exceptions">Exceptions</a></li>
         <li><a href="../option/OptionError-class.html">OptionError</a></li>
-        <li><a href="../result/ResultError-class.html">ResultError</a></li>
 </ol>
 
   </div><!--/sidebar-offcanvas-right-->

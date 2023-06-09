@@ -1,5 +1,5 @@
-import 'package:option_result/option_result.dart';
 import 'package:test/test.dart';
+import 'package:option_result/result.dart';
 
 void main () {
 	group('Result:', () {
@@ -65,11 +65,6 @@ void main () {
 		test('Should create appropriate Results via Result.from()', () {
 			expect(Result.from('foo', 'err'), equals(Ok<String, String>('foo')));
 			expect(Result<String, String>.from(null, 'err'), equals(Err<String, String>('err')));
-
-			Option<int> foo = Some(7);
-			Option<int> bar = None();
-
-			print(foo.runtimeType.hashCode == bar.runtimeType.hashCode);
 		});
 
 		test('Should throw ResultError when unwrapping Err()', () {

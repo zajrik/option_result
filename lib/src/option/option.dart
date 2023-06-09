@@ -78,8 +78,19 @@ sealed class Option<T> {
 	/// - `Some(value)` if `predicate` returns true (where `value` is the held value).
 	/// - `None()` if `predicate` returns `false`.
 	Option<T> filter(bool Function(T) predicate) => switch (this) {
-		None() => this,
-		Some(value: T value) => predicate(value) ? this : None()
+		Some(value: T value) => predicate(value) ? this : None(),
+		None() => this
+	};
+
+	/// Maps an `Option<T>` to an `Option<U>` using the given function with the
+	/// held value.
+	///
+	/// Returns:
+	/// - [Some<U>] if this `Option` is [Some<T>]
+	/// - [None<U>] if this `Option` is [None]
+	Option<U> map<U>(U Function(T) mapFn) => switch (this) {
+		Some(value: T value) => Some(mapFn(value)),
+		None() => None()
 	};
 }
 

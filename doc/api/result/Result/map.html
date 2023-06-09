@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
-  <meta name="description" content="API docs for the unwrapErr method from the Result class, for the Dart programming language.">
-  <title>unwrapErr method - Result class - result library - Dart API</title>
+  <meta name="description" content="API docs for the map method from the Result class, for the Dart programming language.">
+  <title>map method - Result class - result library - Dart API</title>
 
 
   
@@ -31,9 +31,9 @@
     <li><a href="../../index.html">option_result</a></li>
     <li><a href="../../result/result-library.html">result</a></li>
     <li><a href="../../result/Result-class.html">Result<span class="signature">&lt;<wbr><span class="type-parameter">T</span>, <span class="type-parameter">E</span>&gt;</span></a></li>
-    <li class="self-crumb">unwrapErr method</li>
+    <li class="self-crumb">map&lt;<wbr><span class="type-parameter">U</span>&gt; method</li>
   </ol>
-  <div class="self-name">unwrapErr</div>
+  <div class="self-name">map</div>
   <form class="search navbar-right" role="search">
     <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
@@ -53,30 +53,43 @@
 
   <div id="dartdoc-main-content" class="main-content">
       <div>
-<h1><span class="kind-method">unwrapErr</span> method 
+<h1><span class="kind-method">map&lt;<wbr><span class="type-parameter">U</span>&gt;</span> method 
 </h1></div>
 
     <section class="multi-line-signature">
       
 
-<span class="returntype">E</span>
-<span class="name ">unwrapErr</span>(<wbr>)
+<span class="returntype"><a href="../../result/Result-class.html">Result</a><span class="signature">&lt;<wbr><span class="type-parameter">U</span>, <span class="type-parameter">E</span>&gt;</span></span>
+<span class="name ">map</span>&lt;<wbr><span class="type-parameter">U</span>&gt;(<wbr><ol class="parameter-list"><li><span class="parameter" id="map-param-mapFn"><span class="type-annotation">U</span> <span class="parameter-name">mapFn</span>(<ol class="parameter-list"><li><span class="parameter" id="param-"><span class="type-annotation">T</span></span></li>
+</ol>
+)</span></li>
+</ol>)
 
       
 
     </section>
     
 <section class="desc markdown">
-  <p>Returns the held <a href="../../result/Err-class.html">Err</a> value. Throws a <a href="../../result/ResultError-class.html">ResultError</a> if this is an <a href="../../result/Ok-class.html">Ok</a> value</p>
+  <p>Maps a <code>Result&lt;T, E&gt;</code> to a <code>Result&lt;U, E&gt;</code> using the given function with the
+held value.</p>
+<p><strong>Note</strong>: <a href="../../result/Err-class.html">Err&lt;T, E&gt;</a> results will become <a href="../../result/Err-class.html">Err&lt;U, E&gt;</a> with their held values will
+remaining unchanged. This behavior is present in Rust as well, so it is
+preserved here since this project is inspired by the Rust implementation
+of Option/Result types</p>
+<p>Returns:</p>
+<ul>
+<li><a href="../../result/Ok-class.html">Ok&lt;U, E&gt;</a> if this <code>Option</code> is <a href="../../result/Ok-class.html">Ok&lt;T, E&gt;</a></li>
+<li><a href="../../result/Err-class.html">Err&lt;U, E&gt;</a> if this <code>Option</code> is <a href="../../result/Err-class.html">Err&lt;T, E&gt;</a></li>
+</ul>
 </section>
 
 
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">E unwrapErr() =&gt; switch (this) {
-	Ok(value: T value) =&gt; throw ResultError(value, this),
-	Err(value: E value) =&gt; value
+  <pre class="language-dart"><code class="language-dart">Result&lt;U, E&gt; map&lt;U&gt;(U Function(T) mapFn) =&gt; switch (this) {
+	Err(value: E value) =&gt; Err(value),
+	Ok(value: T value) =&gt; Ok(mapFn(value))
 };</code></pre>
 </section>
 
@@ -94,7 +107,7 @@
   <li><a href="../../index.html">option_result</a></li>
   <li><a href="../../result/result-library.html">result</a></li>
   <li><a href="../../result/Result-class.html">Result<span class="signature">&lt;<wbr><span class="type-parameter">T</span>, <span class="type-parameter">E</span>&gt;</span></a></li>
-  <li class="self-crumb">unwrapErr method</li>
+  <li class="self-crumb">map&lt;<wbr><span class="type-parameter">U</span>&gt; method</li>
 </ol>
 
 

@@ -3,7 +3,7 @@ import 'package:option_result/result.dart';
 
 void main () {
 	group('Result:', () {
-		test('Should return appropriate values for isOk()/isErr()', () {
+		test('Should return expected values for isOk()/isErr()', () {
 			expect(Ok(null).isOk(), equals(true));
 			expect(Ok(null).isErr(), equals(false));
 			expect(Err(null).isOk(), equals(false));
@@ -32,7 +32,7 @@ void main () {
 			expect(Err(['foo', 42, true]).unwrapErr(), equals(['foo', 42, true]));
 		});
 
-		test('Should return appropriate values from unwrapOr()', () {
+		test('Should return expected values from unwrapOr()', () {
 			expect(Ok(1).unwrapOr(2), equals(1));
 			expect(Err(1).unwrapOr(2), equals(2));
 		});
@@ -62,7 +62,7 @@ void main () {
 			expect(foo == bar, equals(false));
 		});
 
-		test('Should create appropriate Results via Result.from()', () {
+		test('Should create expected Results via Result.from()', () {
 			expect(Result.from('foo', 'err'), equals(Ok<String, String>('foo')));
 			expect(Result<String, String>.from(null, 'err'), equals(Err<String, String>('err')));
 		});

@@ -178,6 +178,20 @@ if (foo case Ok(value: var bar)) {
 
 </dd>
 
+        <dt id="map" class="callable inherited">
+  <span class="name"><a href="../result/Result/map.html">map</a></span><span class="signature">&lt;<wbr><span class="type-parameter">U</span>&gt;</span><span class="signature">(<wbr><span class="parameter" id="map-param-mapFn"><span class="type-annotation">U</span> <span class="parameter-name">mapFn</span>(<span class="parameter" id="param-"><span class="type-annotation">T</span></span>)</span>)
+    <span class="returntype parameter">&#8594; <a href="../result/Result-class.html">Result</a><span class="signature">&lt;<wbr><span class="type-parameter">U</span>, <span class="type-parameter">E</span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Maps a <code>Result&lt;T, E&gt;</code> to a <code>Result&lt;U, E&gt;</code> using the given function with the
+held value.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
         <dt id="noSuchMethod" class="callable inherited">
   <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></span><span class="signature">(<wbr><span class="parameter" id="noSuchMethod-param-invocation"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Invocation-class.html">Invocation</a></span> <span class="parameter-name">invocation</span></span>)
     <span class="returntype parameter">&#8594; dynamic</span>
@@ -327,6 +341,7 @@ if (foo case Ok(value: var bar)) {
         <li class="section-title inherited"><a href="../result/Ok-class.html#instance-methods">Methods</a></li>
           <li class="inherited"><a href="../result/Result/isErr.html">isErr</a></li>
           <li class="inherited"><a href="../result/Result/isOk.html">isOk</a></li>
+          <li class="inherited"><a href="../result/Result/map.html">map</a></li>
           <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
           <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/toString.html">toString</a></li>
           <li class="inherited"><a href="../result/Result/unwrap.html">unwrap</a></li>

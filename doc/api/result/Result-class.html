@@ -30,7 +30,7 @@
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../index.html">option_result</a></li>
     <li><a href="../result/result-library.html">result</a></li>
-    <li class="self-crumb">Result<span class="signature">&lt;<wbr><span class="type-parameter">T</span>, <span class="type-parameter">E</span>&gt;</span> class</li>
+    <li class="self-crumb">Result<span class="signature">&lt;<wbr><span class="type-parameter">T</span>, <span class="type-parameter">E</span>&gt;</span> sealed class</li>
   </ol>
   <div class="self-name">Result</div>
   <form class="search navbar-right" role="search">
@@ -53,7 +53,6 @@
   <div id="dartdoc-main-content" class="main-content">
       <div>
 <h1><span class="kind-class">Result&lt;<wbr><span class="type-parameter">T</span>, <span class="type-parameter">E</span>&gt;</span> class 
-    <a href="https://github.com/dart-lang/language/blob/main/accepted/future-releases/sealed-types/feature-specification.md#sealed-types" class="feature feature-sealed" title="All direct subtypes must be defined in the same library.">sealed</a>
  
 </h1></div>
 
@@ -175,6 +174,20 @@ print(switch (foo) {
 
 </dd>
 
+        <dt id="map" class="callable">
+  <span class="name"><a href="../result/Result/map.html">map</a></span><span class="signature">&lt;<wbr><span class="type-parameter">U</span>&gt;</span><span class="signature">(<wbr><span class="parameter" id="map-param-mapFn"><span class="type-annotation">U</span> <span class="parameter-name">mapFn</span>(<span class="parameter" id="param-"><span class="type-annotation">T</span></span>)</span>)
+    <span class="returntype parameter">&#8594; <a href="../result/Result-class.html">Result</a><span class="signature">&lt;<wbr><span class="type-parameter">U</span>, <span class="type-parameter">E</span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Maps a <code>Result&lt;T, E&gt;</code> to a <code>Result&lt;U, E&gt;</code> using the given function with the
+held value.
+  
+
+</dd>
+
         <dt id="noSuchMethod" class="callable inherited">
   <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></span><span class="signature">(<wbr><span class="parameter" id="noSuchMethod-param-invocation"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Invocation-class.html">Invocation</a></span> <span class="parameter-name">invocation</span></span>)
     <span class="returntype parameter">&#8594; dynamic</span>
@@ -280,7 +293,7 @@ print(switch (foo) {
 <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
   <li><a href="../index.html">option_result</a></li>
   <li><a href="../result/result-library.html">result</a></li>
-  <li class="self-crumb">Result<span class="signature">&lt;<wbr><span class="type-parameter">T</span>, <span class="type-parameter">E</span>&gt;</span> class</li>
+  <li class="self-crumb">Result<span class="signature">&lt;<wbr><span class="type-parameter">T</span>, <span class="type-parameter">E</span>&gt;</span> sealed class</li>
 </ol>
 
 
@@ -324,6 +337,7 @@ print(switch (foo) {
         <li class="section-title"><a href="../result/Result-class.html#instance-methods">Methods</a></li>
           <li><a href="../result/Result/isErr.html">isErr</a></li>
           <li><a href="../result/Result/isOk.html">isOk</a></li>
+          <li><a href="../result/Result/map.html">map</a></li>
           <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
           <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/toString.html">toString</a></li>
           <li><a href="../result/Result/unwrap.html">unwrap</a></li>

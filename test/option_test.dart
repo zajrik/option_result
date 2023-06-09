@@ -3,7 +3,7 @@ import 'package:option_result/option.dart';
 
 void main() {
 	group('Option:', () {
-		test('Should return appropriate values for isSome()/isNone()', () {
+		test('Should return expected values for isSome()/isNone()', () {
 			expect(Some(null).isSome(), equals(true));
 			expect(Some(null).isNone(), equals(false));
 			expect(None().isSome(), equals(false));
@@ -21,7 +21,7 @@ void main() {
 			expect(Some(['foo', 'bar', 'baz']).unwrap(), equals(['foo', 'bar', 'baz']));
 		});
 
-		test('Should return appropriate values from unwrapOr()', () {
+		test('Should return expected values from unwrapOr()', () {
 			expect(Some(1).unwrapOr(2), equals(1));
 			expect(None().unwrapOr(2), equals(2));
 		});
@@ -36,7 +36,7 @@ void main() {
 			expect(Some(foo) == Some(foo), equals(true));
 		});
 
-		test('Should create appropriate Options via Option.from()', () {
+		test('Should create expected Options via Option.from()', () {
 			expect(Option.from('foo'), equals(Some('foo')));
 			expect(Option<int>.from(null), equals(None<int>()));
 		});
@@ -58,11 +58,24 @@ void main() {
 			expect(() => None().unwrap(), throwsA(TypeMatcher<OptionError>()));
 		});
 
-		test('Option#filter() should return appropriate values', () {
+		test('Should return expected values for Option#filter()', () {
 			Option<int> foo = Some(5);
 
 			expect(foo.filter((value) => value < 10), equals(Some(5)));
 			expect(foo.filter((value) => value > 6), equals(None<int>()));
+		});
+
+		test('Should return expected values for Option#map()', () {
+			Option<int> foo = Some(5);
+
+			expect(foo.map((value) => value * 10), equals(Some(50)));
+			expect(foo.map((value) => value.toString()), equals(Some('5')));
+
+			expect(foo.map((value) => [value]), equals(TypeMatcher<Some<List<int>>>()));
+
+			// Check the wrapped List directly because two Options holding
+			// different references to visibly identical lists aren't equatable
+			expect(foo.map((value) => [value]).unwrap(), equals([5]));
 		});
 	});
 }

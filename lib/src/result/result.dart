@@ -77,6 +77,19 @@ sealed class Result<T, E> {
 		Ok(value: T value) => throw ResultError(value, this),
 		Err(value: E value) => value
 	};
+
+	/// Maps a `Result<T, E>` to a `Result<U, E>` using the given function with the
+	/// held value.
+	///
+	/// Returns:
+	/// - [Ok<U, E>] if this `Option` is [Ok<T, E>]
+	/// - [Err<U, E>] if this `Option` is [Err<T, E>]
+	Result<U, E> map<U>(U Function(T) mapFn) => switch (this) {
+		Ok(value: T value) => Ok(mapFn(value)),
+		Err(value: E value) => Err(value)
+	};
+
+	//TODO: Add tests for Result#map(), add Result#mapErr() and related tests
 }
 
 /// A type that represents the successful [Result] of something.

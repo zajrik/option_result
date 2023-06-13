@@ -83,9 +83,22 @@ void main () {
 
 			expect(foo.map((value) => [value]), equals(TypeMatcher<Ok<List<int>, String>>()));
 
-			// Check the wrapped List directly because two Options holding
+			// Check the wrapped List directly because two Results holding
 			// different references to visibly identical lists aren't equatable
 			expect(foo.map((value) => [value]).unwrap(), equals([5]));
+		});
+
+		test('Should return expected results for Result#mapErr()', () {
+			Result<int, String> foo = Err('foo');
+
+			expect(foo.mapErr((value) => value * 3), equals(Err<int, String>('foofoofoo')));
+			expect(foo.mapErr((value) => value.toUpperCase()), equals(Err<int, String>('FOO')));
+
+			expect(foo.mapErr((value) => [value]), equals(TypeMatcher<Err<int, List<String>>>()));
+
+			// Check the wrapped List directly because two Results holding
+			// different references to visibly identical lists aren't equatable
+			expect(foo.mapErr((value) => [value]).unwrapErr(), equals(['foo']));
 		});
 	});
 }

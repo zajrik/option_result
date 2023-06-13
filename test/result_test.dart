@@ -74,5 +74,18 @@ void main () {
 		test('Should throw ResultError with unwrapErr() on Ok()', () {
 			expect(() => Ok('foo bar baz').unwrapErr(), throwsA(TypeMatcher<ResultError>()));
 		});
+
+		test('Should return expected results for Result#map()', () {
+			Result<int, String> foo = Ok(5);
+
+			expect(foo.map((value) => value * 10), equals(Ok<int, String>(50)));
+			expect(foo.map((value) => value.toString()), equals(Ok<String, String>('5')));
+
+			expect(foo.map((value) => [value]), equals(TypeMatcher<Ok<List<int>, String>>()));
+
+			// Check the wrapped List directly because two Options holding
+			// different references to visibly identical lists aren't equatable
+			expect(foo.map((value) => [value]).unwrap(), equals([5]));
+		});
 	});
 }

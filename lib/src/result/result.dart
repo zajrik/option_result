@@ -74,7 +74,7 @@ sealed class Result<T, E> {
 
 	/// Returns the held [Err] value. Throws a [ResultError] if this is an [Ok] value
 	E unwrapErr() => switch (this) {
-		Ok(value: T value) => throw ResultError(value, this),
+		Ok(value: T value) => throw ResultError(value),
 		Err(value: E value) => value
 	};
 
@@ -82,14 +82,14 @@ sealed class Result<T, E> {
 	/// held value.
 	///
 	/// Returns:
-	/// - [Ok<U, E>] if this `Option` is [Ok<T, E>]
-	/// - [Err<U, E>] if this `Option` is [Err<T, E>]
+	/// - [Ok<U, E>] if this `Result` is [Ok<T, E>]
+	/// - [Err<U, E>] if this `Result` is [Err<T, E>]
 	Result<U, E> map<U>(U Function(T) mapFn) => switch (this) {
 		Ok(value: T value) => Ok(mapFn(value)),
 		Err(value: E value) => Err(value)
 	};
 
-	//TODO: Add tests for Result#map(), add Result#mapErr() and related tests
+	//TODO: add Result#mapErr() and related tests
 }
 
 /// A type that represents the successful [Result] of something.

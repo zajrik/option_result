@@ -71,10 +71,10 @@
 <section class="desc markdown">
   <p>Executes the given function, returning the returned <a href="../result/Result-class.html">Result</a> value.</p>
 <p>If a <a href="../result/ResultError-class.html">ResultError</a> is thrown during the execution of the given function,
-which occurs when an <a href="../result/Err-class.html">Err</a> value is unwrapped, the <a href="../result/Err-class.html">Err</a> that was unwrapped
+which occurs when an <code>[Err()]</code> value is unwrapped, the <a href="../result/Err/Err.html">Err()</a> that was unwrapped
 will be returned.</p>
 <p>This effectively allows safely unwrapping <a href="../result/Result-class.html">Result</a> values within the given function,
-propagating <a href="../result/Err-class.html">Err</a> to the returned value in the same way that the <code>?</code> operator
+propagating <a href="../result/Err/Err.html">Err()</a> to the returned value in the same way that the <code>?</code> operator
 does in Rust. The simplest way to do this is to wrap your function body inside
 this function like so:</p>
 <pre class="language-dart"><code class="language-dart">Result&lt;int, String&gt; foo = Ok(1);
@@ -95,7 +95,11 @@ print(switch (baz) {
   Err(value: String err) =&gt; 'Error: $err'
 });
 </code></pre>
-<p>Note that any other type of thrown error/exception other than <a href="../option/OptionError-class.html">OptionError</a> will be rethrown.</p>
+<p>Note that any other type of thrown error/exception other than <a href="../result/ResultError-class.html">ResultError</a>
+will be rethrown. Additionally, The propagated <a href="../result/Err/Err.html">Err()</a> type will be repackaged
+to match the <code>T</code> of the expected return type of this function, and if the <code>E</code>
+value type of the propagated <a href="../result/Err/Err.html">Err()</a> does not match the expected <code>E</code> value type
+of this function, a <a href="../result/ResultError-class.html">ResultError</a> will be thrown.</p>
 </section>
 
 
@@ -104,7 +108,7 @@ print(switch (baz) {
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">Result&lt;T, E&gt; propagateResult&lt;T, E&gt;(Result&lt;T, E&gt; Function() fn) {
 	try { return fn(); }
-	catch (err) { return _handleResultError(err); }
+	catch (e) { return _handleResultError(e); }
 }</code></pre>
 </section>
 

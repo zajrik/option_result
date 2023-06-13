@@ -84,8 +84,8 @@ held value.</p>
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">Option&lt;U&gt; map&lt;U&gt;(U Function(T) mapFn) =&gt; switch (this) {
-	None() =&gt; None(),
-	Some(value: T value) =&gt; Some(mapFn(value))
+	Some(value: T value) =&gt; Some(mapFn(value)),
+	None() =&gt; None()
 };</code></pre>
 </section>
 

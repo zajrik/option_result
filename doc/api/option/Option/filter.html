@@ -84,8 +84,8 @@ the held value, returning:</p>
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">Option&lt;T&gt; filter(bool Function(T) predicate) =&gt; switch (this) {
-	None() =&gt; this,
-	Some(value: T value) =&gt; predicate(value) ? this : None()
+	Some(value: T value) =&gt; predicate(value) ? this : None(),
+	None() =&gt; this
 };</code></pre>
 </section>
 

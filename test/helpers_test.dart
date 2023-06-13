@@ -73,18 +73,34 @@ void main() {
 			expect(() => propagateResultAsync(() => throw FormatException('baz')), throwsFormatException);
 		});
 
-		test('Should throw ResultError when propagating a mismatched Err() type via propagateResult', () {
-			expect(() => propagateResult<int, String>(() {
+		test('Should repackage propagated Err()s as long as the Err() type (E) matches via propagateResult', () {
+			expect(propagateResult<int, String>(() {
 				Result<int, String> foo = Ok(1);
 				Result<bool, String> bar = Err('foo bar baz');
+				return Ok(foo.unwrap() + (bar.unwrap() ? 1 : 2));
+			}), equals(Err<int, String>('foo bar baz')));
+		});
+
+		test('Should repackage propagated Err()s as long as the Err() type `E` matches via propagateResultAsync', () async {
+			expect(await propagateResultAsync<int, String>(() {
+				Result<int, String> foo = Ok(1);
+				Result<bool, String> bar = Err('foo bar baz');
+				return Ok(foo.unwrap() + (bar.unwrap() ? 1 : 2));
+			}), equals(Err<int, String>('foo bar baz')));
+		});
+
+		test('Should throw ResultError when propagated Err() type `E` does not match expected type via propagateResult', () {
+			expect(() => propagateResultAsync<int, String>(() {
+				Result<int, String> foo = Ok(1);
+				Result<bool, int> bar = Err(3);
 				return Ok(foo.unwrap() + (bar.unwrap() ? 1 : 2));
 			}), throwsA(TypeMatcher<ResultError>()));
 		});
 
-		test('Should throw ResultError when propagating a mismatched Err() type via propagateResultAsync', () {
+		test('Should throw ResultError when propagated Err() type `E` does not match expected type via propagateResultAsync', () {
 			expect(() => propagateResultAsync<int, String>(() {
 				Result<int, String> foo = Ok(1);
-				Result<bool, String> bar = Err('foo bar baz');
+				Result<bool, int> bar = Err(3);
 				return Ok(foo.unwrap() + (bar.unwrap() ? 1 : 2));
 			}), throwsA(TypeMatcher<ResultError>()));
 		});

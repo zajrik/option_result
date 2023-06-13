@@ -72,14 +72,10 @@
 <section class="desc markdown">
   <p>Maps a <code>Result&lt;T, E&gt;</code> to a <code>Result&lt;U, E&gt;</code> using the given function with the
 held value.</p>
-<p><strong>Note</strong>: <a href="../../result/Err-class.html">Err&lt;T, E&gt;</a> results will become <a href="../../result/Err-class.html">Err&lt;U, E&gt;</a> with their held values will
-remaining unchanged. This behavior is present in Rust as well, so it is
-preserved here since this project is inspired by the Rust implementation
-of Option/Result types</p>
 <p>Returns:</p>
 <ul>
-<li><a href="../../result/Ok-class.html">Ok&lt;U, E&gt;</a> if this <code>Option</code> is <a href="../../result/Ok-class.html">Ok&lt;T, E&gt;</a></li>
-<li><a href="../../result/Err-class.html">Err&lt;U, E&gt;</a> if this <code>Option</code> is <a href="../../result/Err-class.html">Err&lt;T, E&gt;</a></li>
+<li><a href="../../result/Ok-class.html">Ok&lt;U, E&gt;</a> if this <code>Result</code> is <a href="../../result/Ok-class.html">Ok&lt;T, E&gt;</a></li>
+<li><a href="../../result/Err-class.html">Err&lt;U, E&gt;</a> if this <code>Result</code> is <a href="../../result/Err-class.html">Err&lt;T, E&gt;</a></li>
 </ul>
 </section>
 
@@ -88,8 +84,8 @@ of Option/Result types</p>
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">Result&lt;U, E&gt; map&lt;U&gt;(U Function(T) mapFn) =&gt; switch (this) {
-	Err(value: E value) =&gt; Err(value),
-	Ok(value: T value) =&gt; Ok(mapFn(value))
+	Ok(value: T value) =&gt; Ok(mapFn(value)),
+	Err(value: E value) =&gt; Err(value)
 };</code></pre>
 </section>
 

@@ -71,7 +71,7 @@
 <section class="desc markdown">
   <p>Executes the given function asynchronously, returning the returned <a href="../result/Result-class.html">Result</a> value.</p>
 <p>If a <a href="../result/ResultError-class.html">ResultError</a> is thrown during the execution of the given function, which
-occurs when an <a href="../result/Err-class.html">Err</a> value is unwrapped, the <a href="../result/Err-class.html">Err</a> that was unwrapped will be returned.</p>
+occurs when an <a href="../result/Err/Err.html">Err()</a> value is unwrapped, the <a href="../result/Err/Err.html">Err()</a> that was unwrapped will be returned.</p>
 <p>Behaves identically to <a href="../result/propagateResult.html">propagateResult</a> but async, returning <code>Furture&lt;Result&lt;T, E&gt;&gt;</code>
 rather than <code>Result&lt;T, E&gt;</code>.</p>
 </section>
@@ -82,7 +82,7 @@ rather than <code>Result&lt;T, E&gt;</code>.</p>
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">Future&lt;Result&lt;T, E&gt;&gt; propagateResultAsync&lt;T, E&gt;(FutureOr&lt;Result&lt;T, E&gt;&gt; Function() fn) async {
 	try { return await fn(); }
-	catch (err) { return _handleResultError(err); }
+	catch (e) { return _handleResultError(e); }
 }</code></pre>
 </section>
 

@@ -22,8 +22,8 @@ sealed class Result<T, E> {
 	/// Creates a `Result` from the given nullable `T` value
 	///
 	/// Creates:
-	/// - [Ok] using the given `T` value if the given `T` value is not null
-	/// - [Err] using the given `E` value if the given `T` value is null
+	/// - [Ok] using the given `T` value if the given `T` value is not null.
+	/// - [Err] using the given `E` value if the given `T` value is null.
 	factory Result.from(T? value, E err) => switch (value) {
 		null => Err(err),
 		_ => Ok(value)
@@ -35,7 +35,7 @@ sealed class Result<T, E> {
 	/// same AND their runtime types are the same.
 	///
 	/// This means that `Ok<int, String>(1)` is not equal to `Ok<int, int>(1)` even
-	/// though they are both `Ok(1)`
+	/// though they are both `Ok(1)`.
 	@override
 	operator ==(Object other) => switch (other) {
 		Ok(value: T value) when isOk() && compareRuntimeTypes(this, other) => value == unwrap(),
@@ -49,51 +49,65 @@ sealed class Result<T, E> {
 		Err(value: E err) => Object.hash('Err()', err)
 	};
 
-	/// Returns whether or not this result is an `Ok` result
+	/// Returns whether or not this result is an `Ok` result.
 	bool isOk() => switch (this) {
 		Ok() => true,
 		Err() => false,
 	};
 
-	/// Returns whether or not this result is an `Err` result
+	/// Returns whether or not this result is an `Err` result.
 	bool isErr() => !isOk();
 
 	/// Returns the held [Ok] value.
 	///
-	/// Throws a [ResultError] if this is an [Err] value
+	/// Throws a [ResultError] if this is an [Err] value.
 	T unwrap() => switch (this) {
 		Ok(value: T value) => value,
-		Err() => throw ResultError('called `Result#unwrap()` on an `Err` value', this)
+		Err() => throw ResultError('called `Result#unwrap()` on an `Err` value', original: this)
 	};
 
-	/// Returns the held value of an [Ok], or the given value if this `Result` is an [Err] value
+	/// Returns the held value of an [Ok], or the given value if this `Result` is an [Err] value.
 	T unwrapOr(T orValue) => switch (this) {
 		Ok(value: T value) => value,
 		Err() => orValue
 	};
 
-	/// Returns the held value of an [Err]. Throws a [ResultError] if this is an [Ok] value
+	/// Returns the held value of an [Err]. Throws a [ResultError] if this is an [Ok] value.
 	E unwrapErr() => switch (this) {
 		Ok(value: T value) => throw ResultError(value),
 		Err(value: E value) => value
 	};
 
+	/// Returns the held [Ok] value. Throws a [ResultError] with the given `message`
+	/// and held [Err] value if this `Result` is [Err].
+	T expect(String message) => switch (this) {
+		Ok(value: T value) => value,
+		Err(value: E value) => throw ResultError('$message: $value', isExpected: true)
+	};
+
+	/// Returns the held [Err] value. Throws a [ResultError] with the given `message`
+	/// and held [Ok] value if this `Result` is [Ok].
+	E expectErr(String message) => switch (this) {
+		Ok(value: T value) => throw ResultError('$message: $value', isExpected: true),
+		Err(value: E value) => value
+	};
+
 	/// Returns a `Result` value as [Err<U, E>] if this `Result` is [Err<T, E>],
-	/// otherwise returns `other`
+	/// otherwise returns `other`.
 	Result<U, E> and<U>(Result<U, E> other) => switch (this) {
 		Ok() => other,
 		Err(value: E value) => Err(value)
 	};
 
 	/// Returns a `Result` value as [Err<U, E>] if this `Result` is [Err<T, E>],
-	/// otherwise calls `fn` with the held value and returns the returned `Result`
+	/// otherwise calls `fn` with the held value and returns the returned `Result`.
 	Result<U, E> andThen<U>(Result<U, E> Function(T) fn) => switch (this) {
 		Ok(value: T value) => fn(value),
 		Err(value: E value) => Err(value)
 	};
 
 	/// Returns a `Result` value as [Ok<T, F>] if this `Result` is [Ok<T, E>],
-	/// otherwise returns `other`
+	/// otherwise returns `other`.
 	Result<T, F> or<F>(Result<T, F> other) => switch (this) {
 		Ok(value: T value) => Ok(value),
 		Err() => other
@@ -101,7 +115,7 @@ sealed class Result<T, E> {
 
 	/// Returns a `Result` value as [Ok<T, F>] if this `Result` is [Ok<T, E>],
 	/// otherwise calls `fn` with the held [Err] value and returns the returned
-	/// `Result`
+	/// `Result`.
 	Result<T, F> orElse<F>(Result<T, F> Function(E) fn) => switch (this) {
 		Ok(value: T value) => Ok(value),
 		Err(value: E value) => fn(value)
@@ -111,8 +125,8 @@ sealed class Result<T, E> {
 	/// held value.
 	///
 	/// Returns:
-	/// - [Ok<U, E>] if this `Result` is [Ok<T, E>]
-	/// - [Err<U, E>] if this `Result` is [Err<T, E>]
+	/// - [Ok<U, E>] if this `Result` is [Ok<T, E>].
+	/// - [Err<U, E>] if this `Result` is [Err<T, E>].
 	Result<U, E> map<U>(U Function(T) mapFn) => switch (this) {
 		Ok(value: T value) => Ok(mapFn(value)),
 		Err(value: E value) => Err(value)
@@ -122,8 +136,8 @@ sealed class Result<T, E> {
 	/// held value.
 	///
 	/// Returns:
-	/// - [Ok<T, F>] if this [Result] is [Ok<T, E>]
-	/// - [Err<T, F>] if this [Result] is [Err<T, E>]
+	/// - [Ok<T, F>] if this [Result] is [Ok<T, E>].
+	/// - [Err<T, F>] if this [Result] is [Err<T, E>].
 	Result<T, F> mapErr<F>(F Function(E) mapFn) => switch (this) {
 		Ok(value: T value) => Ok(value),
 		Err(value: E value) => Err(mapFn(value))

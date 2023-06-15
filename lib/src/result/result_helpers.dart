@@ -55,7 +55,7 @@ Future<Result<T, E>> propagateResultAsync<T, E>(FutureOr<Result<T, E>> Function(
 	catch (error) { return _handleResultError(error); }
 }
 
-/// Attempt to propagate the given error if it is a ResultError, otherwise rethrow
+/// Attempt to propagate the given error if it is a ResultError, otherwise rethrow.
 Result<T, E> _handleResultError<T, E>(dynamic error) {
 	// Attempt to propagate original Err()
 	if (error is ResultError) {
@@ -64,9 +64,10 @@ Result<T, E> _handleResultError<T, E>(dynamic error) {
 			throw error;
 		}
 
-		// Rethrow if we don't have an original Err(). This shouldn't happen except
-		// in the above case, but just as a precaution
-		if (error.original == null) {
+		// Rethrow if this error is from Result#expect()/expectErr(), or if we don't
+		// have an original Err(). The latter should never happen except in the above
+		// case but just as a precaution we'll check for it
+		if (error.isExpected || error.original == null) {
 			throw error;
 		}
 

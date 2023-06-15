@@ -75,6 +75,16 @@ void main () {
 			expect(() => Ok('foo bar baz').unwrapErr(), throwsA(TypeMatcher<ResultError>()));
 		});
 
+		test('Should return expected values from Result#expect()', () {
+			expect(Ok(1).expect('should be Ok()'), equals(1));
+			expect(() => Err('foo').expect('Should be Ok()'), throwsA(TypeMatcher<ResultError>()));
+		});
+
+		test('Should return expected values from Result#expectErr()', () {
+			expect(Err(1).expectErr('should be Err()'), equals(1));
+			expect(() => Ok('foo').expectErr('Should be Err()'), throwsA(TypeMatcher<ResultError>()));
+		});
+
 		test('Should return expected values for Result#and()', () {
 			Result<int, String> foo = Ok(1);
 			Result<int, String> bar = Err('bar');

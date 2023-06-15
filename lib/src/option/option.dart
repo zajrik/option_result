@@ -14,14 +14,14 @@ part of option;
 /// ```
 sealed class Option<T> {
 	/// The `Option` class cannot be instantiated directly. use [Some], [None], or
-	/// [Option.from] to create instances of `Option` variants
+	/// [Option.from] to create instances of `Option` variants.
 	Option();
 
 	/// Creates an `Option` from the given nullable `T` value.
 	///
 	/// Creates:
-	/// - [Some] if the given value is not null
-	/// - [None] if the given value is null
+	/// - [Some] if the given value is not null.
+	/// - [None] if the given value is null.
 	factory Option.from(T? value) => switch (value) {
 		null => None(),
 		_ => Some(value)
@@ -33,7 +33,7 @@ sealed class Option<T> {
 	/// same AND their runtime types are the same.
 	///
 	/// This means that a `None<int>()` is not equal to `None<String>()` even though
-	/// they are both `None()`
+	/// they are both `None()`.
 	@override
 	operator ==(Object other) => switch (other) {
 		Some(value: T value) when isSome() && compareRuntimeTypes(this, other) => value == unwrap(),
@@ -47,50 +47,57 @@ sealed class Option<T> {
 		None() => Object.hash('None()', runtimeType)
 	};
 
-	/// Returns whether or not this `Option` holds a value ([Some])
+	/// Returns whether or not this `Option` holds a value ([Some]).
 	bool isSome() => switch (this) {
 		Some() => true,
 		None() => false
 	};
 
-	/// Returns whether or not this `Option` holds no value ([None])
+	/// Returns whether or not this `Option` holds no value ([None]).
 	bool isNone() => !isSome();
 
 	/// Returns the held [Some] value.
 	///
-	/// Throws an [OptionError] if this `Option` is a [None] value
+	/// Throws an [OptionError] if this `Option` is a [None] value.
 	T unwrap() => switch (this) {
 		Some(value: T value) => value,
 		None() => throw OptionError('called `Option#unwrap()` on a `None` value')
 	};
 
-	/// Returns the held [Some] value, or the given value if this `Option` is a [None] value
+	/// Returns the held [Some] value, or the given value if this `Option` is a [None] value.
 	T unwrapOr(T orValue) => switch (this) {
 		Some(value: T value) => value,
 		None() => orValue
 	};
 
-	/// Returns [None<U>] if this `Option` is [None<T>], otherwise returns `other`
+	/// Returns the held [Some] value, or throws [OptionError] with the given message
+	/// if this `Option` is [None].
+	T expect(String message) => switch (this) {
+		Some(value: T value) => value,
+		None() => throw OptionError(message, isExpected: true)
+	};
+
+	/// Returns [None<U>] if this `Option` is [None<T>], otherwise returns `other`.
 	Option<U> and<U>(Option<U> other) => switch (this) {
 		Some() => other,
 		None() => None()
 	};
 
 	/// Returns [None<U>] if this `Option` is [None<T>], otherwise calls `fn` with
-	/// the held value and returns the returned `Option``
+	/// the held value and returns the returned `Option`.
 	Option<U> andThen<U>(Option<U> Function(T) fn) => switch (this) {
 		Some(value: T value) => fn(value),
 		None() => None()
 	};
 
-	/// Returns this `Option` if this `Option` is [Some<T>], otherwise returns `other`
+	/// Returns this `Option` if this `Option` is [Some<T>], otherwise returns `other`.
 	Option<T> or(Option<T> other) => switch (this) {
 		Some() => this,
 		None() => other
 	};
 
 	/// Returns this `Option` if this `Option` is [Some<T>], otherwise calls `fn`
-	/// and returns the returned `Option`
+	/// and returns the returned `Option`.
 	Option<T> orElse(Option<T> Function() fn) => switch (this) {
 		Some() => this,
 		None() => fn()
@@ -112,8 +119,8 @@ sealed class Option<T> {
 	/// held value.
 	///
 	/// Returns:
-	/// - [Some<U>] if this `Option` is [Some<T>]
-	/// - [None<U>] if this `Option` is [None]
+	/// - [Some<U>] if this `Option` is [Some<T>].
+	/// - [None<U>] if this `Option` is [None].
 	Option<U> map<U>(U Function(T) mapFn) => switch (this) {
 		Some(value: T value) => Some(mapFn(value)),
 		None() => None()
@@ -143,8 +150,8 @@ sealed class Option<T> {
 	/// two values.
 	///
 	/// Returns:
-	/// - `(Some<U>, Some<V>)` if this `Option` is [Some<(U, V)>]
-	/// - `(None<U>, None<V>)` if this `Option` is anything else
+	/// - `(Some<U>, Some<V>)` if this `Option` is [Some<(U, V)>].
+	/// - `(None<U>, None<V>)` if this `Option` is anything else.
 	///
 	/// **Note**: You will need to provide type parameters for this method either
 	/// implicitly via declaring the type of the variable you assign the returned

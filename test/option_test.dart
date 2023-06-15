@@ -36,11 +36,6 @@ void main() {
 			expect(Some(foo) == Some(foo), equals(true));
 		});
 
-		test('Should create expected Options via Option.from()', () {
-			expect(Option.from('foo'), equals(Some('foo')));
-			expect(Option<int>.from(null), equals(None<int>()));
-		});
-
 		test('Should not equate Options with equatable values but mismatched types', () {
 			Option<int> foo = Some(1);
 			Option<num> bar = Some(1);
@@ -54,8 +49,18 @@ void main() {
 			expect(foo2 == bar2, equals(false));
 		});
 
+		test('Should create expected Options via Option.from()', () {
+			expect(Option.from('foo'), equals(Some('foo')));
+			expect(Option<int>.from(null), equals(None<int>()));
+		});
+
 		test('Should throw OptionError when unwrapping None()', () {
 			expect(() => None().unwrap(), throwsA(TypeMatcher<OptionError>()));
+		});
+
+		test('Should return expected values from Option#expect()', () {
+			expect(Some(1).expect('should be Some()'), equals(1));
+			expect(() => None().expect('Should be Some()'), throwsA(TypeMatcher<OptionError>()));
 		});
 
 		test('Should return expected values for Option#and()', () {

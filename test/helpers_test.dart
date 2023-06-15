@@ -30,6 +30,14 @@ void main() {
 			expect(() => propagateOptionAsync(() => throw ArgumentError('bar')), throwsArgumentError);
 			expect(() => propagateOptionAsync(() => throw FormatException('baz')), throwsFormatException);
 		});
+
+		test('Should rethrow OptionErrors thrown by Option#expect() inside propagateOption', () {
+			expect(() => propagateOption(() => None().expect('foo')), throwsA(TypeMatcher<OptionError>()));
+		});
+
+		test('Should rethrow OptionErrors thrown by Option#expect() inside propagateOptionAsync', () {
+			expect(() => propagateOptionAsync(() => None().expect('foo')), throwsA(TypeMatcher<OptionError>()));
+		});
 	});
 
 	group('Result helpers:', () {
@@ -103,6 +111,22 @@ void main() {
 				Result<bool, int> bar = Err(3);
 				return Ok(foo.unwrap() + (bar.unwrap() ? 1 : 2));
 			}), throwsA(TypeMatcher<ResultError>()));
+		});
+
+		test('Should rethrow ResultErrors thrown by Result#expect() inside propagateOption', () {
+			expect(() => propagateResult(() => Err('foo').expect('bar')), throwsA(TypeMatcher<ResultError>()));
+		});
+
+		test('Should rethrow ResultErrors thrown by Result#expect() inside propagateOptionAsync', () {
+			expect(() => propagateResultAsync(() => Err('foo').expect('bar')), throwsA(TypeMatcher<ResultError>()));
+		});
+
+		test('Should rethrow ResultErrors thrown by Result#expectErr() inside propagateOption', () {
+			expect(() => propagateResult(() => Ok('foo').expectErr('bar')), throwsA(TypeMatcher<ResultError>()));
+		});
+
+		test('Should rethrow ResultErrors thrown by Result#expectErr() inside propagateOptionAsync', () {
+			expect(() => propagateResultAsync(() => Ok('foo').expectErr('bar')), throwsA(TypeMatcher<ResultError>()));
 		});
 	});
 }

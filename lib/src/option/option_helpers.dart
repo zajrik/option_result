@@ -35,8 +35,7 @@ part of option;
 /// Note that any other type of thrown error/exception other than [OptionError] will be rethrown.
 Option<T> propagateOption<T>(Option<T> Function() fn) {
 	try { return fn(); }
-	on OptionError { return None(); }
-	catch (_) { rethrow; }
+	catch (error) { return _handleOptionError(error); }
 }
 
 /// Executes the given function asynchronously, returning the returned [Option] value.
@@ -48,6 +47,20 @@ Option<T> propagateOption<T>(Option<T> Function() fn) {
 /// rather than `Option<T>`.
 Future<Option<T>> propagateOptionAsync<T>(FutureOr<Option<T>> Function() fn) async {
 	try { return await fn(); }
-	on OptionError { return None(); }
-	catch (_) { rethrow; }
+	catch (error) { return _handleOptionError(error); }
+}
+
+/// Propagate `None()` on `OptionError` unless the error came from `expect()`.
+Option<T> _handleOptionError<T>(dynamic error) {
+	if (error is OptionError) {
+		// If the error is expected (came from expect()), rethrow it
+		if (error.isExpected) {
+			throw error;
+		}
+
+		// Otherwise return None()
+		return None();
+	}
+
+	throw error;
 }

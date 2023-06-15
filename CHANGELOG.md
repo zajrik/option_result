@@ -1,7 +1,7 @@
 ## 0.0.1-dev-4
 
-- Add `Option#and()`, `andThen()`
-- Add `Result#and()`, `andThen()`
+- Add `Option#and()`, `andThen()`, `or()`, `orElse()`
+- Add `Result#and()`, `andThen()`, `or()`, `orElse()`
 
 ## 0.0.1-dev-3
 

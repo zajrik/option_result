@@ -75,26 +75,48 @@ void main () {
 			expect(() => Ok('foo bar baz').unwrapErr(), throwsA(TypeMatcher<ResultError>()));
 		});
 
-		test('Should return expected values for Option#and()', () {
+		test('Should return expected values for Result#and()', () {
 			Result<int, String> foo = Ok(1);
-			Result<int, String> bar = Err('foo');
+			Result<int, String> bar = Err('bar');
 
 			expect(foo.and(Ok(2)), equals(Ok<int, String>(2)));
-			expect(bar.and(Ok(2)), equals(Err<int, String>('foo')));
+			expect(bar.and(Ok(2)), equals(Err<int, String>('bar')));
 
 			expect(foo.and(Ok('foo')), equals(Ok<String, String>('foo')));
-			expect(bar.and(Ok('baz')), equals(Err<String, String>('foo')));
+			expect(bar.and(Ok('baz')), equals(Err<String, String>('bar')));
 		});
 
-		test('Should return expected values for Option#andThen()', () {
+		test('Should return expected values for Result#andThen()', () {
 			Result<int, String> foo = Ok(1);
-			Result<int, String> bar = Err('foo');
+			Result<int, String> bar = Err('bar');
 
 			expect(foo.andThen((value) => Ok(value * 2)), equals(Ok<int, String>(2)));
-			expect(bar.andThen((value) => Ok(value * 2)), equals(Err<int, String>('foo')));
+			expect(bar.andThen((value) => Ok(value * 2)), equals(Err<int, String>('bar')));
 
 			expect(foo.andThen((value) => Ok(value.toString())), equals(Ok<String, String>('1')));
-			expect(bar.andThen((value) => Ok(value.toString())), equals(Err<String, String>('foo')));
+			expect(bar.andThen((value) => Ok(value.toString())), equals(Err<String, String>('bar')));
+		});
+
+		test('Should return expected values for Result#or()', () {
+			Result<int, String> foo = Ok(1);
+			Result<int, String> bar = Err('bar');
+
+			expect(foo.or(Ok<int, String>(2)), equals(Ok<int, String>(1)));
+			expect(bar.or(Ok<int, String>(2)), equals(Ok<int, String>(2)));
+
+			expect(foo.or(Err(2)), equals(Ok<int, int>(1)));
+			expect(bar.or(Err(2)), equals(Err<int, int>(2)));
+		});
+
+		test('Should return expected values for Result#orElse()', () {
+			Result<int, String> foo = Ok(1);
+			Result<int, String> bar = Err('bar');
+
+			expect(foo.orElse((value) => Err('$value baz')), equals(Ok<int, String>(1)));
+			expect(bar.orElse((value) => Err('$value baz')), equals(Err<int, String>('bar baz')));
+
+			expect(foo.orElse((_) => Err(2)), equals(Ok<int, int>(1)));
+			expect(bar.orElse((_) => Err(2)), equals(Err<int, int>(2)));
 		});
 
 		test('Should return expected results for Result#map()', () {

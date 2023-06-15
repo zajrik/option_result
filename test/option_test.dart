@@ -80,6 +80,26 @@ void main() {
 			expect(bar.andThen((value) => Some(value.toString())), equals(None<String>()));
 		});
 
+		test('Should return expected values for Option#or()', () {
+			Option<int> foo = None();
+			Option<int> bar = Some(1);
+			Option<int> baz = None();
+
+			expect(foo.or(bar), equals(Some(1)));
+			expect(bar.or(Some(2)), equals(Some(1)));
+			expect(foo.or(baz), equals(None<int>()));
+		});
+
+		test('Should return expected values for Option#orElse()', () {
+			Option<int> foo = None();
+			Option<int> bar = Some(1);
+			Option<int> baz = None();
+
+			expect(foo.orElse(() => Some(2)), equals(Some(2)));
+			expect(bar.orElse(() => Some(2)), equals(Some(1)));
+			expect(baz.orElse(() => None()), equals(None<int>()));
+		});
+
 		test('Should return expected values for Option#filter()', () {
 			Option<int> foo = Some(5);
 

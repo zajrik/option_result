@@ -66,30 +66,45 @@ sealed class Result<T, E> {
 		Err() => throw ResultError('called `Result#unwrap()` on an `Err` value', this)
 	};
 
-	/// Returns the held [Ok] value, or the given value if this `Result` is an [Err] value
+	/// Returns the held value of an [Ok], or the given value if this `Result` is an [Err] value
 	T unwrapOr(T orValue) => switch (this) {
 		Ok(value: T value) => value,
 		Err() => orValue
 	};
 
-	/// Returns the held [Err] value. Throws a [ResultError] if this is an [Ok] value
+	/// Returns the held value of an [Err]. Throws a [ResultError] if this is an [Ok] value
 	E unwrapErr() => switch (this) {
 		Ok(value: T value) => throw ResultError(value),
 		Err(value: E value) => value
 	};
 
-	/// Returns the held [Err] value as [Err<U, E>] if this `Result` is [Err<T, E>],
+	/// Returns a `Result` value as [Err<U, E>] if this `Result` is [Err<T, E>],
 	/// otherwise returns `other`
 	Result<U, E> and<U>(Result<U, E> other) => switch (this) {
 		Ok() => other,
 		Err(value: E value) => Err(value)
 	};
 
-	/// Returns the held [Err] value as [Err<U, E>] if this `Result` is [Err<T, E>],
-	/// otherwise calls `fn` with the held value and returns the returned value
+	/// Returns a `Result` value as [Err<U, E>] if this `Result` is [Err<T, E>],
+	/// otherwise calls `fn` with the held value and returns the returned `Result`
 	Result<U, E> andThen<U>(Result<U, E> Function(T) fn) => switch (this) {
 		Ok(value: T value) => fn(value),
 		Err(value: E value) => Err(value)
+	};
+
+	/// Returns a `Result` value as [Ok<T, F>] if this `Result` is [Ok<T, E>],
+	/// otherwise returns `other`
+	Result<T, F> or<F>(Result<T, F> other) => switch (this) {
+		Ok(value: T value) => Ok(value),
+		Err() => other
+	};
+
+	/// Returns a `Result` value as [Ok<T, F>] if this `Result` is [Ok<T, E>],
+	/// otherwise calls `fn` with the held [Err] value and returns the returned
+	/// `Result`
+	Result<T, F> orElse<F>(Result<T, F> Function(E) fn) => switch (this) {
+		Ok(value: T value) => Ok(value),
+		Err(value: E value) => fn(value)
 	};
 
 	/// Maps a `Result<T, E>` to a `Result<U, E>` using the given function with the

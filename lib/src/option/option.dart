@@ -77,10 +77,23 @@ sealed class Option<T> {
 	};
 
 	/// Returns [None<U>] if this `Option` is [None<T>], otherwise calls `fn` with
-	/// the held value and returns the returned value
+	/// the held value and returns the returned `Option``
 	Option<U> andThen<U>(Option<U> Function(T) fn) => switch (this) {
 		Some(value: T value) => fn(value),
 		None() => None()
+	};
+
+	/// Returns this `Option` if this `Option` is [Some<T>], otherwise returns `other`
+	Option<T> or(Option<T> other) => switch (this) {
+		Some() => this,
+		None() => other
+	};
+
+	/// Returns this `Option` if this `Option` is [Some<T>], otherwise calls `fn`
+	/// and returns the returned `Option`
+	Option<T> orElse(Option<T> Function() fn) => switch (this) {
+		Some() => this,
+		None() => fn()
 	};
 
 	/// Filters this `Option` based on the given `predicate` function.

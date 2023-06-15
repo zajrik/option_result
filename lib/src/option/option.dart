@@ -43,7 +43,7 @@ sealed class Option<T> {
 
 	@override
 	int get hashCode => switch (this) {
-		Some(value: T value) => value.hashCode,
+		Some(value: T value) => Object.hash('Some()', value),
 		None() => Object.hash('None()', runtimeType)
 	};
 
@@ -75,8 +75,8 @@ sealed class Option<T> {
 	/// Returns [None] if this `Option` is [None], otherwise calls `predicate` with
 	/// the held value, returning:
 	///
-	/// - `Some(value)` if `predicate` returns true (where `value` is the held value).
-	/// - `None()` if `predicate` returns `false`.
+	/// - [Some<T>] if `predicate` returns `true`.
+	/// - [None<T>] if `predicate` returns `false`.
 	Option<T> filter(bool Function(T) predicate) => switch (this) {
 		Some(value: T value) => predicate(value) ? this : None(),
 		None() => this
@@ -91,6 +91,53 @@ sealed class Option<T> {
 	Option<U> map<U>(U Function(T) mapFn) => switch (this) {
 		Some(value: T value) => Some(mapFn(value)),
 		None() => None()
+	};
+
+	/// Zips this `Option` with another `Option`.
+	///
+	/// Returns:
+	/// - [Some<(T, U)>] if this `Option` is [Some<T>] and `other` is [Some<U>].
+	/// - [None<(T, U)>] otherwise.
+	Option<(T, U)> zip<U>(Option<U> other) => switch ((this, other)) {
+		(Some(value: T a), Some(value: U b)) => Some((a, b)),
+		_ => None()
+	};
+
+	/// Zips this `Option` with another `Option` using the given function.
+	///
+	/// Returns:
+	/// - [Some<V>] if this `Option` is [Some<T>] and `other` is [Some<U>].
+	/// - [None<V>] otherwise.
+	Option<V> zipWith<U, V>(Option<U> other, V Function(T, U) zipFn) => switch ((this, other)) {
+		(Some(value: T a), Some(value: U b)) => Some(zipFn(a, b)),
+		_ => None()
+	};
+
+	/// Unzips this `Option` if this `Option` contains a `Record` consisting of
+	/// two values.
+	///
+	/// Returns:
+	/// - `(Some<U>, Some<V>)` if this `Option` is [Some<(U, V)>]
+	/// - `(None<U>, None<V>)` if this `Option` is anything else
+	///
+	/// **Note**: You will need to provide type parameters for this method either
+	/// implicitly via declaring the type of the variable you assign the returned
+	/// value to, or explicitly via the type parameters of the method itself, otherwise
+	/// the compiler will just assume it returns `(Option<dynamic>, Option<dynamic>)`.
+	///
+	/// ```dart
+	/// Option<(int, int)> foo = Some((1, 2));
+	/// (Option<int>, Option<int>) bar = foo.unzip();
+	/// // or
+	/// var foo = foo.unzip<int, int>();
+	/// ```
+	///
+	/// Dart does not have a way (that I'm aware of) to convey this limitation at
+	/// compile-time like Rust does via limiting the implementation to only `Option`
+	/// values that contain a 2-value tuple (`Record`, in Dart's case).
+	(Option<U>, Option<V>) unzip<U, V>() => switch (this) {
+		Some(value: (U a, V b)) => (Some(a), Some(b)),
+		_ => (None(), None())
 	};
 }
 

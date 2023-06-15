@@ -77,5 +77,51 @@ void main() {
 			// different references to visibly identical lists aren't equatable
 			expect(foo.map((value) => [value]).unwrap(), equals([5]));
 		});
+
+		test('Should return expected values from Option#zip()', () {
+			Option<(int, String)> zipped = Some(1).zip(Some('foo'));
+
+			expect(zipped, equals(Some((1, 'foo'))));
+			expect(Some(1).zip(None<int>()), equals(None<(int, int)>()));
+		});
+
+		test('Should return expected values from Option#zipWith()', () {
+			Option<int> x = Some(1);
+			Option<int> y = Some(2);
+
+			expect(x.zipWith(y, Point.new), equals(Some(Point(1, 2))));
+		});
+
+		test('Should return expected values from Option#unzip()', () {
+			Option<(int, String)> zipped = Some((1, 'foo'));
+
+			expect(zipped.unzip<int, String>(), equals((Some(1), Some('foo'))));
+			expect(Some(1).unzip(), equals((None(), None())));
+			expect(None<(int, int)>().unzip<int, int>(), equals((None<int>(), None<int>())));
+
+			// Test implicit and explicit typing on unzip()
+			Option<(int, int)> foo = None();
+			(Option<int>, Option<int>) bar = foo.unzip();
+			var baz = foo.unzip<int, int>();
+
+			expect(bar, equals((None<int>(), None<int>())));
+			expect(baz, equals((None<int>(), None<int>())));
+		});
 	});
+}
+
+class Point {
+	int x;
+	int y;
+
+	Point(this.x, this.y);
+
+	@override
+	operator ==(Object other) => switch (other) {
+		Point(x: int otherX, y: int otherY) => x == otherX && y == otherY,
+		_ => false
+	};
+
+	@override
+	int get hashCode => Object.hash(x, y);
 }

@@ -45,8 +45,8 @@ sealed class Result<T, E> {
 
 	@override
 	int get hashCode => switch (this) {
-		Ok(value: T value) => value.hashCode,
-		Err(value: E err) => err.hashCode
+		Ok(value: T value) => Object.hash('Ok()', value),
+		Err(value: E err) => Object.hash('Err()', err)
 	};
 
 	/// Returns whether or not this result is an `Ok` result

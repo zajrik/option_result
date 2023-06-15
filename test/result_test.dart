@@ -75,6 +75,28 @@ void main () {
 			expect(() => Ok('foo bar baz').unwrapErr(), throwsA(TypeMatcher<ResultError>()));
 		});
 
+		test('Should return expected values for Option#and()', () {
+			Result<int, String> foo = Ok(1);
+			Result<int, String> bar = Err('foo');
+
+			expect(foo.and(Ok(2)), equals(Ok<int, String>(2)));
+			expect(bar.and(Ok(2)), equals(Err<int, String>('foo')));
+
+			expect(foo.and(Ok('foo')), equals(Ok<String, String>('foo')));
+			expect(bar.and(Ok('baz')), equals(Err<String, String>('foo')));
+		});
+
+		test('Should return expected values for Option#andThen()', () {
+			Result<int, String> foo = Ok(1);
+			Result<int, String> bar = Err('foo');
+
+			expect(foo.andThen((value) => Ok(value * 2)), equals(Ok<int, String>(2)));
+			expect(bar.andThen((value) => Ok(value * 2)), equals(Err<int, String>('foo')));
+
+			expect(foo.andThen((value) => Ok(value.toString())), equals(Ok<String, String>('1')));
+			expect(bar.andThen((value) => Ok(value.toString())), equals(Err<String, String>('foo')));
+		});
+
 		test('Should return expected results for Result#map()', () {
 			Result<int, String> foo = Ok(5);
 

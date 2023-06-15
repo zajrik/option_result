@@ -78,6 +78,20 @@ sealed class Result<T, E> {
 		Err(value: E value) => value
 	};
 
+	/// Returns the held [Err] value as [Err<U, E>] if this `Result` is [Err<T, E>],
+	/// otherwise returns `other`
+	Result<U, E> and<U>(Result<U, E> other) => switch (this) {
+		Ok() => other,
+		Err(value: E value) => Err(value)
+	};
+
+	/// Returns the held [Err] value as [Err<U, E>] if this `Result` is [Err<T, E>],
+	/// otherwise calls `fn` with the held value and returns the returned value
+	Result<U, E> andThen<U>(Result<U, E> Function(T) fn) => switch (this) {
+		Ok(value: T value) => fn(value),
+		Err(value: E value) => Err(value)
+	};
+
 	/// Maps a `Result<T, E>` to a `Result<U, E>` using the given function with the
 	/// held value.
 	///

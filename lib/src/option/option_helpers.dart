@@ -44,7 +44,7 @@ Option<T> propagateOption<T>(Option<T> Function() fn) {
 /// If an [OptionError] is thrown during the execution of the given function,
 /// which occurs when a [None] value is unwrapped, [None] will be returned.
 ///
-/// Behaves identically to [propagateOption] but async, returning `Furture<Option<T>>`
+/// Behaves identically to [propagateOption] but async, returning `Future<Option<T>>`
 /// rather than `Option<T>`.
 Future<Option<T>> propagateOptionAsync<T>(FutureOr<Option<T>> Function() fn) async {
 	try { return await fn(); }

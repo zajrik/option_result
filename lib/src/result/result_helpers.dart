@@ -48,7 +48,7 @@ Result<T, E> propagateResult<T, E>(Result<T, E> Function() fn) {
 /// If a [ResultError] is thrown during the execution of the given function, which
 /// occurs when an [Err()] value is unwrapped, the [Err()] that was unwrapped will be returned.
 ///
-/// Behaves identically to [propagateResult] but async, returning `Furture<Result<T, E>>`
+/// Behaves identically to [propagateResult] but async, returning `Future<Result<T, E>>`
 /// rather than `Result<T, E>`.
 Future<Result<T, E>> propagateResultAsync<T, E>(FutureOr<Result<T, E>> Function() fn) async {
 	try { return await fn(); }

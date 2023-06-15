@@ -58,6 +58,28 @@ void main() {
 			expect(() => None().unwrap(), throwsA(TypeMatcher<OptionError>()));
 		});
 
+		test('Should return expected values for Option#and()', () {
+			Option<int> foo = Some(1);
+			Option<int> bar = None();
+
+			expect(foo.and(Some(2)), equals(Some(2)));
+			expect(bar.and(Some(2)), equals(None<int>()));
+
+			expect(foo.and(Some('foo')), equals(Some('foo')));
+			expect(bar.and(Some('foo')), equals(None<String>()));
+		});
+
+		test('Should return expected values for Option#andThen()', () {
+			Option<int> foo = Some(1);
+			Option<int> bar = None();
+
+			expect(foo.andThen((value) => Some(value * 2)), equals(Some(2)));
+			expect(bar.andThen((value) => Some(value * 2)), equals(None<int>()));
+
+			expect(foo.andThen((value) => Some(value.toString())), equals(Some('1')));
+			expect(bar.andThen((value) => Some(value.toString())), equals(None<String>()));
+		});
+
 		test('Should return expected values for Option#filter()', () {
 			Option<int> foo = Some(5);
 

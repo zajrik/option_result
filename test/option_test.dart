@@ -142,14 +142,13 @@ void main() {
 		test('Should return expected values from Option#unzip()', () {
 			Option<(int, String)> zipped = Some((1, 'foo'));
 
-			expect(zipped.unzip<int, String>(), equals((Some(1), Some('foo'))));
-			expect(Some(1).unzip(), equals((None(), None())));
-			expect(None<(int, int)>().unzip<int, int>(), equals((None<int>(), None<int>())));
+			expect(zipped.unzip(), equals((Some(1), Some('foo'))));
+			expect(None<(int, int)>().unzip(), equals((None<int>(), None<int>())));
 
 			// Test implicit and explicit typing on unzip()
 			Option<(int, int)> foo = None();
 			(Option<int>, Option<int>) bar = foo.unzip();
-			var baz = foo.unzip<int, int>();
+			var baz = foo.unzip();
 
 			expect(bar, equals((None<int>(), None<int>())));
 			expect(baz, equals((None<int>(), None<int>())));

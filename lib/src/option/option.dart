@@ -27,6 +27,12 @@ sealed class Option<T> {
 		_ => Some(value)
 	};
 
+	@override
+	int get hashCode => switch (this) {
+		Some(value: T value) => Object.hash('Some()', value),
+		None() => Object.hash('None()', runtimeType)
+	};
+
 	/// Compare equality between two `Option` values.
 	///
 	/// `Option` values are considered equal only if the value they hold is the
@@ -41,11 +47,45 @@ sealed class Option<T> {
 		_ => false
 	};
 
-	@override
-	int get hashCode => switch (this) {
-		Some(value: T value) => Object.hash('Some()', value),
-		None() => Object.hash('None()', runtimeType)
-	};
+	/// Shortcut to call [Option.unwrap()].
+	///
+	/// **Warning**: This is an *unsafe* operation. An [OptionError] will be thrown
+	/// if this operator is used on a [None] value. You can take advantage of this
+	/// safely via [propagateOption]/[propagateOptionAsync] and their respective
+	/// shortcuts ([OptionPropagateShortcut.~]/OptionPropagateShortcutAsync.~).
+	///
+	/// This is as close to analagous to Rust's `?` postfix operator for `Option`
+	/// values as Dart can manage. There are no overrideable postfix operators in
+	/// Dart, sadly, so this won't be as ergonomic as Rust but it's still nicer
+	/// than calling [Option.unwrap()].
+	///
+	/// ```dart
+	/// var foo = Some(1);
+	/// var bar = Some(2);
+	///
+	/// print(~foo + ~bar); // prints: 3
+	/// ```
+	///
+	/// **Note**: if you need to access fields or methods on the held value when
+	/// using `~`, you'll need to use parentheses like so:
+	///
+	/// ```dart
+	/// var opt = Some(1);
+	///
+	/// print((~opt).toString());
+	/// ```
+	///
+	/// Additionally, If you need to perform a bitwise NOT on the held value of
+	/// an `Option`, you have a few choices:
+	///
+	/// ```dart
+	/// var opt = Some(1);
+	///
+	/// print(~(~opt)); // prints: -2
+	/// print(~~opt); // prints: -2
+	/// print(~opt.unwrap()); // prints: -2;
+	/// ```
+	T operator ~() => unwrap();
 
 	/// Returns whether or not this `Option` holds a value ([Some]).
 	bool isSome() => switch (this) {
@@ -56,22 +96,24 @@ sealed class Option<T> {
 	/// Returns whether or not this `Option` holds no value ([None]).
 	bool isNone() => !isSome();
 
-	/// Returns the held [Some] value.
+	/// Returns the held value of this `Option` if it is [Some].
 	///
-	/// Throws an [OptionError] if this `Option` is a [None] value.
+	/// **Warning**: This method is *unsafe*. An [OptionError] will be thrown when
+	/// this method is called if this `Option` is [None].
 	T unwrap() => switch (this) {
 		Some(value: T value) => value,
 		None() => throw OptionError('called `Option#unwrap()` on a `None` value')
 	};
 
-	/// Returns the held [Some] value, or the given value if this `Option` is a [None] value.
+	/// Returns the held value of this `Option` if it is [Some], or the given value
+	/// if this `Option` is [None].
 	T unwrapOr(T orValue) => switch (this) {
 		Some(value: T value) => value,
 		None() => orValue
 	};
 
-	/// Returns the held [Some] value, or throws [OptionError] with the given message
-	/// if this `Option` is [None].
+	/// Returns the held value of this `Option` if it is [Some], or throws [OptionError]
+	/// with the given `message` if this `Option` is [None].
 	T expect(String message) => switch (this) {
 		Some(value: T value) => value,
 		None() => throw OptionError(message, isExpected: true)
@@ -126,11 +168,14 @@ sealed class Option<T> {
 		None() => None()
 	};
 
-	/// Zips this `Option` with another `Option`.
+	/// Zips this `Option` with another `Option`, returning a [Record] of their
+	/// held values.
 	///
 	/// Returns:
 	/// - [Some<(T, U)>] if this `Option` is [Some<T>] and `other` is [Some<U>].
 	/// - [None<(T, U)>] otherwise.
+	///
+	/// See: [OptionUnzip.unzip()] for reversing this operation.
 	Option<(T, U)> zip<U>(Option<U> other) => switch ((this, other)) {
 		(Some(value: T a), Some(value: U b)) => Some((a, b)),
 		_ => None()
@@ -144,33 +189,6 @@ sealed class Option<T> {
 	Option<V> zipWith<U, V>(Option<U> other, V Function(T, U) zipFn) => switch ((this, other)) {
 		(Some(value: T a), Some(value: U b)) => Some(zipFn(a, b)),
 		_ => None()
-	};
-
-	/// Unzips this `Option` if this `Option` contains a `Record` consisting of
-	/// two values.
-	///
-	/// Returns:
-	/// - `(Some<U>, Some<V>)` if this `Option` is [Some<(U, V)>].
-	/// - `(None<U>, None<V>)` if this `Option` is anything else.
-	///
-	/// **Note**: You will need to provide type parameters for this method either
-	/// implicitly via declaring the type of the variable you assign the returned
-	/// value to, or explicitly via the type parameters of the method itself, otherwise
-	/// the compiler will just assume it returns `(Option<dynamic>, Option<dynamic>)`.
-	///
-	/// ```dart
-	/// Option<(int, int)> foo = Some((1, 2));
-	/// (Option<int>, Option<int>) bar = foo.unzip();
-	/// // or
-	/// var foo = foo.unzip<int, int>();
-	/// ```
-	///
-	/// Dart does not have a way (that I'm aware of) to convey this limitation at
-	/// compile-time like Rust does via limiting the implementation to only `Option`
-	/// values that contain a 2-value tuple (`Record`, in Dart's case).
-	(Option<U>, Option<V>) unzip<U, V>() => switch (this) {
-		Some(value: (U a, V b)) => (Some(a), Some(b)),
-		_ => (None(), None())
 	};
 }
 
@@ -203,3 +221,16 @@ class Some<T> extends Option<T> {
 /// }
 /// ```
 class None<T> extends Option<T> {}
+
+/// Provides the `unzip` method to [Option] type values that hold a [Record] of two values.
+extension OptionUnzip<T, U> on Option<(T, U)> {
+	/// Unzips this `Option` if this `Option` holds a [Record] of two values.
+	///
+	/// Returns:
+	/// - `(Some<U>, Some<V>)` if this `Option` is [Some<(U, V)>].
+	/// - `(None<U>, None<V>)` if this `Option` is [None<(U, V)>].
+	(Option<T>, Option<U>) unzip() => switch (this) {
+		Some(value: (T a, U b)) => (Some(a), Some(b)),
+		None() => (None(), None())
+	};
+}

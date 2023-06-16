@@ -28,4 +28,10 @@ void main() {
 		Ok(value: int value) => 'Value is $value',
 		Err(value: String err) => 'Error: $err'
 	});
+
+	Option<int> foo3 = Some(1);
+	Result<int, String> bar3 = Ok(2);
+
+	print(~foo3 + ~bar3);
+	print(None());
 }

@@ -1,3 +1,9 @@
+## 0.0.1-dev-5
+
+- Add `~` operator for unwrapping `Option` and `Result` types
+- Add `~` operator as shortcut for propagating `None()`/`Err()` in functions returning `Option`/`Result`
+- Rework `Option#unzip()` via extension methods to only provide the method on `Option<(T, U)>` values
+
 ## 0.0.1-dev-4
 
 - Add `Option#and()`, `andThen()`, `or()`, `orElse()`, `expect()`

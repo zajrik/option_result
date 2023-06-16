@@ -9,6 +9,12 @@ void main() {
 				Option<int> bar = None();
 				return Some(foo.unwrap() + bar.unwrap());
 			}), equals(None<int>()));
+
+			expect(~() {
+				Option<int> foo = Some(1);
+				Option<int> bar = None();
+				return Some(foo.unwrap() + bar.unwrap());
+			}, equals(None<int>()));
 		});
 
 		test('Should propagate None() via propagateOptionAsync', () async {
@@ -16,6 +22,30 @@ void main() {
 				Option<int> foo = Some(1);
 				Option<int> bar = None();
 				return Some(foo.unwrap() + bar.unwrap());
+			}), equals(None<int>()));
+		});
+
+		test('Should propagate None() via ~ as a propagation shortcut', () {
+			expect(~() => Some(None().unwrap()), equals(None()));
+		});
+
+		test('Should propagate None() via ~ as an async propagation shortcut', () async {
+			expect(await ~() async => Some(None().unwrap()), equals(None()));
+		});
+
+		test('Should propagate None() using ~ in propagateOption', () {
+			expect(propagateOption<int>(() {
+				Option<int> foo = Some(1);
+				Option<int> bar = None();
+				return Some(~foo + ~bar);
+			}), equals(None<int>()));
+		});
+
+		test('Should propagate None() using ~ in propagateOptionAsync', () async {
+			expect(await propagateOptionAsync<int>(() {
+				Option<int> foo = Some(1);
+				Option<int> bar = None();
+				return Some(~foo + ~bar);
 			}), equals(None<int>()));
 		});
 
@@ -55,6 +85,30 @@ void main() {
 				Result<int, String> bar = Err('foo bar baz');
 				return Ok(foo.unwrap() + bar.unwrap());
 			}), equals(Err<int, String>('foo bar baz')));
+		});
+
+		test('Should propagate Err() via ~ as a propagation shortcut', () {
+			expect(~() => Ok<dynamic, String>(Err('foo').unwrap()), equals(Err('foo')));
+		});
+
+		test('Should propagate Err() via ~ as an async propagation shortcut', () async {
+			expect(await ~() async => Ok<dynamic, String>(Err('foo').unwrap()), equals(Err('foo')));
+		});
+
+		test('Should propagate Err() using ~ in propagateResult', () {
+			expect(propagateResult<int, String>(() {
+				Result<int, String> foo = Ok(1);
+				Result<int, String> bar = Err('foo');
+				return Ok(~foo + ~bar);
+			}), equals(Err<int, String>('foo')));
+		});
+
+		test('Should propagate Err() using ~ in propagateResultAsync', () async {
+			expect(await propagateResultAsync<int, String>(() {
+				Result<int, String> foo = Ok(1);
+				Result<int, String> bar = Err('foo');
+				return Ok(~foo + ~bar);
+			}), equals(Err<int, String>('foo')));
 		});
 
 		test('Should rethrow ResultError when erroring on unwrapErr() on Ok() via propagateResult', () {

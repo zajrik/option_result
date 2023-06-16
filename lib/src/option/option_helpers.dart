@@ -13,15 +13,17 @@ part of option;
 /// this function like so:
 ///
 /// ```dart
-/// Option<int> foo = Some(1);
-/// Option<int> bar = None();
-///
 /// Option<int> add(Option<int> a, Option<int> b) => propagateOption(() {
 ///   // The equivalent non-idiomatic Rust return here would be:
 ///   // return Some(a? + b?);
 ///   return Some(a.unwrap() + b.unwrap());
+///
+///   // You can also use the ~ operator as a shortcut for unwrap():
+///   // return Some(~a + ~b);
 /// });
 ///
+/// Option<int> foo = Some(1);
+/// Option<int> bar = None();
 /// Option<int> baz = add(foo, bar);
 ///
 /// // Prints 'There is no value!' due to the OptionError thrown
@@ -33,6 +35,8 @@ part of option;
 /// ```
 ///
 /// Note that any other type of thrown error/exception other than [OptionError] will be rethrown.
+///
+/// See also: [OptionPropagateShortcut.~]
 Option<T> propagateOption<T>(Option<T> Function() fn) {
 	try { return fn(); }
 	catch (error) { return _handleOptionError(error); }
@@ -45,6 +49,8 @@ Option<T> propagateOption<T>(Option<T> Function() fn) {
 ///
 /// Behaves identically to [propagateOption] but async, returning `Future<Option<T>>`
 /// rather than `Option<T>`.
+///
+/// See also: [OptionPropagateShortcutAsync.~]
 Future<Option<T>> propagateOptionAsync<T>(FutureOr<Option<T>> Function() fn) async {
 	try { return await fn(); }
 	catch (error) { return _handleOptionError(error); }
@@ -63,4 +69,60 @@ Option<T> _handleOptionError<T>(dynamic error) {
 	}
 
 	throw error;
+}
+
+/// Provides the `~` shortcut for functions that return [Option] to allow propagating
+/// unwrapped [None] values up the call stack.
+///
+/// See: [OptionPropagateShortcut.~]
+extension OptionPropagateShortcut<T> on Option<T> Function() {
+	/// Shortcut for [propagateOption].
+	///
+	/// Usage:
+	///
+	/// ```dart
+	/// // This function will error at runtime if passed a None() value
+	/// Option<int> add(Option<int> a, Option<int> b) {
+	///   return Some(a.unwrap() + b.unwrap());
+	/// }
+	///
+	/// // For safety, it can be rewritten as:
+	/// Option<int> add(Option<int> a, Option<int> b) => ~() {
+	///   return Some(a.unwrap() + b.unwrap());
+	///
+	///   // You can also use the ~ operator as a shortcut for unwrap():
+	///   // return Some(~a + ~b);
+	/// };
+	///
+	/// // Runtime safety achieved from a mere 8 total characters of syntactical overhead!
+	/// ```
+	Option<T> operator ~() => propagateOption(this);
+}
+
+/// Provides the `~` shortcut for asynchronous functions that return [Option] to
+/// allow propagating unwrapped [None] values up the call stack.
+///
+/// See: [OptionPropagateShortcutAsync.~]
+extension OptionPropagateShortcutAsync<T> on Future<Option<T>> Function() {
+	/// Shortcut for [propagateOptionAsync].
+	///
+	/// Usage:
+	///
+	/// ```dart
+	/// // This function will error at runtime if passed a None() value
+	/// Future<Option<int>> add(Option<int> a, Option<int> b) async {
+	///   return Some(a.unwrap() + b.unwrap());
+	/// }
+	///
+	/// // For safety, it can be rewritten as:
+	/// Future<Option<int>> add(Option<int> a, Option<int> b) => ~() async {
+	///   return Some(a.unwrap() + b.unwrap());
+	///
+	///   // You can also use the ~ operator as a shortcut for unwrap():
+	///   // return Some(~a + ~b);
+	/// };
+	///
+	/// // Runtime safety achieved from a mere 8 total characters of syntactical overhead!
+	/// ```
+	Future<Option<T>> operator ~() => propagateOptionAsync(this);
 }

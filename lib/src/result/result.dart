@@ -29,6 +29,12 @@ sealed class Result<T, E> {
 		_ => Ok(value)
 	};
 
+	@override
+	int get hashCode => switch (this) {
+		Ok(value: T value) => Object.hash('Ok()', value),
+		Err(value: E err) => Object.hash('Err()', err)
+	};
+
 	/// Compare equality between two `Result` values.
 	///
 	/// `Result` values are considered equal only if the value they hold is the
@@ -43,11 +49,45 @@ sealed class Result<T, E> {
 		_ => false
 	};
 
-	@override
-	int get hashCode => switch (this) {
-		Ok(value: T value) => Object.hash('Ok()', value),
-		Err(value: E err) => Object.hash('Err()', err)
-	};
+	/// Shortcut to call [Result.unwrap()].
+	///
+	/// **Warning**: This is an *unsafe* operation. A [ResultError] will be thrown
+	/// if this operator is used on a [None] value. You can take advantage of this
+	/// safely via [propagateResult]/[propagateResultAsync] and their respective
+	/// shortcuts ([ResultPropagateShortcut.~]/ResultPropagateShortcutAsync.~).
+	///
+	/// This is as close to analagous to Rust's `?` postfix operator for `Result`
+	/// values as Dart can manage. There are no overrideable postfix operators in
+	/// Dart, sadly, so this won't be as ergonomic as Rust but it's still nicer
+	/// than calling [Result.unwrap()].
+	///
+	/// ```dart
+	/// var foo = Ok(1);
+	/// var bar = Ok(2);
+	///
+	/// print(~foo + ~bar); // prints: 3
+	/// ```
+	///
+	/// **Note**: if you need to access fields or methods on the held value when
+	/// using `~`, you'll need to use parentheses like so:
+	///
+	/// ```dart
+	/// var res = Ok(1);
+	///
+	/// print((~res).toString());
+	/// ```
+	///
+	/// Additionally, If you need to perform a bitwise NOT on the held value of
+	/// a `Result`, you have a few choices:
+	///
+	/// ```dart
+	/// var res = Ok(1);
+	///
+	/// print(~(~res)); // prints: -2
+	/// print(~~res); // prints: -2
+	/// print(~res.unwrap()); // prints: -2;
+	/// ```
+	T operator ~() => unwrap();
 
 	/// Returns whether or not this result is an `Ok` result.
 	bool isOk() => switch (this) {
@@ -58,35 +98,40 @@ sealed class Result<T, E> {
 	/// Returns whether or not this result is an `Err` result.
 	bool isErr() => !isOk();
 
-	/// Returns the held [Ok] value.
+	/// Returns the held value of this `Result` if it is [Ok].
 	///
-	/// Throws a [ResultError] if this is an [Err] value.
+	/// **Warning**: This method is *unsafe*. A [ResultError] will be thrown when
+	/// this method is called if this `Result` is [Err].
 	T unwrap() => switch (this) {
 		Ok(value: T value) => value,
 		Err() => throw ResultError('called `Result#unwrap()` on an `Err` value', original: this)
 	};
 
-	/// Returns the held value of an [Ok], or the given value if this `Result` is an [Err] value.
+	/// Returns the held value of this `Result` if it is [Ok], or the given value
+	/// if this `Result` is [Err].
 	T unwrapOr(T orValue) => switch (this) {
 		Ok(value: T value) => value,
 		Err() => orValue
 	};
 
-	/// Returns the held value of an [Err]. Throws a [ResultError] if this is an [Ok] value.
+	/// Returns the held value of this `Result` if it is [Err].
+	///
+	/// **Warning**: This method is *unsafe*. A [ResultError] will be thrown when
+	/// this method is called if this `Result` is [Ok].
 	E unwrapErr() => switch (this) {
 		Ok(value: T value) => throw ResultError(value),
 		Err(value: E value) => value
 	};
 
-	/// Returns the held [Ok] value. Throws a [ResultError] with the given `message`
-	/// and held [Err] value if this `Result` is [Err].
+	/// Returns the held value of this `Result` if it is [Ok]. Throws a [ResultError]
+	/// with the given `message` and held [Err] value if this `Result` is [Err].
 	T expect(String message) => switch (this) {
 		Ok(value: T value) => value,
 		Err(value: E value) => throw ResultError('$message: $value', isExpected: true)
 	};
 
-	/// Returns the held [Err] value. Throws a [ResultError] with the given `message`
-	/// and held [Ok] value if this `Result` is [Ok].
+	/// Returns the held value of this `Result` if it is [Err]. Throws a [ResultError]
+	/// with the given `message` and held [Ok] value if this `Result` is [Ok].
 	E expectErr(String message) => switch (this) {
 		Ok(value: T value) => throw ResultError('$message: $value', isExpected: true),
 		Err(value: E value) => value
@@ -100,7 +145,7 @@ sealed class Result<T, E> {
 	};
 
 	/// Returns a `Result` value as [Err<U, E>] if this `Result` is [Err<T, E>],
-	/// otherwise calls `fn` with the held value and returns the returned `Result`.
+	/// otherwise calls `fn` with the held [Ok] value and returns the returned `Result`.
 	Result<U, E> andThen<U>(Result<U, E> Function(T) fn) => switch (this) {
 		Ok(value: T value) => fn(value),
 		Err(value: E value) => Err(value)
@@ -114,8 +159,7 @@ sealed class Result<T, E> {
 	};
 
 	/// Returns a `Result` value as [Ok<T, F>] if this `Result` is [Ok<T, E>],
-	/// otherwise calls `fn` with the held [Err] value and returns the returned
-	/// `Result`.
+	/// otherwise calls `fn` with the held [Err] value and returns the returned `Result`.
 	Result<T, F> orElse<F>(Result<T, F> Function(E) fn) => switch (this) {
 		Ok(value: T value) => Ok(value),
 		Err(value: E value) => fn(value)

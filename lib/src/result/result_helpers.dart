@@ -14,15 +14,17 @@ part of result;
 /// this function like so:
 ///
 /// ```dart
-/// Result<int, String> foo = Ok(1);
-/// Result<int, String> bar = Err('There was an error!');
-///
 /// Result<int, String> add(Result<int, String> a, Result<int, String> b) => propagateResult(() {
 ///   // The equivalent non-idiomatic Rust return here would be:
-///   // return Some(a? + b?);
+///   // return Ok(a? + b?);
 ///   return Ok(a.unwrap() + b.unwrap());
+///
+///   // You can also use the ~ operator as a shortcut for unwrap():
+///   // return Ok(~a + ~b);
 /// });
 ///
+/// Result<int, String> foo = Ok(1);
+/// Result<int, String> bar = Err('There was an error!');
 /// Result<int, String> baz = add(foo, bar);
 ///
 /// // Prints 'Error: There was an error!!' due to the ResultError
@@ -38,6 +40,8 @@ part of result;
 /// to match the `T` of the expected return type of this function, and if the `E`
 /// value type of the propagated [Err()] does not match the expected `E` value type
 /// of this function, a [ResultError] will be thrown.
+///
+/// See also: [ResultPropagateShortcut.~]
 Result<T, E> propagateResult<T, E>(Result<T, E> Function() fn) {
 	try { return fn(); }
 	catch (error) { return _handleResultError(error); }
@@ -50,6 +54,8 @@ Result<T, E> propagateResult<T, E>(Result<T, E> Function() fn) {
 ///
 /// Behaves identically to [propagateResult] but async, returning `Future<Result<T, E>>`
 /// rather than `Result<T, E>`.
+///
+/// See also: [ResultPropagateShortcutAsync.~]
 Future<Result<T, E>> propagateResultAsync<T, E>(FutureOr<Result<T, E>> Function() fn) async {
 	try { return await fn(); }
 	catch (error) { return _handleResultError(error); }
@@ -87,4 +93,60 @@ Result<T, E> _handleResultError<T, E>(dynamic error) {
 
 	// Rethrow any other kind of error
 	throw error;
+}
+
+/// Provides the `~` shortcut for functions that return [Result] to allow propagating
+/// unwrapped [Err] values up the call stack.
+///
+/// See: [ResultPropagateShortcut.~]
+extension ResultPropagateShortcut<T, E> on Result<T, E> Function() {
+	/// Shortcut for [propagateResult].
+	///
+	/// Usage:
+	///
+	/// ```dart
+	/// // This function will error at runtime if passed an Err() value
+	/// Result<int, String> add(Result<int, String> a, Result<int, String> b) {
+	///   return Ok(a.unwrap() + b.unwrap());
+	/// }
+	///
+	/// // For safety, it can be rewritten as:
+	/// Result<int, String> add(Result<int, String> a, Result<int, String> b) => ~() {
+	///   return Ok(a.unwrap() + b.unwrap());
+	///
+	///   // You can also use the ~ operator as a shortcut for unwrap():
+	///   // return Ok(~a + ~b);
+	/// };
+	///
+	/// // Runtime safety achieved from a mere 8 total characters of syntactical overhead!
+	/// ```
+	Result<T, E> operator ~() => propagateResult(this);
+}
+
+/// Provides the `~` shortcut for asynchronous functions that return [Result] to
+/// allow propagating unwrapped [Err] values up the call stack.
+///
+/// See: [ResultPropagateShortcutAsync.~]
+extension ResultPropagateShortcutAsync<T, E> on Future<Result<T, E>> Function() {
+	/// Shortcut for [propagateResultAsync].
+	///
+	/// Usage:
+	///
+	/// ```dart
+	/// // This function will error at runtime if passed an Err() value
+	/// Future<Result<int, String>> add(Result<int, String> a, Result<int, String> b) async {
+	///   return Ok(a.unwrap() + b.unwrap());
+	/// }
+	///
+	/// // For safety, it can be rewritten as:
+	/// Future<Result<int, String>> add(Result<int, String> a, Result<int, String> b) => ~() async {
+	///   return Ok(a.unwrap() + b.unwrap());
+	///
+	///   // You can also use the ~ operator as a shortcut for unwrap():
+	///   // return Ok(~a + ~b);
+	/// };
+	///
+	/// // Runtime safety achieved from a mere 8 total characters of syntactical overhead!
+	/// ```
+	Future<Result<T, E>> operator ~() => propagateResultAsync(this);
 }

@@ -13,8 +13,8 @@ part of option;
 /// });
 /// ```
 sealed class Option<T> {
-	/// The `Option` class cannot be instantiated directly. use [Some], [None], or
-	/// [Option.from] to create instances of `Option` variants.
+	/// The `Option` class cannot be instantiated directly. use [Some()], [None()],
+	/// or [Option.from()] to create instances of `Option` variants.
 	Option();
 
 	/// Creates an `Option` from the given nullable `T` value.
@@ -52,7 +52,7 @@ sealed class Option<T> {
 	/// **Warning**: This is an *unsafe* operation. An [OptionError] will be thrown
 	/// if this operator is used on a [None] value. You can take advantage of this
 	/// safely via [propagateOption]/[propagateOptionAsync] and their respective
-	/// shortcuts ([OptionPropagateShortcut.~]/OptionPropagateShortcutAsync.~).
+	/// shortcuts ([OptionPropagateShortcut.~]/[OptionPropagateShortcutAsync.~]).
 	///
 	/// This is as close to analagous to Rust's `?` postfix operator for `Option`
 	/// values as Dart can manage. There are no overrideable postfix operators in
@@ -222,7 +222,7 @@ class Some<T> extends Option<T> {
 /// ```
 class None<T> extends Option<T> {}
 
-/// Provides the `unzip` method to [Option] type values that hold a [Record] of two values.
+/// Provides the `unzip()` method to [Option] type values that hold a [Record] of two values.
 extension OptionUnzip<T, U> on Option<(T, U)> {
 	/// Unzips this `Option` if this `Option` holds a [Record] of two values.
 	///
@@ -232,5 +232,18 @@ extension OptionUnzip<T, U> on Option<(T, U)> {
 	(Option<T>, Option<U>) unzip() => switch (this) {
 		Some(value: (T a, U b)) => (Some(a), Some(b)),
 		None() => (None(), None())
+	};
+}
+
+/// Provides the `flatten()` method to [Option] type values that hold another [Option]
+extension OptionFlatten<T> on Option<Option<T>> {
+	/// Flattens a nested `Option` type value one level.
+	///
+	/// Returns:
+	/// - [Some<T>] if this `Option` is [Some<Option<T>>]
+	/// - [None<T>] if this `Option` is [None<Option<T>>]
+	Option<T> flatten() => switch (this) {
+		Some(value: Option<T> value) => value,
+		None() => None()
 	};
 }

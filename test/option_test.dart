@@ -153,6 +153,21 @@ void main() {
 			expect(bar, equals((None<int>(), None<int>())));
 			expect(baz, equals((None<int>(), None<int>())));
 		});
+
+		test('Should return expected values from Option#flatten()', () {
+			Option<Option<Option<Option<int>>>> foo = Some(Some(Some(Some(1))));
+
+			// Option.from() here because it won't equate Some<Some<T>> to Option<Option<T>>
+			// but Option<Option<T>> compares fine. I assumed it was from the runtimeType
+			// comparison in == but removing that still doesn't allow equals() to consider
+			// the values the same here despite that fixing == for these cases.
+			expect(foo.flatten(), equals(Option.from(Option.from(Option.from(1)))));
+			expect(foo.flatten().flatten(), equals(Option.from(Option.from(1))));
+			expect(foo.flatten().flatten().flatten(), equals(Option.from(1)));
+
+			// 4 flatten()s won't compile because it's no longer Option<Option<int>> after 3
+			// expect(foo.flatten().flatten().flatten().flatten(), equals(Some(1)));
+		});
 	});
 }
 

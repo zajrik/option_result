@@ -15,8 +15,8 @@ part of result;
 /// });
 /// ```
 sealed class Result<T, E> {
-	/// The `Result` class cannot be instantiated directly. use [Ok], [Error], or
-	/// [Result.from] to create instances of `Result` variants
+	/// The `Result` class cannot be instantiated directly. use [Ok()], [Err()],
+	/// or [Result.from()] to create instances of `Result` variants
 	Result();
 
 	/// Creates a `Result` from the given nullable `T` value
@@ -54,7 +54,7 @@ sealed class Result<T, E> {
 	/// **Warning**: This is an *unsafe* operation. A [ResultError] will be thrown
 	/// if this operator is used on a [None] value. You can take advantage of this
 	/// safely via [propagateResult]/[propagateResultAsync] and their respective
-	/// shortcuts ([ResultPropagateShortcut.~]/ResultPropagateShortcutAsync.~).
+	/// shortcuts ([ResultPropagateShortcut.~]/[ResultPropagateShortcutAsync.~]).
 	///
 	/// This is as close to analagous to Rust's `?` postfix operator for `Result`
 	/// values as Dart can manage. There are no overrideable postfix operators in
@@ -220,4 +220,17 @@ class Err<T, E> extends Result<T, E> {
 	final E value;
 
 	Err(this.value);
+}
+
+/// Provides the `flatten()` method to [Option] type values that hold another [Option]
+extension ResultFlatten<T, E> on Result<Result<T, E>, E> {
+	/// Flattens a nested `Result` type value one level.
+	///
+	/// Returns:
+	/// - [Ok<T, E>] if this `Result` is [Ok<Result<T, E>, E>]
+	/// - [Err<T, E>] if this `Result` is [Err<Result<T, E>. E>]
+	Result<T, E> flatten() => switch (this) {
+		Ok(value: Result<T, E> value) => value,
+		Err(value: E value) => Err(value)
+	};
 }

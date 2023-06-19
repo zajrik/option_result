@@ -76,6 +76,9 @@ Option<T> _handleOptionError<T>(dynamic error) {
 ///
 /// See: [OptionPropagateShortcut.~]
 extension OptionPropagateShortcut<T> on Option<T> Function() {
+	/// Executes the prefixed function, propagating any unwrapped [None()] values
+	/// to the return value of the function.
+	///
 	/// Shortcut for [propagateOption].
 	///
 	/// Usage:
@@ -104,6 +107,9 @@ extension OptionPropagateShortcut<T> on Option<T> Function() {
 ///
 /// See: [OptionPropagateShortcutAsync.~]
 extension OptionPropagateShortcutAsync<T> on Future<Option<T>> Function() {
+	/// Executes the prefixed async function, propagating any unwrapped [None()]
+	/// values to the return value of the function.
+	///
 	/// Shortcut for [propagateOptionAsync].
 	///
 	/// Usage:

@@ -154,5 +154,21 @@ void main () {
 			// different references to visibly identical lists aren't equatable
 			expect(foo.mapErr((value) => [value]).unwrapErr(), equals(['foo']));
 		});
+
+		test('Should return expected values from Result#flatten()', () {
+			Result<Result<Result<Result<int, String>, String>, String>, String> foo = Ok(Ok(Ok(Ok(1))));
+
+			// Result.from() here because it won't equate Ok<Ok<T, E>, E> to Result<Result<T, E>, E>
+			// but Result<Result<T, E>, E> compares fine. I assumed it was from the runtimeType
+			// comparison in == but removing that still doesn't allow equals() to consider
+			// the values the same here despite that fixing == for these cases.
+			expect(foo.flatten().flatten().flatten(), equals(Ok<int, String>(1)));
+			expect(foo.flatten().flatten(), equals(Result.from(Result.from(1, 'foo'), 'bar')));
+			expect(foo.flatten(), equals(Result.from(Result.from(Result.from(1, 'foo'), 'bar'), 'baz')));
+
+			var bar = Ok(Ok(Ok(Ok(1))));
+
+			expect(bar.flatten().flatten().flatten(), equals(Ok(1)));
+		});
 	});
 }

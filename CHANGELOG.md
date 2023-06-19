@@ -1,3 +1,10 @@
+## 0.0.1-dev-6
+
+- Add `Option#flatten()`
+- Add `Result#flatten()`
+- Refactor `~` shortcut for `propagateResult/Async` to return dynamic for ergonomics.
+  - See documentation for more information
+
 ## 0.0.1-dev-5
 
 - Add `~` operator for unwrapping `Option` and `Result` types

@@ -25,7 +25,7 @@ Add the dependency to your `pubspec.yaml` file in your Dart/Flutter project:
 
 ```yaml
 dependencies:
-  option_result: ^0.0.1-dev-5
+  option_result: ^0.0.1-dev-6
 ```
 
 Or via git:
@@ -73,7 +73,7 @@ print(switch (email) {
 
 // Pattern matching with switch is exhaustive for Option and Result, so the compiler
 // will give you warnings/errors to make sure you're providing cases for all potential
-// values for Some()/Ok(), either directly or via a default case, and for Err()/None(),
+// values for Some()/Ok(), either directly or via a default case, and for None()/Err(),
 // again either directly or via a default case
 ```
 

@@ -129,6 +129,21 @@ void main () {
 			expect(bar.orElse((_) => Err(2)), equals(Err<int, int>(2)));
 		});
 
+		test('Should execute the given function and return self as expected in Result#inspect()', () {
+			bool called = false;
+
+			void inspectFn(int value) {
+				called = true;
+			}
+
+			Result<int, String> foo = Ok(1);
+
+			int bar = foo.inspect(inspectFn).unwrap();
+
+			expect(bar, equals(1));
+			expect(called, equals(true));
+		});
+
 		test('Should return expected results for Result#map()', () {
 			Result<int, String> foo = Ok(5);
 

@@ -165,6 +165,45 @@ sealed class Result<T, E> {
 		Err(value: E value) => fn(value)
 	};
 
+	/// Calls the provided function with the contained value if this `Result` is [Ok].
+	///
+	/// ```dart
+	/// Result<int, String> foo = Ok(1);
+	///
+	/// int bar = foo
+	///   .map((value) => value + 2)
+	///   .inspect((value) => print(value)) // prints: 3
+	///   .unwrap();
+	///
+	/// print(bar); // prints: 3
+	Result<T, E> inspect(void Function(T) fn) {
+		if (this case Ok(value: T v)) {
+			fn(v);
+		}
+
+		return this;
+	}
+
+	/// Calls the provided function with the contained error value if this `Result`
+	/// is [Err].
+	///
+	/// ```dart
+	/// Result<int, String> foo = Err('foo');
+	///
+	/// String bar = foo
+	///   .mapErr((value) => value + 'bar')
+	///   .inspectErr((value) => print(value)) // prints: foobar
+	///   .unwrapErr();
+	///
+	/// print(bar); // prints: foobar
+	Result<T, E> inspectErr(void Function(E) fn) {
+		if (this case Err(value: E v)) {
+			fn(v);
+		}
+
+		return this;
+	}
+
 	/// Maps a `Result<T, E>` to a `Result<U, E>` using the given function with the
 	/// held value.
 	///

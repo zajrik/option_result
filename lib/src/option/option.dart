@@ -93,6 +93,17 @@ sealed class Option<T> {
 		None() => false
 	};
 
+	/// Returns whether or not this `Option` holds a value ([Some]) and the held
+	/// value matches the given predicate.
+	///
+	/// Returns:
+	/// - `true` if this `Option` is [Some] and `predicate` returns `true`.
+	/// - `false` if this `Option` is [None], or `predicate` returns `false`
+	bool isSomeAnd(bool Function(T) predicate) => switch (this) {
+		Some(value: T value) => predicate(value),
+		None() => false
+	};
+
 	/// Returns whether or not this `Option` holds no value ([None]).
 	bool isNone() => !isSome();
 
@@ -145,6 +156,41 @@ sealed class Option<T> {
 		None() => fn()
 	};
 
+	/// Returns [Some] if exactly one of this `Option` and `other` is [Some], otherwise
+	/// returns [None].
+	///
+	/// Returns:
+	/// - This `Option` if this `Option` is [Some] and `other` is [None].
+	/// - `other` if this `Option` is [None] and `other` is [Some].
+	/// - [None] otherwise.
+	Option<T> xor(Option<T> other) => switch ((this, other)) {
+		(Some(), None()) => this,
+		(None(), Some()) => other,
+		_ => None()
+	};
+
+	/// Calls the provided function with the contained value if this `Option` is [Some].
+	///
+	/// Returns this `Option`.
+	///
+	/// ```dart
+	/// Option<int> foo = Some(1);
+	///
+	/// int bar = foo
+	///   .map((value) => value + 2)
+	///   .inspect((value) => print(value)) // prints: 3
+	///   .unwrap();
+	///
+	/// print(bar); // prints: 3
+	/// ```
+	Option<T> inspect(void Function(T) fn) {
+		if (this case Some(value: T v)) {
+			fn(v);
+		}
+
+		return this;
+	}
+
 	/// Filters this `Option` based on the given `predicate` function.
 	///
 	/// Returns [None] if this `Option` is [None], otherwise calls `predicate` with
@@ -157,7 +203,7 @@ sealed class Option<T> {
 		None() => this
 	};
 
-	/// Maps an `Option<T>` to an `Option<U>` using the given function with the
+	/// Maps this `Option<T>` to an `Option<U>` using the given function with the
 	/// held value.
 	///
 	/// Returns:
@@ -166,6 +212,53 @@ sealed class Option<T> {
 	Option<U> map<U>(U Function(T) mapFn) => switch (this) {
 		Some(value: T value) => Some(mapFn(value)),
 		None() => None()
+	};
+
+	/// Maps this `Option<T>` to an `Option<U>` using the given function with the
+	/// held value if this `Option<T>` is [Some]. Otherwise returns the provided
+	/// `orValue` as `Some(orValue)`.
+	///
+	/// Values passed for `orValue` are eagerly evaluated. Consider using [Option.mapOrElse()]
+	/// to provide a default that will not be evaluated unless the `Option` is [None].
+	///
+	/// ```dart
+	/// Option<int> a = Some(1);
+	/// Option<int> b = None();
+	///
+	/// print(a.mapOr(5, (val) => val + 1).unwrap()); // prints: 2
+	/// print(b.mapOr(5, (val) => val + 1).unwrap()); // prints: 5
+	/// ```
+	///
+	/// **Note**: Unlike Rust's
+	/// [Option.map_or()](https://doc.rust-lang.org/std/option/enum.Option.html#method.map_or),
+	/// this method returns an `Option` value. Given that [Option.map()] returns
+	/// the mapped `Option` it just made sense for this method to do the same.
+	Option<U> mapOr<U>(U orValue, U Function(T) mapFn) => switch (this) {
+		Some(value: T value) => Some(mapFn(value)),
+		None() => Some(orValue)
+	};
+
+	/// Maps this `Option<T>` to an `Option<U>` using the given `mapFn` function with
+	/// the held value if this `Option` is [Some]. Otherwise returns the result of
+	/// `orFn` as `Some(orFn())`.
+	///
+	/// `orFn` will only be evaluated if this `Option` is [None].
+	///
+	/// ```dart
+	/// Option<int> a = Some(1);
+	/// Option<int> b = None();
+	///
+	/// print(a.mapOrElse(() => 5, (val) => val + 1).unwrap()); // prints: 2
+	/// print(b.mapOrElse(() => 5, (val) => val + 1).unwrap()); // prints: 5
+	/// ```
+	///
+	/// **Note**: Unlike Rust's
+	/// [Option.map_or_else()](https://doc.rust-lang.org/std/option/enum.Option.html#method.map_or_else),
+	/// this method returns an `Option` value. Given that [Option.map()] returns
+	/// the mapped `Option` it just made sense for this method to do the same.
+	Option<U> mapOrElse<U>(U Function() orFn, U Function(T) mapFn) => switch (this) {
+		Some(value: T value) => Some(mapFn(value)),
+		None() => Some(orFn())
 	};
 
 	/// Zips this `Option` with another `Option`, returning a [Record] of their

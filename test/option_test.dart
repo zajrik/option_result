@@ -3,13 +3,6 @@ import 'package:option_result/option.dart';
 
 void main() {
 	group('Option:', () {
-		test('Should return expected values for isSome()/isNone()', () {
-			expect(Some(null).isSome(), equals(true));
-			expect(Some(null).isNone(), equals(false));
-			expect(None().isSome(), equals(false));
-			expect(None().isNone(), equals(true));
-		});
-
 		test('Should hold and unwrap simple values', () {
 			expect(Some('foo bar baz').unwrap(), equals('foo bar baz'));
 			expect(Some(42).unwrap(), equals(42));
@@ -19,11 +12,6 @@ void main() {
 		test('Should hold and unwrap complex values', () {
 			expect(Some({'foo': 'bar', 'baz': 42}).unwrap(), equals({'foo': 'bar', 'baz': 42}));
 			expect(Some(['foo', 'bar', 'baz']).unwrap(), equals(['foo', 'bar', 'baz']));
-		});
-
-		test('Should return expected values from unwrapOr()', () {
-			expect(Some(1).unwrapOr(2), equals(1));
-			expect(None().unwrapOr(2), equals(2));
 		});
 
 		test('Should equate equatable Options', () {
@@ -49,13 +37,34 @@ void main() {
 			expect(foo2 == bar2, equals(false));
 		});
 
+		test('Should throw OptionError when unwrapping None()', () {
+			expect(() => None().unwrap(), throwsA(TypeMatcher<OptionError>()));
+		});
+
+		test('Should return expected values from Option#isSome()', () {
+			expect(Some(null).isSome(), equals(true));
+			expect(None().isSome(), equals(false));
+		});
+
+		test('Should return expected values from Option#isSomeAnd()', () {
+			expect(Some(1).isSomeAnd((value) => value == 1), equals(true));
+			expect(Some(1).isSomeAnd((value) => value >= 2), equals(false));
+			expect(None().isSomeAnd((_) => true), equals(false));
+		});
+
+		test('Should return expected values from Option#isNone()', () {
+			expect(Some(null).isNone(), equals(false));
+			expect(None().isNone(), equals(true));
+		});
+
+		test('Should return expected values from Option#unwrapOr()', () {
+			expect(Some(1).unwrapOr(2), equals(1));
+			expect(None().unwrapOr(2), equals(2));
+		});
+
 		test('Should create expected Options via Option.from()', () {
 			expect(Option.from('foo'), equals(Some('foo')));
 			expect(Option<int>.from(null), equals(None<int>()));
-		});
-
-		test('Should throw OptionError when unwrapping None()', () {
-			expect(() => None().unwrap(), throwsA(TypeMatcher<OptionError>()));
 		});
 
 		test('Should return expected values from Option#expect()', () {
@@ -63,7 +72,7 @@ void main() {
 			expect(() => None().expect('Should be Some()'), throwsA(TypeMatcher<OptionError>()));
 		});
 
-		test('Should return expected values for Option#and()', () {
+		test('Should return expected values from Option#and()', () {
 			Option<int> foo = Some(1);
 			Option<int> bar = None();
 
@@ -74,7 +83,7 @@ void main() {
 			expect(bar.and(Some('foo')), equals(None<String>()));
 		});
 
-		test('Should return expected values for Option#andThen()', () {
+		test('Should return expected values from Option#andThen()', () {
 			Option<int> foo = Some(1);
 			Option<int> bar = None();
 
@@ -85,7 +94,7 @@ void main() {
 			expect(bar.andThen((value) => Some(value.toString())), equals(None<String>()));
 		});
 
-		test('Should return expected values for Option#or()', () {
+		test('Should return expected values from Option#or()', () {
 			Option<int> foo = None();
 			Option<int> bar = Some(1);
 			Option<int> baz = None();
@@ -95,7 +104,7 @@ void main() {
 			expect(foo.or(baz), equals(None<int>()));
 		});
 
-		test('Should return expected values for Option#orElse()', () {
+		test('Should return expected values from Option#orElse()', () {
 			Option<int> foo = None();
 			Option<int> bar = Some(1);
 			Option<int> baz = None();
@@ -105,14 +114,40 @@ void main() {
 			expect(baz.orElse(() => None()), equals(None<int>()));
 		});
 
-		test('Should return expected values for Option#filter()', () {
+		test('Should return expected values from Option#xor()', () {
+			Option<int> a = Some(1);
+			Option<int> b = None();
+			Option<int> c = Some(2);
+
+			expect(a.xor(b), equals(Some(1)));
+			expect(b.xor(c), equals(Some(2)));
+			expect(a.xor(c), equals(None<int>()));
+			expect(b.xor(b), equals(None<int>()));
+		});
+
+		test('Should execute the given function and return self as expected in Option#inspect()', () {
+			bool called = false;
+
+			void inspectFn(int value) {
+				called = true;
+			}
+
+			Option<int> foo = Some(1);
+
+			int bar = foo.inspect(inspectFn).unwrap();
+
+			expect(bar, equals(1));
+			expect(called, equals(true));
+		});
+
+		test('Should return expected values from Option#filter()', () {
 			Option<int> foo = Some(5);
 
 			expect(foo.filter((value) => value < 10), equals(Some(5)));
 			expect(foo.filter((value) => value > 6), equals(None<int>()));
 		});
 
-		test('Should return expected values for Option#map()', () {
+		test('Should return expected values from Option#map()', () {
 			Option<int> foo = Some(5);
 
 			expect(foo.map((value) => value * 10), equals(Some(50)));
@@ -123,6 +158,22 @@ void main() {
 			// Check the wrapped List directly because two Options holding
 			// different references to visibly identical lists aren't equatable
 			expect(foo.map((value) => [value]).unwrap(), equals([5]));
+		});
+
+		test('Should return expected values from Option#mapOr()', () {
+			Option<int> a = Some(1);
+			Option<int> b = None();
+
+			expect(a.mapOr(5, (val) => val + 1), equals(Some(2)));
+			expect(b.mapOr(5, (val) => val + 1), equals(Some(5)));
+		});
+
+		test('Should return expected values from Option#mapOrElse()', () {
+			Option<int> a = Some(1);
+			Option<int> b = None();
+
+			expect(a.mapOrElse(() => 5, (val) => val + 1), equals(Some(2)));
+			expect(b.mapOrElse(() => 5, (val) => val + 1), equals(Some(5)));
 		});
 
 		test('Should return expected values from Option#zip()', () {

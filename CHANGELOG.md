@@ -1,3 +1,8 @@
+## 0.0.1-dev-7
+
+- Add `Option#inspect()`, `xor()`, `isSomeAnd()`, `mapOr()`, `mapOrElse()`
+- Add `Result#inspect()`, `inspectErr()`
+
 ## 0.0.1-dev-6
 
 - Add `Option#flatten()`

@@ -3,20 +3,13 @@ import 'package:option_result/result.dart';
 
 void main () {
 	group('Result:', () {
-		test('Should return expected values for isOk()/isErr()', () {
-			expect(Ok(null).isOk(), equals(true));
-			expect(Ok(null).isErr(), equals(false));
-			expect(Err(null).isOk(), equals(false));
-			expect(Err(null).isErr(), equals(true));
-		});
-
 		test('Should hold and unwrap simple Ok values', () {
 			expect(Ok('foo bar baz').unwrap(), equals('foo bar baz'));
 			expect(Ok(42).unwrap(), equals(42));
 			expect(Ok(false).unwrap(), equals(false));
 		});
 
-		test('Should hold and unwrap simple Err values (unwrapErr)', () {
+		test('Should hold and unwrap simple Err values', () {
 			expect(Err('foo bar baz').unwrapErr(), equals('foo bar baz'));
 			expect(Err(42).unwrapErr(), equals(42));
 			expect(Err(false).unwrapErr(), equals(false));
@@ -27,14 +20,14 @@ void main () {
 			expect(Ok(['foo', 42, true]).unwrap(), equals(['foo', 42, true]));
 		});
 
-		test('Should hold and unwrap complex Err values (unwrapErr)', () {
+		test('Should hold and unwrap complex Err values', () {
 			expect(Err({'foo': 'bar', 'baz': 42}).unwrapErr(), equals({'foo': 'bar', 'baz': 42}));
 			expect(Err(['foo', 42, true]).unwrapErr(), equals(['foo', 42, true]));
 		});
 
-		test('Should return expected values from unwrapOr()', () {
-			expect(Ok(1).unwrapOr(2), equals(1));
-			expect(Err(1).unwrapOr(2), equals(2));
+		test('Should create expected Results via Result.from()', () {
+			expect(Result.from('foo', 'err'), equals(Ok<String, String>('foo')));
+			expect(Result<String, String>.from(null, 'err'), equals(Err<String, String>('err')));
 		});
 
 		test('Should equate equatable Results', () {
@@ -62,17 +55,44 @@ void main () {
 			expect(foo == bar, equals(false));
 		});
 
-		test('Should create expected Results via Result.from()', () {
-			expect(Result.from('foo', 'err'), equals(Ok<String, String>('foo')));
-			expect(Result<String, String>.from(null, 'err'), equals(Err<String, String>('err')));
-		});
-
 		test('Should throw ResultError when unwrapping Err()', () {
 			expect(() => Err('foo bar baz').unwrap(), throwsA(TypeMatcher<ResultError>()));
 		});
 
 		test('Should throw ResultError with unwrapErr() on Ok()', () {
 			expect(() => Ok('foo bar baz').unwrapErr(), throwsA(TypeMatcher<ResultError>()));
+		});
+
+		test('Should return expected values from Result#isOk()', () {
+			expect(Ok(null).isOk(), equals(true));
+			expect(Err(null).isOk(), equals(false));
+		});
+
+		test('Should return expected values from Result#isOkAnd()', () {
+			expect(Ok(1).isOkAnd((value) => value == 1), equals(true));
+			expect(Ok(1).isOkAnd((value) => value >= 2), equals(false));
+			expect(Err(1).isOkAnd((_) => true), equals(false));
+		});
+
+		test('Should return expected values from Result#isErr()', () {
+			expect(Ok(null).isErr(), equals(false));
+			expect(Err(null).isErr(), equals(true));
+		});
+
+		test('Should return expected values from Result#isErrAnd()', () {
+			expect(Err(1).isErrAnd((value) => value == 1), equals(true));
+			expect(Err(1).isErrAnd((value) => value >= 2), equals(false));
+			expect(Ok(1).isErrAnd((_) => true), equals(false));
+		});
+
+		test('Should return expected values from Result#unwrapOr()', () {
+			expect(Ok(1).unwrapOr(2), equals(1));
+			expect(Err(1).unwrapOr(2), equals(2));
+		});
+
+		test('Should return expected values from Result#unwrapOrElse()', () {
+			expect(Ok(1).unwrapOrElse(() => 2), equals(1));
+			expect(Err(1).unwrapOrElse(() => 2), equals(2));
 		});
 
 		test('Should return expected values from Result#expect()', () {
@@ -85,7 +105,7 @@ void main () {
 			expect(() => Ok('foo').expectErr('Should be Err()'), throwsA(TypeMatcher<ResultError>()));
 		});
 
-		test('Should return expected values for Result#and()', () {
+		test('Should return expected values from Result#and()', () {
 			Result<int, String> foo = Ok(1);
 			Result<int, String> bar = Err('bar');
 
@@ -96,7 +116,7 @@ void main () {
 			expect(bar.and(Ok('baz')), equals(Err<String, String>('bar')));
 		});
 
-		test('Should return expected values for Result#andThen()', () {
+		test('Should return expected values from Result#andThen()', () {
 			Result<int, String> foo = Ok(1);
 			Result<int, String> bar = Err('bar');
 
@@ -107,7 +127,7 @@ void main () {
 			expect(bar.andThen((value) => Ok(value.toString())), equals(Err<String, String>('bar')));
 		});
 
-		test('Should return expected values for Result#or()', () {
+		test('Should return expected values from Result#or()', () {
 			Result<int, String> foo = Ok(1);
 			Result<int, String> bar = Err('bar');
 
@@ -118,7 +138,7 @@ void main () {
 			expect(bar.or(Err(2)), equals(Err<int, int>(2)));
 		});
 
-		test('Should return expected values for Result#orElse()', () {
+		test('Should return expected values from Result#orElse()', () {
 			Result<int, String> foo = Ok(1);
 			Result<int, String> bar = Err('bar');
 
@@ -132,7 +152,7 @@ void main () {
 		test('Should execute the given function and return self as expected in Result#inspect()', () {
 			bool called = false;
 
-			void inspectFn(int value) {
+			void inspectFn(_) {
 				called = true;
 			}
 
@@ -144,7 +164,22 @@ void main () {
 			expect(called, equals(true));
 		});
 
-		test('Should return expected results for Result#map()', () {
+		test('Should execute the given function and return self as expected in Result#inspectErr()', () {
+			bool called = false;
+
+			void inspectFn(_) {
+				called = true;
+			}
+
+			Result<int, String> foo = Err('foo');
+
+			String bar = foo.inspectErr(inspectFn).unwrapErr();
+
+			expect(bar, equals('foo'));
+			expect(called, equals(true));
+		});
+
+		test('Should return expected values from Result#map()', () {
 			Result<int, String> foo = Ok(5);
 
 			expect(foo.map((value) => value * 10), equals(Ok<int, String>(50)));
@@ -157,7 +192,23 @@ void main () {
 			expect(foo.map((value) => [value]).unwrap(), equals([5]));
 		});
 
-		test('Should return expected results for Result#mapErr()', () {
+		test('Should return expected values from Result#mapOr()', () {
+			Result<int, String> a = Ok(1);
+			Result<int, String> b = Err('foo');
+
+			expect(a.mapOr(5, (val) => val + 1), equals(Ok<int, String>(2)));
+			expect(b.mapOr(5, (val) => val + 1), equals(Ok<int, String>(5)));
+		});
+
+		test('Should return expected values from Result#mapOrElse()', () {
+			Result<int, String> a = Ok(1);
+			Result<int, String> b = Err('foo');
+
+			expect(a.mapOrElse(() => 5, (val) => val + 1), equals(Ok<int, String>(2)));
+			expect(b.mapOrElse(() => 5, (val) => val + 1), equals(Ok<int, String>(5)));
+		});
+
+		test('Should return expected values from Result#mapErr()', () {
 			Result<int, String> foo = Err('foo');
 
 			expect(foo.mapErr((value) => value * 3), equals(Err<int, String>('foofoofoo')));

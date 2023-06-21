@@ -123,6 +123,13 @@ sealed class Option<T> {
 		None() => orValue
 	};
 
+	/// Returns the held value of this `Option` if it is [Some], or returns the
+	/// returned value from `elseFn` if this `Option` is [None].
+	T unwrapOrElse(T Function() elseFn) => switch (this) {
+		Some(value: T value) => value,
+		None() => elseFn()
+	};
+
 	/// Returns the held value of this `Option` if it is [Some], or throws [OptionError]
 	/// with the given `message` if this `Option` is [None].
 	T expect(String message) => switch (this) {

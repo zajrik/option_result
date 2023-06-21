@@ -1,3 +1,8 @@
+## 0.0.1-dev-8
+
+- Add `Option#unwrapOrElse()`
+- Add `Result#unwrapOrElse()`, `isOkAnd()`, `isErrAnd()`, `mapOr()`, `mapOrElse()`
+
 ## 0.0.1-dev-7
 
 - Add `Option#inspect()`, `xor()`, `isSomeAnd()`, `mapOr()`, `mapOrElse()`

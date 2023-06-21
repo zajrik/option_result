@@ -14,6 +14,11 @@ void main() {
 			expect(Some(['foo', 'bar', 'baz']).unwrap(), equals(['foo', 'bar', 'baz']));
 		});
 
+		test('Should create expected Options via Option.from()', () {
+			expect(Option.from('foo'), equals(Some('foo')));
+			expect(Option<int>.from(null), equals(None<int>()));
+		});
+
 		test('Should equate equatable Options', () {
 			expect(Some('foo') == Some('foo'), equals(true));
 			expect(None() == None(), equals(true));
@@ -62,9 +67,9 @@ void main() {
 			expect(None().unwrapOr(2), equals(2));
 		});
 
-		test('Should create expected Options via Option.from()', () {
-			expect(Option.from('foo'), equals(Some('foo')));
-			expect(Option<int>.from(null), equals(None<int>()));
+		test('Should return expected values from Option#unwrapOrElse()', () {
+			expect(Some(1).unwrapOrElse(() => 2), equals(1));
+			expect(None().unwrapOrElse(() => 2), equals(2));
 		});
 
 		test('Should return expected values from Option#expect()', () {
@@ -148,6 +153,10 @@ void main() {
 		});
 
 		test('Should return expected values from Option#map()', () {
+			Option<int> bar = None();
+
+			expect(bar.map((value) => value + 1), equals(None<int>()));
+
 			Option<int> foo = Some(5);
 
 			expect(foo.map((value) => value * 10), equals(Some(50)));
@@ -158,6 +167,7 @@ void main() {
 			// Check the wrapped List directly because two Options holding
 			// different references to visibly identical lists aren't equatable
 			expect(foo.map((value) => [value]).unwrap(), equals([5]));
+
 		});
 
 		test('Should return expected values from Option#mapOr()', () {

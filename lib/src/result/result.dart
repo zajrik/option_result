@@ -89,14 +89,36 @@ sealed class Result<T, E> {
 	/// ```
 	T operator ~() => unwrap();
 
-	/// Returns whether or not this result is an `Ok` result.
+	/// Returns whether or not this `Result` is [Ok].
 	bool isOk() => switch (this) {
 		Ok() => true,
 		Err() => false,
 	};
 
-	/// Returns whether or not this result is an `Err` result.
+	/// Returns whether or not this `Result` is [Ok] and that the held value matches
+	/// the given predicate.
+	///
+	/// Returns:
+	/// - `true` if this `Result` is [Ok] and `predicate` returns `true`.
+	/// - `false` if this `Result` is [Err], or `predicate` returns `false`
+	bool isOkAnd(bool Function(T) predicate) => switch (this) {
+		Ok(value: T value) => predicate(value),
+		Err() => false
+	};
+
+	/// Returns whether or not this `Result` is [Err].
 	bool isErr() => !isOk();
+
+	/// Returns whether or not this `Result` is [Err] and that the held error value
+	/// matches the given predicate.
+	///
+	/// Returns:
+	/// - `true` if this `Result` is [Err] and `predicate` returns `true`.
+	/// - `false` if this `Result` is [Ok], or `predicate` returns `false`
+	bool isErrAnd(bool Function(E) predicate) => switch (this) {
+		Ok() => false,
+		Err(value: E value) => predicate(value)
+	};
 
 	/// Returns the held value of this `Result` if it is [Ok].
 	///
@@ -112,6 +134,13 @@ sealed class Result<T, E> {
 	T unwrapOr(T orValue) => switch (this) {
 		Ok(value: T value) => value,
 		Err() => orValue
+	};
+
+	/// Returns the held value of this `Result` if it is [Ok], or returns the
+	/// returned value from `elseFn` if this `Result` is [Err].
+	T unwrapOrElse(T Function() elseFn) => switch (this) {
+		Ok(value: T value) => value,
+		Err() => elseFn()
 	};
 
 	/// Returns the held value of this `Result` if it is [Err].
@@ -215,6 +244,53 @@ sealed class Result<T, E> {
 		Err(value: E value) => Err(value)
 	};
 
+	/// Maps a `Result<T, E>` to a `Result<U, E>` using the given function with the
+	/// held value if the `Result<T, E>` is [Ok]. Otherwise returns the provided
+	/// `orValue` as `Ok(orValue)`.
+	///
+	/// Values passed for `orValue` are eagerly evaluated. Consider using [Result.mapOrElse()]
+	/// to provide a default that will not be evaluated unless the `Result` is [Ok].
+	///
+	/// ```dart
+	/// Result<int, String> a = Ok(1);
+	/// Result<int, String> b = Err('foo');
+	///
+	/// print(a.mapOr(5, (val) => val + 1).unwrap()); // prints: 2
+	/// print(b.mapOr(5, (val) => val + 1).unwrap()); // prints: 5
+	/// ```
+	///
+	/// **Note**: Unlike Rust's
+	/// [Result.map_or()](https://doc.rust-lang.org/std/result/enum.Result.html#method.map_or),
+	/// this method returns a `Result` value. Given that [Result.map()] returns
+	/// the mapped `Result` it just made sense for this method to do the same.
+	Result<U, E> mapOr<U>(U orValue, U Function(T) mapFn) => switch (this) {
+		Ok(value: T value) => Ok(mapFn(value)),
+		Err() => Ok(orValue)
+	};
+
+	/// Maps a `Result<T, E>` to a `Result<U, E>` using the given `mapFn` function with
+	/// the held value if the `Result` is [Ok]. Otherwise returns the result of
+	/// `orFn` as `Ok(orFn())`.
+	///
+	/// `orFn` will only be evaluated if this `Result` is [Err].
+	///
+	/// ```dart
+	/// Result<int, String> a = Ok(1);
+	/// Result<int, String> b = Err('foo');
+	///
+	/// print(a.mapOrElse(() => 5, (val) => val + 1).unwrap()); // prints: 2
+	/// print(b.mapOrElse(() => 5, (val) => val + 1).unwrap()); // prints: 5
+	/// ```
+	///
+	/// **Note**: Unlike Rust's
+	/// [Result.map_or_else()](https://doc.rust-lang.org/std/result/enum.Result.html#method.map_or_else),
+	/// this method returns a `Result` value. Given that [Result.map()] returns
+	/// the mapped `Result` it just made sense for this method to do the same.
+	Result<U, E> mapOrElse<U>(U Function() orFn, U Function(T) mapFn) => switch (this) {
+		Ok(value: T value) => Ok(mapFn(value)),
+		Err() => Ok(orFn())
+	};
+
 	/// Maps a `Result<T, E>` to a `Result<T, F>` using the given function with the
 	/// held value.
 	///
@@ -261,7 +337,7 @@ class Err<T, E> extends Result<T, E> {
 	Err(this.value);
 }
 
-/// Provides the `flatten()` method to [Option] type values that hold another [Option]
+/// Provides the `flatten()` method to [Result] type values that hold another [Result]
 extension ResultFlatten<T, E> on Result<Result<T, E>, E> {
 	/// Flattens a nested `Result` type value one level.
 	///

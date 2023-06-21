@@ -8,3 +8,7 @@ pubspec.lock
 
 # Ignore generated docs to keep commit changes cleaner
 **/doc/api/
+
+# Ignore test coverage artifacts
+build/
+coverage/

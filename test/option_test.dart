@@ -3,6 +3,11 @@ import 'package:option_result/option.dart';
 
 void main() {
 	group('Option:', () {
+		test('Should provide a hashCode', () {
+			expect(Some(1).hashCode, equals(Object.hash('Some()', 1)));
+			expect(None().hashCode, equals(Object.hash('None()', None().runtimeType)));
+		});
+
 		test('Should hold and unwrap simple values', () {
 			expect(Some('foo bar baz').unwrap(), equals('foo bar baz'));
 			expect(Some(42).unwrap(), equals(42));
@@ -150,6 +155,10 @@ void main() {
 
 			expect(foo.filter((value) => value < 10), equals(Some(5)));
 			expect(foo.filter((value) => value > 6), equals(None<int>()));
+
+			Option<int> bar = None();
+
+			expect(bar.filter((value) => value < 10), equals(None<int>()));
 		});
 
 		test('Should return expected values from Option#map()', () {
@@ -196,8 +205,10 @@ void main() {
 		test('Should return expected values from Option#zipWith()', () {
 			Option<int> x = Some(1);
 			Option<int> y = Some(2);
+			Option<int> z = None();
 
 			expect(x.zipWith(y, Point.new), equals(Some(Point(1, 2))));
+			expect(x.zipWith(z, Point.new), equals(None<Point>()));
 		});
 
 		test('Should return expected values from Option#unzip()', () {
@@ -228,6 +239,20 @@ void main() {
 
 			// 4 flatten()s won't compile because it's no longer Option<Option<int>> after 3
 			// expect(foo.flatten().flatten().flatten().flatten(), equals(Some(1)));
+
+			Option<Option<int>> bar = None();
+
+			expect(bar.flatten(), equals(None<int>()));
+		});
+	});
+
+	group('OptionError:', () {
+		test('Should return expected values from ResultError#toString()', () {
+			OptionError foo = OptionError(null);
+			OptionError bar = OptionError('bar');
+
+			expect(foo.toString(), equals('OptionError'));
+			expect(bar.toString(), equals('OptionError: bar'));
 		});
 	});
 }

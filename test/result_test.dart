@@ -3,6 +3,11 @@ import 'package:option_result/result.dart';
 
 void main () {
 	group('Result:', () {
+		test('Should provide a hashCode', () {
+			expect(Ok(1).hashCode, equals(Object.hash('Ok()', 1)));
+			expect(Err(1).hashCode, equals(Object.hash('Err()', 1)));
+		});
+
 		test('Should hold and unwrap simple Ok values', () {
 			expect(Ok('foo bar baz').unwrap(), equals('foo bar baz'));
 			expect(Ok(42).unwrap(), equals(42));
@@ -190,6 +195,10 @@ void main () {
 			// Check the wrapped List directly because two Results holding
 			// different references to visibly identical lists aren't equatable
 			expect(foo.map((value) => [value]).unwrap(), equals([5]));
+
+			Result<int, String> bar = Err('bar');
+
+			expect(bar.map((value) => value.toString()), equals(Err<String, String>('bar')));
 		});
 
 		test('Should return expected values from Result#mapOr()', () {
@@ -235,6 +244,20 @@ void main () {
 			var bar = Ok(Ok(Ok(Ok(1))));
 
 			expect(bar.flatten().flatten().flatten(), equals(Ok(1)));
+
+			Result<Result<int, String>, String> baz = Err('baz');
+
+			expect(baz.flatten(), equals(Err<int, String>('baz')));
+		});
+	});
+
+	group('ResultError:', () {
+		test('Should return expected values from ResultError#toString()', () {
+			ResultError foo = ResultError(null);
+			ResultError bar = ResultError('bar');
+
+			expect(foo.toString(), equals('ResultError'));
+			expect(bar.toString(), equals('ResultError: bar'));
 		});
 	});
 }

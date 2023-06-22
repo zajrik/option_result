@@ -1,5 +1,5 @@
 import 'package:test/test.dart';
-import 'package:option_result/result.dart';
+import 'package:option_result/option_result.dart';
 
 void main () {
 	group('Result:', () {
@@ -248,6 +248,34 @@ void main () {
 			Result<Result<int, String>, String> baz = Err('baz');
 
 			expect(baz.flatten(), equals(Err<int, String>('baz')));
+		});
+
+		test('Should return expected values from Result#ok()', () {
+			Result<int, String> foo = Ok(1);
+			Result<int, String> bar = Err('bar');
+
+			expect(foo.ok(), equals(Some(1)));
+			expect(bar.ok(), equals(None<int>()));
+		});
+
+		test('Should return expected values from Result#err()', () {
+			Result<int, String> foo = Ok(1);
+			Result<int, String> bar = Err('bar');
+
+			expect(foo.err(), equals(None<String>()));
+			expect(bar.err(), equals(Some('bar')));
+		});
+
+		test('Should return expected values from Result#transpose()', () {
+			Result<Option<int>, String> foo = Ok(Some(1));
+			Result<Option<int>, String> bar = Ok(None());
+			Result<Option<int>, String> baz = Err('baz');
+
+			print(bar.runtimeType);
+
+			expect(foo.transpose(), equals(Some<Result<int, String>>(Ok(1))));
+			expect(bar.transpose(), equals(None<Result<int, String>>()));
+			expect(baz.transpose(), equals(Some<Result<int, String>>(Err('baz'))));
 		});
 	});
 

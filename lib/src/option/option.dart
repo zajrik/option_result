@@ -382,6 +382,13 @@ extension OptionTranspose<T, E> on Option<Result<T, E>> {
 	/// - [Ok<Some<T>, E>] if this `Option` is [Some<Ok<T, E>>].
 	/// - [Err<T, E>] if this `Option` is [Some<Err<T, E>>].
 	/// - [Ok<None<T>, E>] if this `Option` is [None<Result<T, E>>].
+	///
+	/// ```dart
+	/// Option<Result<int, String>> a = Some(Ok(1));
+	/// Result<Option<int>, String> b = Ok(Some(1));
+	///
+	/// print(a.transpose() == b); // prints: true
+	/// ```
 	Result<Option<T>, E> transpose() => switch (this) {
 		Some(value: Ok(value: T value)) => Ok(Some(value)),
 		Some(value: Err(value: E value)) => Err(value),

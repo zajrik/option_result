@@ -1,3 +1,7 @@
+## 0.0.1-dev-9
+
+- Add `Result#transpose()`, `ok()`, `err()`
+
 ## 0.0.1-dev-8
 
 - Add `Option#unwrapOrElse()`, `okOr()`, `okOrElse()`, `transpose()`

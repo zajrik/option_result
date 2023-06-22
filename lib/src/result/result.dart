@@ -301,6 +301,28 @@ sealed class Result<T, E> {
 		Ok(value: T value) => Ok(value),
 		Err(value: E value) => Err(mapFn(value))
 	};
+
+	/// Converts this `Result<T, E>` into an [Option<T>], discarding the held error
+	/// value if this is [Err].
+	///
+	/// Returns:
+	/// - [Some<T>] if this `Result` is [Ok<T, E>].
+	/// - [None<T>] if this `Result` is [Err<T, E>].
+	Option<T> ok() => switch (this) {
+		Ok(value: T value) => Some(value),
+		Err() => None()
+	};
+
+	/// Converts this `Result<T, E>` into an [Option<E>], discarding the held value
+	/// if this is [Ok].
+	///
+	/// Returns:
+	/// - [Some<E>] if this `Result` is [Err<T, E>].
+	/// - [None<E>] if this `Result` is [Ok<T, E>].
+	Option<E> err() => switch (this) {
+		Ok() => None(),
+		Err(value: E value) => Some(value)
+	};
 }
 
 /// A type that represents the successful [Result] of something.
@@ -337,7 +359,7 @@ class Err<T, E> extends Result<T, E> {
 	Err(this.value);
 }
 
-/// Provides the `flatten()` method to [Result] type values that hold another [Result]
+/// Provides the `flatten()` method to [Result] type values that hold another [Result].
 extension ResultFlatten<T, E> on Result<Result<T, E>, E> {
 	/// Flattens a nested `Result` type value one level.
 	///
@@ -347,5 +369,27 @@ extension ResultFlatten<T, E> on Result<Result<T, E>, E> {
 	Result<T, E> flatten() => switch (this) {
 		Ok(value: Result<T, E> value) => value,
 		Err(value: E value) => Err(value)
+	};
+}
+
+/// Provides the `transpose()` method to [Result] type values that hold an [Option] value.
+extension ResultTranspose<T, E> on Result<Option<T>, E> {
+	/// Transposes this `Result<Option<T>, E>` into an [Option<Result<T, E>>].
+	///
+	/// Returns:
+	/// - [Some<Ok<T, E>>] if this `Result` is [Ok<Some<T>, E>].
+	/// - [None<Result<T, E>>] if this `Result` is [Ok<None<T>, E>].
+	/// - [Some<Err<T, E>>] if this `Result` is [Err<Option<T>, E>].
+	///
+	/// ```dart
+	/// Result<Option<int>, String> a = Ok(Some(1));
+	/// Option<Result<int, String>> b = Some(Ok(1));
+	///
+	/// print(a.transpose() == b); // prints: true
+	/// ```
+	Option<Result<T, E>> transpose() => switch (this) {
+		Ok(value: Some(value: T value)) => Some(Ok(value)),
+		Ok(value: None()) => None(),
+		Err(value: E value) => Some(Err(value))
 	};
 }

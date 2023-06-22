@@ -11,7 +11,7 @@ and the Flutter guide for
 [developing packages and plugins](https://flutter.dev/developing-packages).
 -->
 
-## option_result ![Test status](https://github.com/zajrik/option_result/actions/workflows/test.yaml/badge.svg) [![codecov](https://codecov.io/gh/zajrik/option_result/branch/main/graph/badge.svg?token=OMC42NL71B)](https://codecov.io/gh/zajrik/option_result)
+## option_result [![Test status](https://github.com/zajrik/option_result/actions/workflows/test.yaml/badge.svg)](https://github.com/zajrik/option_result/actions/workflows/test.yaml) [![codecov](https://codecov.io/gh/zajrik/option_result/branch/main/graph/badge.svg?token=OMC42NL71B)](https://codecov.io/gh/zajrik/option_result)
 `option_result` is a lightweight Dart library for `Option` and `Result` types. Inspired
 by Rust, leveraging Dart 3's new pattern matching features and `sealed class` exhaustive
 switch mechanics to provide as close to Rust's `Option`/`Result` experience as possible

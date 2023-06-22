@@ -226,7 +226,7 @@ sealed class Option<T> {
 	/// `orValue` as `Some(orValue)`.
 	///
 	/// Values passed for `orValue` are eagerly evaluated. Consider using [Option.mapOrElse()]
-	/// to provide a default that will not be evaluated unless the `Option` is [None].
+	/// to provide a default that will not be evaluated unless this `Option` is [None].
 	///
 	/// ```dart
 	/// Option<int> a = Some(1);
@@ -290,6 +290,32 @@ sealed class Option<T> {
 		(Some(value: T a), Some(value: U b)) => Some(zipFn(a, b)),
 		_ => None()
 	};
+
+	/// Converts this `Option<T>` into a [Result<T, E>] using the given `err` if [None].
+	///
+	/// Values passed for `err` are eagerly evaluated. Consider using [Option.okOrElse()]
+	/// to provide an error value that will not be evaluated unless this `Option` is [None].
+	///
+	/// Returns:
+	/// - [Ok<T, E>] if this `Option` is [Some<T>].
+	/// - [Err<T, E>] using `err` if this `Option` is [None<T>].
+	Result<T, E> okOr<E>(E err) => switch (this) {
+		Some(value: T value) => Ok(value),
+		None() => Err(err)
+	};
+
+	/// Converts this `Option<T>` into a [Result<T, E>] using the returned value
+	/// from `elseFn` if [None].
+	///
+	/// `elseFn` will only be evaluated if this `Option` is [None].
+	///
+	/// Returns:
+	/// - [Ok<T, E>] if this `Option` is [Some<T>].
+	/// - [Err<T, E>] using the value returned by `elseFn` if this `Option` is [None<T>].
+	Result<T, E> okOrElse<E>(E Function() elseFn) => switch (this) {
+		Some(value: T value) => Ok(value),
+		None() => Err(elseFn())
+	};
 }
 
 /// A type that represents the presence of a value of type `T`.
@@ -335,15 +361,30 @@ extension OptionUnzip<T, U> on Option<(T, U)> {
 	};
 }
 
-/// Provides the `flatten()` method to [Option] type values that hold another [Option]
+/// Provides the `flatten()` method to [Option] type values that hold another [Option].
 extension OptionFlatten<T> on Option<Option<T>> {
 	/// Flattens a nested `Option` type value one level.
 	///
 	/// Returns:
-	/// - [Some<T>] if this `Option` is [Some<Option<T>>]
-	/// - [None<T>] if this `Option` is [None<Option<T>>]
+	/// - [Some<T>] if this `Option` is [Some<Option<T>>].
+	/// - [None<T>] if this `Option` is [None<Option<T>>].
 	Option<T> flatten() => switch (this) {
 		Some(value: Option<T> value) => value,
 		None() => None()
+	};
+}
+
+/// Provides the `transpose()` method to [Option] type values that hold a [Result].
+extension OptionTranspose<T, E> on Option<Result<T, E>> {
+	/// Transposes this [Option<Result<T, E>>] into a [Result<Option<T>, E>].
+	///
+	/// Returns:
+	/// - [Ok<Some<T>, E>] if this `Option` is [Some<Ok<T, E>>].
+	/// - [Err<T, E>] if this `Option` is [Some<Err<T, E>>].
+	/// - [Ok<None<T>, E>] if this `Option` is [None<Result<T, E>>].
+	Result<Option<T>, E> transpose() => switch (this) {
+		Some(value: Ok(value: T value)) => Ok(Some(value)),
+		Some(value: Err(value: E value)) => Err(value),
+		None() => Ok(None())
 	};
 }

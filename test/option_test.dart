@@ -1,5 +1,5 @@
 import 'package:test/test.dart';
-import 'package:option_result/option.dart';
+import 'package:option_result/option_result.dart';
 
 void main() {
 	group('Option:', () {
@@ -243,6 +243,32 @@ void main() {
 			Option<Option<int>> bar = None();
 
 			expect(bar.flatten(), equals(None<int>()));
+		});
+
+		test('Should return expected values from Option#okOr()', () {
+			Option<int> foo = Some(1);
+			Option<int> bar = None();
+
+			expect(foo.okOr('foo'), equals(Ok<int, String>(1)));
+			expect(bar.okOr('bar'), equals(Err<int, String>('bar')));
+		});
+
+		test('Should return expected values from Option#okOrElse()', () {
+			Option<int> foo = Some(1);
+			Option<int> bar = None();
+
+			expect(foo.okOrElse(() => 'foo'), equals(Ok<int, String>(1)));
+			expect(bar.okOrElse(() => 'bar'), equals(Err<int, String>('bar')));
+		});
+
+		test('Should return expected values from Option#transpose()', () {
+			Option<Result<int, String>> foo = Some(Ok(1));
+			Option<Result<int, String>> bar = Some(Err('bar'));
+			Option<Result<int, String>> baz = None();
+
+			expect(foo.transpose(), equals(Ok<Option<int>, String>(Some(1))));
+			expect(bar.transpose(), equals(Err<Option<int>, String>('bar')));
+			expect(baz.transpose(), equals(Ok<Option<int>, String>(None())));
 		});
 	});
 

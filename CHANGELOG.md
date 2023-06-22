@@ -1,6 +1,6 @@
 ## 0.0.1-dev-8
 
-- Add `Option#unwrapOrElse()`
+- Add `Option#unwrapOrElse()`, `okOr()`, `okOrElse()`, `transpose()`
 - Add `Result#unwrapOrElse()`, `isOkAnd()`, `isErrAnd()`, `mapOr()`, `mapOrElse()`
 
 ## 0.0.1-dev-7

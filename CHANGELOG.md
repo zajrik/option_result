@@ -1,3 +1,15 @@
+## 0.0.1-dev-10
+
+- Add `Option#toString()`
+- Add `Result#toString()`
+- Rework `==` for `Option` and `Result` types.
+  - Previously `==` would check for matching runtime types in addition to held value equality.
+  I was trying to keep things as close to Rust's behavior as I could. It didn't occur to me
+  until after I rewrote it to be more accommodating of `dynamic` values that it didn't support
+  comparing held values that inherit from eachother that might normally be comparable in both
+  the original implementation and the rewrite so I scrapped both in favor of solely comparing
+  held values.
+
 ## 0.0.1-dev-9
 
 - Add `Result#transpose()`, `ok()`, `err()`

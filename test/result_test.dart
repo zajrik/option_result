@@ -8,6 +8,20 @@ void main () {
 			expect(Err(1).hashCode, equals(Object.hash('Err()', 1)));
 		});
 
+		test('Should provide a string representation', () {
+			expect(Ok(1).toString(), equals('Ok(1)'));
+			expect(Ok('foo').toString(), equals('Ok(foo)'));
+			expect(Ok({'foo': 'bar'}).toString(), equals('Ok({foo: bar})'));
+			expect(Ok([1, 2, 3]).toString(), equals('Ok([1, 2, 3])'));
+			expect(Ok({1, 2, 3}).toString(), equals('Ok({1, 2, 3})'));
+
+			expect(Err(1).toString(), equals('Err(1)'));
+			expect(Err('foo').toString(), equals('Err(foo)'));
+			expect(Err({'foo': 'bar'}).toString(), equals('Err({foo: bar})'));
+			expect(Err([1, 2, 3]).toString(), equals('Err([1, 2, 3])'));
+			expect(Err({1, 2, 3}).toString(), equals('Err({1, 2, 3})'));
+		});
+
 		test('Should hold and unwrap simple Ok values', () {
 			expect(Ok('foo bar baz').unwrap(), equals('foo bar baz'));
 			expect(Ok(42).unwrap(), equals(42));
@@ -50,14 +64,13 @@ void main () {
 			baz = Ok(2);
 
 			expect(bar == baz, equals(false));
-		});
 
-		test('Should not equate Results with equatable values but mismatched types', () {
-			Result<int, String> foo = Ok(1);
-			Result<int, int> bar = Ok(1);
+			// Irrelevant types are elided (E for Ok, T for Err), only value matters
 
 			// ignore: unrelated_type_equality_checks
-			expect(foo == bar, equals(false));
+			expect(Ok<int, String>(1) == Ok<int, int>(1), equals(true));
+			// ignore: unrelated_type_equality_checks
+			expect(Err<int, String>('foo') == Err<bool, String>('foo'), equals(true));
 		});
 
 		test('Should throw ResultError when unwrapping Err()', () {
@@ -270,8 +283,6 @@ void main () {
 			Result<Option<int>, String> foo = Ok(Some(1));
 			Result<Option<int>, String> bar = Ok(None());
 			Result<Option<int>, String> baz = Err('baz');
-
-			print(bar.runtimeType);
 
 			expect(foo.transpose(), equals(Some<Result<int, String>>(Ok(1))));
 			expect(bar.transpose(), equals(None<Result<int, String>>()));

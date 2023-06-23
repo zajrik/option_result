@@ -35,16 +35,22 @@ sealed class Option<T> {
 
 	/// Compare equality between two `Option` values.
 	///
-	/// `Option` values are considered equal only if the value they hold is the
-	/// same AND their runtime types are the same.
+	/// `Option` values are considered equal if the values they hold are equal,
+	/// or if they hold references to the same object ([identical()]).
 	///
-	/// This means that a `None<int>()` is not equal to `None<String>()` even though
-	/// they are both `None()`.
+	/// Note that [None] values are always equal to one another. Their `T` type
+	/// is elided implicitly.
 	@override
 	operator ==(Object other) => switch (other) {
-		Some(value: T value) when isSome() && compareRuntimeTypes(this, other) => value == unwrap(),
-		None() when isNone() && compareRuntimeTypes(this, other) => true,
+		Some(value: T value) when isSome() => identical(value, unwrap()) || value == unwrap(),
+		None() when isNone() => true,
 		_ => false
+	};
+
+	@override
+	String toString() => switch (this) {
+		Some(value: T value) => 'Some($value)',
+		None() => 'None()'
 	};
 
 	/// Shortcut to call [Option.unwrap()].
@@ -52,7 +58,7 @@ sealed class Option<T> {
 	/// **Warning**: This is an *unsafe* operation. An [OptionError] will be thrown
 	/// if this operator is used on a [None] value. You can take advantage of this
 	/// safely via [propagateOption]/[propagateOptionAsync] and their respective
-	/// shortcuts ([OptionPropagateShortcut.~]/[OptionPropagateShortcutAsync.~]).
+	/// shortcuts ([OptionPropagateShortcut.~] / [OptionPropagateShortcutAsync.~]).
 	///
 	/// This is as close to analagous to Rust's `?` postfix operator for `Option`
 	/// values as Dart can manage. There are no overrideable postfix operators in

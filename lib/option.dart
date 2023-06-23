@@ -17,7 +17,6 @@ library option;
 import 'dart:async';
 
 import 'result.dart';
-import 'src/util.dart';
 
 part 'src/option/option.dart';
 part 'src/option/option_error.dart';

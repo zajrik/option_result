@@ -1,7 +1,5 @@
 part of result;
 
-//TODO: Improve code examples for propagateResult/Option to show both outcome variants (Ok/Err and Some/None)
-
 /// Executes the given function, returning the returned [Result] value.
 ///
 /// If a [ResultError] is thrown during the execution of the given function,
@@ -14,25 +12,18 @@ part of result;
 /// this function like so:
 ///
 /// ```dart
-/// Result<int, String> add(Result<int, String> a, Result<int, String> b) => propagateResult(() {
-///   // The equivalent non-idiomatic Rust return here would be:
-///   // return Ok(a? + b?);
-///   return Ok(a.unwrap() + b.unwrap());
+/// // The equivalent (non-idiomatic) Rust return in divideByTwo() would be:
+/// // return Ok(value? / 2);
 ///
-///   // You can also use the ~ operator as a shortcut for unwrap():
-///   // return Ok(~a + ~b);
+/// Result<int, String> divideByTwo(Result<int, String> value) => propagateResult(() {
+///   return Ok(value.unwrap() ~/ 2);
 /// });
 ///
-/// Result<int, String> foo = Ok(1);
+/// Result<int, String> foo = Ok(42);
 /// Result<int, String> bar = Err('There was an error!');
-/// Result<int, String> baz = add(foo, bar);
 ///
-/// // Prints 'Error: There was an error!!' due to the ResultError
-/// // thrown when unwrapping the Err value contained in `bar`
-/// print(switch (baz) {
-///   Ok(value: int value) => 'Value is $value',
-///   Err(value: String err) => 'Error: $err'
-/// });
+/// Result<int, String> result1 = divideByTwo(foo); // Ok(21)
+/// Result<int, String> result2 = divideByTwo(bar); // Err('There was an error!')
 /// ```
 ///
 /// Note that any other type of thrown error/exception other than [ResultError]
@@ -41,7 +32,7 @@ part of result;
 /// value type of the propagated [Err()] does not match the expected `E` value type
 /// of this function, a [ResultError] will be thrown.
 ///
-/// See also: [ResultPropagateShortcut.~]
+/// See also: [Result.~], [ResultPropagateShortcut.~]
 Result<T, E> propagateResult<T, E>(Result<T, E> Function() fn) {
 	try { return fn(); }
 	catch (error) { return _handleResultError(error); }
@@ -124,19 +115,23 @@ extension ResultPropagateShortcut<T, E> on Result<T, E> Function() {
 	/// // Runtime safety achieved from a mere 8 total characters of syntactical overhead!
 	/// ```
 	///
-	/// **Note:** You will want to explicitly type receivers of this operation due
-	/// to how the compiler handles generic return values from operators vs functions.
+	/// **Note:** This operator returns `dynamic`. Consider explicitly typing receivers
+	/// of this operation to limit the amount of `dynamic` being passed around in
+	/// your codebase.
 	///
-	/// When this operator is typed to return [Result<T, E>] and you return [Ok()]
-	/// or [Err()] in the prefixed function, the compiler treats the prefixed function
-	/// as returning [Result<T, dynamic>] or [Result<dynamic, E>] which is fine when
-	/// using [propagateResult] because it is able to gather type information from
-	/// the return value of the given function, as well as from the receiver, but
-	/// the operator cannot so it just errors at compile time. Example:
+	/// If this operator were typed to return [Result<T, E>] and you were to return
+	/// [Ok()] or [Err()] in the prefixed function, the compiler would treat the
+	/// operator as returning [Result<T, dynamic>] or [Result<dynamic, E>].
+	///
+	/// Operators are not able to receive generic type parameters and thus this operator
+	/// is unable to infer the generic types of the returned [Result] in the same way
+	/// [propagateResult] can.
 	///
 	/// ```dart
 	/// // Compiles fine
 	/// Result<int, String> foo = propagateResult(() => Ok(1));
+	///
+	/// // If this operator were typed to return Result<T, E>:
 	///
 	/// // Error: A value of type 'Result<int, dynamic>' can't be assigned to a variable of type 'Result<int, String>'
 	/// Result<int, String> bar = ~() => Ok(1);
@@ -149,8 +144,13 @@ extension ResultPropagateShortcut<T, E> on Result<T, E> Function() {
 	/// // variables and function/method returns
 	/// ```
 	///
-	/// Hence, this operator returns `dynamic`. If this is undesireable for you,
-	/// consider using [propagateResult] directly instead.
+	/// Hence, this operator returns `dynamic` to avoid this problem. The compiler
+	/// will still enforce returning `Result` values regardless, as this operator
+	/// is only provided for functions which return `Result`.
+	///
+	///
+	/// If a `dynamic` return value is undesireable to you, consider using
+	/// [propagateResult] directly instead.
 	operator ~() => propagateResult(this);
 }
 
@@ -180,19 +180,24 @@ extension ResultPropagateShortcutAsync<T, E> on Future<Result<T, E>> Function() 
 	/// // Runtime safety achieved from a mere 8 total characters of syntactical overhead!
 	/// ```
 	///
-	/// **Note:** You will want to explicitly type receivers of this operation due
-	/// to how the compiler handles generic return values from operators vs functions.
+	/// **Note:** This operator returns `dynamic`. Consider explicitly typing receivers
+	/// of this operation to limit the amount of `dynamic` being passed around in
+	/// your codebase.
 	///
-	/// When this operator is typed to return [Future<Result<T, E>>] and you return
-	/// [Ok()] or [Err()] in the prefixed function, the compiler treats the prefixed
-	/// function as returning [Future<Result<T, dynamic>>] or [Future<Result<dynamic, E>>]
-	/// which is fine when using [propagateResultAsync] because it is able to gather
-	/// type information from the return value of the given function, as well as from
-	/// the receiver, but the operator cannot so it just errors at compile time. Example:
+	/// If this operator were typed to return [Future<Result<T, E>>] and you were
+	/// to return [Ok()] or [Err()] in the prefixed function, the compiler would
+	/// treat the operator as returning [Future<Result<T, dynamic>>] or
+	/// [Future<Result<dynamic, E>>].
+	///
+	/// Operators are not able to receive generic type parameters and thus this operator
+	/// is unable to infer the generic types of the returned [Result] in the same way
+	/// [propagateResult] can.
 	///
 	/// ```dart
 	/// // Compiles fine
 	/// Result<int, String> foo = await propagateResultAsync(() async => Ok(1));
+	///
+	/// // If this operator were typed to return Future<Result<T, E>>:
 	///
 	/// // Error: A value of type 'Result<int, dynamic>' can't be assigned to a variable of type 'Result<int, String>'
 	/// Result<int, String> bar = await ~() async => Ok(1);
@@ -205,7 +210,12 @@ extension ResultPropagateShortcutAsync<T, E> on Future<Result<T, E>> Function() 
 	/// // variables and function/method returns
 	/// ```
 	///
-	/// Hence, this operator returns `dynamic`. If this is undesireable for you,
-	/// consider using [propagateResultAsync] directly instead.
+	/// Hence, this operator returns `dynamic` to avoid this problem. The compiler
+	/// will still enforce returning `Result` values regardless, as this operator
+	/// is only provided for functions which return `Result`.
+	///
+	///
+	/// If a `dynamic` return value is undesireable to you, consider using
+	/// [propagateResultAsync] directly instead.
 	operator ~() => propagateResultAsync(this);
 }

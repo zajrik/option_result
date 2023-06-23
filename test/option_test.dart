@@ -8,6 +8,16 @@ void main() {
 			expect(None().hashCode, equals(Object.hash('None()', None().runtimeType)));
 		});
 
+		test('Should provide a string representation', () {
+			expect(Some(1).toString(), equals('Some(1)'));
+			expect(Some('foo').toString(), equals('Some(foo)'));
+			expect(Some({'foo': 'bar'}).toString(), equals('Some({foo: bar})'));
+			expect(Some([1, 2, 3]).toString(), equals('Some([1, 2, 3])'));
+			expect(Some({1, 2, 3}).toString(), equals('Some({1, 2, 3})'));
+
+			expect(None().toString(), equals('None()'));
+		});
+
 		test('Should hold and unwrap simple values', () {
 			expect(Some('foo bar baz').unwrap(), equals('foo bar baz'));
 			expect(Some(42).unwrap(), equals(42));
@@ -32,19 +42,14 @@ void main() {
 
 			// They share the same reference to foo
 			expect(Some(foo) == Some(foo), equals(true));
-		});
 
-		test('Should not equate Options with equatable values but mismatched types', () {
-			Option<int> foo = Some(1);
-			Option<num> bar = Some(1);
+			// Different types, but equatable values
+			expect(Some<int>(1) == Some<num>(1), equals(true));
+			expect(Some<num>(1) == Some<double>(1), equals(true));
 
-			expect(foo == bar, equals(false));
-
-			Option<int> foo2 = None();
-			Option<bool> bar2 = None();
-
+			// None() is always equal to None(), regardless of type
 			// ignore: unrelated_type_equality_checks
-			expect(foo2 == bar2, equals(false));
+			expect(None<int>() == None<String>(), equals(true));
 		});
 
 		test('Should throw OptionError when unwrapping None()', () {

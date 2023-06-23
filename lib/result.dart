@@ -17,7 +17,6 @@ library result;
 import 'dart:async';
 
 import 'option.dart';
-import 'src/util.dart';
 
 part 'src/result/result.dart';
 part 'src/result/result_error.dart';

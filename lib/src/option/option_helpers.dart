@@ -1,7 +1,5 @@
 part of option;
 
-//TODO: Improve code examples for propagateResult/Option to show both outcome variants (Ok/Err and Some/None)
-
 /// Executes the given function, returning the returned [Option] value.
 ///
 /// If an [OptionError] is thrown during the execution of the given function,
@@ -13,30 +11,23 @@ part of option;
 /// this function like so:
 ///
 /// ```dart
-/// Option<int> add(Option<int> a, Option<int> b) => propagateOption(() {
-///   // The equivalent non-idiomatic Rust return here would be:
-///   // return Some(a? + b?);
-///   return Some(a.unwrap() + b.unwrap());
+/// // The equivalent (non-idiomatic) Rust return in divideByTwo() would be:
+/// // return Some(value? / 2);
 ///
-///   // You can also use the ~ operator as a shortcut for unwrap():
-///   // return Some(~a + ~b);
+/// Option<int> divideByTwo(Option<int> value) => propagateOption(() {
+///   return Some(value.unwrap() ~/ 2);
 /// });
 ///
-/// Option<int> foo = Some(1);
+/// Option<int> foo = Some(42);
 /// Option<int> bar = None();
-/// Option<int> baz = add(foo, bar);
 ///
-/// // Prints 'There is no value!' due to the OptionError thrown
-/// // when unwrapping the None value contained in `bar`
-/// print(switch (baz) {
-///   Some(value: int value) => 'Value is $value',
-///   None() => 'There is no value!'
-/// });
+/// Option<int> result1 = divideByTwo(foo); // Some(21)
+/// Option<int> result2 = divideByTwo(bar); // None()
 /// ```
 ///
 /// Note that any other type of thrown error/exception other than [OptionError] will be rethrown.
 ///
-/// See also: [OptionPropagateShortcut.~]
+/// See also: [Option.~], [OptionPropagateShortcut.~]
 Option<T> propagateOption<T>(Option<T> Function() fn) {
 	try { return fn(); }
 	catch (error) { return _handleOptionError(error); }

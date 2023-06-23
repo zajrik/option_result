@@ -37,16 +37,25 @@ sealed class Result<T, E> {
 
 	/// Compare equality between two `Result` values.
 	///
-	/// `Result` values are considered equal only if the value they hold is the
-	/// same AND their runtime types are the same.
+	/// `Result` values are considered equal if the values they hold are equal,
+	/// or if they hold references to the same object ([identical()]). When comparing
+	/// [Ok] values, the type of `E` will be elided, and `T` will be elided when
+	/// comparing [Err] values.
 	///
-	/// This means that `Ok<int, String>(1)` is not equal to `Ok<int, int>(1)` even
-	/// though they are both `Ok(1)`.
+	/// This means that [Ok<int, String>(1)] is equal to [Ok<int, int>(1)] and
+	/// [Err<int, String>('foo')] is equal to [Err<bool, String>('foo')] because
+	/// their held values are equatable and their irrelevant types are elided.
 	@override
 	operator ==(Object other) => switch (other) {
-		Ok(value: T value) when isOk() && compareRuntimeTypes(this, other) => value == unwrap(),
-		Err(value: E err) when isErr() && compareRuntimeTypes(this, other) => err == unwrapErr(),
+		Ok(value: T value) when isOk() => identical(value, unwrap()) || value == unwrap(),
+		Err(value: E err) when isErr() => identical(err, unwrapErr()) || err == unwrapErr(),
 		_ => false
+	};
+
+	@override
+	String toString() => switch (this) {
+		Ok(value: T value) => 'Ok($value)',
+		Err(value: E err) => 'Err($err)'
 	};
 
 	/// Shortcut to call [Result.unwrap()].
@@ -54,7 +63,7 @@ sealed class Result<T, E> {
 	/// **Warning**: This is an *unsafe* operation. A [ResultError] will be thrown
 	/// if this operator is used on a [None] value. You can take advantage of this
 	/// safely via [propagateResult]/[propagateResultAsync] and their respective
-	/// shortcuts ([ResultPropagateShortcut.~]/[ResultPropagateShortcutAsync.~]).
+	/// shortcuts ([ResultPropagateShortcut.~] / [ResultPropagateShortcutAsync.~]).
 	///
 	/// This is as close to analagous to Rust's `?` postfix operator for `Result`
 	/// values as Dart can manage. There are no overrideable postfix operators in

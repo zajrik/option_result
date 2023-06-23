@@ -17,7 +17,7 @@ part of result;
 sealed class Result<T, E> {
 	/// The `Result` class cannot be instantiated directly. use [Ok()], [Err()],
 	/// or [Result.from()] to create instances of `Result` variants
-	Result();
+	const Result();
 
 	/// Creates a `Result` from the given nullable `T` value
 	///
@@ -360,7 +360,7 @@ sealed class Result<T, E> {
 class Ok<T, E> extends Result<T, E> {
 	final T value;
 
-	Ok(this.value);
+	const Ok(this.value);
 }
 
 /// A type that represents the failure [Result] of something.
@@ -377,7 +377,7 @@ class Ok<T, E> extends Result<T, E> {
 class Err<T, E> extends Result<T, E> {
 	final E value;
 
-	Err(this.value);
+	const Err(this.value);
 }
 
 /// Provides the `flatten()` method to [Result] type values that hold another [Result].

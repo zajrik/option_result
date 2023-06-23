@@ -178,12 +178,12 @@ void main() {
 		test('Should return expected values from Option#filter()', () {
 			Option<int> foo = Some(5);
 
-			expect(foo.filter((value) => value < 10), equals(Some(5)));
-			expect(foo.filter((value) => value > 6), equals(None<int>()));
+			expect(foo.where((value) => value < 10), equals(Some(5)));
+			expect(foo.where((value) => value > 6), equals(None<int>()));
 
 			Option<int> bar = None();
 
-			expect(bar.filter((value) => value < 10), equals(None<int>()));
+			expect(bar.where((value) => value < 10), equals(None<int>()));
 		});
 
 		test('Should return expected values from Option#map()', () {

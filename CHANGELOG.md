@@ -1,3 +1,7 @@
+## 0.1.0-dev-3
+
+- Allow `const` `Option` and `Result` values
+
 ## 0.1.0-dev-2
 
 - Add `Option#iter()`

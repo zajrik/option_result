@@ -15,7 +15,7 @@ part of option;
 sealed class Option<T> {
 	/// The `Option` class cannot be instantiated directly. use [Some()], [None()],
 	/// or [Option.from()] to create instances of `Option` variants.
-	Option();
+	const Option();
 
 	/// Creates an `Option` from the given nullable `T` value.
 	///
@@ -223,7 +223,7 @@ sealed class Option<T> {
 	///
 	/// - [Some<T>] if `predicate` returns `true`.
 	/// - [None<T>] if `predicate` returns `false`.
-	Option<T> filter(bool Function(T) predicate) => switch (this) {
+	Option<T> where(bool Function(T) predicate) => switch (this) {
 		Some(value: T value) => predicate(value) ? this : None(),
 		None() => this
 	};
@@ -350,7 +350,7 @@ sealed class Option<T> {
 class Some<T> extends Option<T> {
 	final T value;
 
-	Some(this.value);
+	const Some(this.value);
 }
 
 /// A type that represents the absence of a value.
@@ -364,7 +364,9 @@ class Some<T> extends Option<T> {
 ///   print('No value!');
 /// }
 /// ```
-class None<T> extends Option<T> {}
+class None<T> extends Option<T> {
+	const None();
+}
 
 /// Provides the `unzip()` method to [Option] type values that hold a [Record] of two values.
 extension OptionUnzip<T, U> on Option<(T, U)> {

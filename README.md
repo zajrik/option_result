@@ -12,12 +12,34 @@ and the Flutter guide for
 -->
 
 ## option_result [![Test status](https://github.com/zajrik/option_result/actions/workflows/test.yaml/badge.svg)](https://github.com/zajrik/option_result/actions/workflows/test.yaml) [![codecov](https://codecov.io/gh/zajrik/option_result/branch/main/graph/badge.svg?token=OMC42NL71B)](https://codecov.io/gh/zajrik/option_result)
-`option_result` is a lightweight Dart library for `Option` and `Result` types. Inspired
-by Rust, leveraging Dart 3's new pattern matching features and `sealed class` exhaustive
-switch mechanics to provide as close to Rust's `Option`/`Result` experience as possible
-without going so deep as to implement every single utility method Rust provides.
+
+`option_result` is a lightweight library with the goal of bringing Rust's
+[Option](https://doc.rust-lang.org/stable/std/option/) and
+[Result](https://doc.rust-lang.org/std/result/) types to Dart.
+
+This library aims to provide as close to a 1:1 experience in Dart as possible to
+Rust's implementation of these types, carrying over all of the methods for composing
+`Option` and `Result` values (`and_then()`, `or_else()`, `map()`, etc.) and allowing
+the use of Dart's new exhaustive pattern matching to provide a familiar experience
+while working with `Option` and `Result` type values.
 
 > This package is a work-in-progress.
+
+## Key differences
+
+- `Option` and `Result` types provided by this library are immutable. All composition
+methods either return new instances or the same instance if applicable, and methods
+for inserting/replacing values are not provided.
+<br><br>
+  The benefits of immutability speak for themselves, but this also allows compile-time
+`const` `Option` and `Result` values which can help improve application performance.
+<br><br>
+- This library lacks all of the methods Rust's `Option` and `Result` types have
+that are related to `ref`, `deref`, `mut`, `pin`, `clone`, and `copy` due to not
+being applicable to Dart as a higher-level language.
+<br><br>
+- The [Option.filter()](https://doc.rust-lang.org/std/option/enum.Option.html#method.filter)
+method has been renamed `where()` to be more idiomatic to Dart.
 
 ## Getting started
 
@@ -25,7 +47,7 @@ Add the dependency to your `pubspec.yaml` file in your Dart/Flutter project:
 
 ```yaml
 dependencies:
-  option_result: ^0.1.0-dev-2
+  option_result: ^0.1.0-dev-3
 ```
 
 Or via git:

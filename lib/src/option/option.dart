@@ -143,6 +143,18 @@ sealed class Option<T> {
 		None() => throw OptionError(message, isExpected: true)
 	};
 
+	/// Returns an [Iterable] of the held value.
+	///
+	/// Yields:
+	/// - The held `T` value if [Some].
+	/// - Nothing if [None].
+	Iterable<T> iter() sync* {
+		switch (this) {
+			case Some(value: T value): yield value;
+			case None(): return;
+		}
+	}
+
 	/// Returns [None<U>] if this `Option` is [None<T>], otherwise returns `other`.
 	Option<U> and<U>(Option<U> other) => switch (this) {
 		Some() => other,

@@ -175,6 +175,18 @@ sealed class Result<T, E> {
 		Err(value: E value) => value
 	};
 
+	/// Returns an [Iterable] of the held value.
+	///
+	/// Yields:
+	/// - The held `T` value if [Ok].
+	/// - Nothing if [Err].
+	Iterable<T> iter() sync* {
+		switch (this) {
+			case Ok(value: T value): yield value;
+			case Err(): return;
+		}
+	}
+
 	/// Returns a `Result` value as [Err<U, E>] if this `Result` is [Err<T, E>],
 	/// otherwise returns `other`.
 	Result<U, E> and<U>(Result<U, E> other) => switch (this) {

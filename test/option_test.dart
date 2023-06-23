@@ -87,6 +87,26 @@ void main() {
 			expect(() => None().expect('Should be Some()'), throwsA(TypeMatcher<OptionError>()));
 		});
 
+		test('Should iterate over the held value via Option#iter()', () {
+			Option<int> foo = Some(1);
+			Option<int> bar = None();
+
+			for (int value in foo.iter()) {
+				expect(value, equals(1));
+			}
+
+			bool called = false;
+			void call() => called = true;
+
+			// The call() function should not run since there's nothing to iterate
+			// over in a None() value
+			for (int _ in bar.iter()) {
+				call();
+			}
+
+			expect(called, equals(false));
+		});
+
 		test('Should return expected values from Option#and()', () {
 			Option<int> foo = Some(1);
 			Option<int> bar = None();

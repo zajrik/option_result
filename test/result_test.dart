@@ -123,6 +123,26 @@ void main () {
 			expect(() => Ok('foo').expectErr('Should be Err()'), throwsA(TypeMatcher<ResultError>()));
 		});
 
+		test('Should iterate over the held value via Result#iter()', () {
+			Result<int, String> foo = Ok(1);
+			Result<int, String> bar = Err('foo');
+
+			for (int value in foo.iter()) {
+				expect(value, equals(1));
+			}
+
+			bool called = false;
+			void call() => called = true;
+
+			// The call() function should not run since there's nothing to iterate
+			// over in an Err() value
+			for (int _ in bar.iter()) {
+				call();
+			}
+
+			expect(called, equals(false));
+		});
+
 		test('Should return expected values from Result#and()', () {
 			Result<int, String> foo = Ok(1);
 			Result<int, String> bar = Err('bar');

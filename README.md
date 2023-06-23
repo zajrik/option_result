@@ -25,7 +25,7 @@ Add the dependency to your `pubspec.yaml` file in your Dart/Flutter project:
 
 ```yaml
 dependencies:
-  option_result: ^0.1.0-dev-1
+  option_result: ^0.1.0-dev-2
 ```
 
 Or via git:

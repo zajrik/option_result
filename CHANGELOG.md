@@ -1,6 +1,8 @@
 ## 0.1.0-dev-3
 
 - Allow `const` `Option` and `Result` values
+- Rename `Option#filter()` -> `Option#where()`
+  - This is more Dart-idiomatic
 
 ## 0.1.0-dev-2
 

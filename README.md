@@ -81,7 +81,7 @@ switch (email) {
 ### Result
 
 `Result` types represent the result of some operation, either success (`Ok`), or
-failure (`Err`).
+failure (`Err`), and both variants can hold data.
 
 This promotes safe handling of error values without the need for try/catch blocks
 while also providing composability like `Option` via methods for composing `Result`-returning
@@ -126,6 +126,28 @@ switch (email) {
   case Err(value: String err): print('Error fetching email: $err');
 }
 ```
+
+But `Result` doesn't always have to concern data. A `Result` can be used strictly
+for error handling, where an `Ok` simply means there was no error and you can safely
+continue. In Rust this is typically done by returning the
+[unit](https://doc.rust-lang.org/std/primitive.unit.html) type `()` as `Result<(), E>`
+and the same can be done in Dart with an empty `Record` via `()`.
+
+```dart
+Result<(), String> failableOperation() => Ok(());
+Result<(), String> err = failableOperation();
+
+if (err case Err(value: String error)) {
+  print(error);
+  return;
+}
+
+// No error, continue...
+```
+
+*Note that just like how `unit` has one value in Rust, empty `Record` values in
+Dart are optimized to the same runtime constant reference so there is no performance
+or memory overhead when using `()` as a `unit` type.*
 
 ## Key differences from Rust
 

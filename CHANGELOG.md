@@ -1,3 +1,7 @@
+## 1.0.0
+
+- Final documentation update for 1.0.0 release 🎉
+
 ## 0.1.0-dev-4
 
 - Update documentation

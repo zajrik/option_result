@@ -60,8 +60,7 @@ sealed class Option<T> {
 	///
 	/// **Warning**: This is an *unsafe* operation. An [OptionError] will be thrown
 	/// if this operator is used on a [None] value. You can take advantage of this
-	/// safely via [propagateOption]/[propagateOptionAsync] and their respective
-	/// shortcuts ([OptionPropagateShortcut.~] / [OptionPropagateShortcutAsync.~]).
+	/// safely via [catchOption]/[catchOptionAsync].
 	///
 	/// This is as close to analagous to Rust's `?` postfix operator for `Option`
 	/// values as Dart can manage. There are no overrideable postfix operators in

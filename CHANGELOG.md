@@ -1,3 +1,21 @@
+## 2.0.0
+
+### Breaking changes
+
+- Remove `~` shortcut for Option/Result propagation
+  - I failed to test the most obvious use-case. Due to the lack of generics on operators,
+  when both variants of `Option` or `Result` are returned in the same prefixed function,
+  the return type is inferred by the compiler to be `Object` and the propagation
+  extensions then fail to recognize the function as a valid target for the `~` operator.
+
+    To compensate, I made the Option/Result propagation helpers easier to type by
+  renaming them, saving 4 characters and 2 syllables. It's the best I can think of
+  until such time that Dart supposed fully generic operator definitions.
+- Rename `propagateOption()` -> `catchOption()`
+- Rename `propagateResult()` -> `catchResult()`
+- Rename `propagateOptionAsync()` -> `catchOptionAsync()`
+- Rename `propagateResultAsync()` -> `catchResultAsync()`
+
 ## 1.0.0
 
 - Final documentation update for 1.0.0 release 🎉

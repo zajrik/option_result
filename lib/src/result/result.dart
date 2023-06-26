@@ -65,8 +65,7 @@ sealed class Result<T, E> {
 	///
 	/// **Warning**: This is an *unsafe* operation. A [ResultError] will be thrown
 	/// if this operator is used on a [None] value. You can take advantage of this
-	/// safely via [propagateResult]/[propagateResultAsync] and their respective
-	/// shortcuts ([ResultPropagateShortcut.~] / [ResultPropagateShortcutAsync.~]).
+	/// safely via [catchResult]/[catchResultAsync].
 	///
 	/// This is as close to analagous to Rust's `?` postfix operator for `Result`
 	/// values as Dart can manage. There are no overrideable postfix operators in

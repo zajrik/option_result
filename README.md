@@ -55,20 +55,20 @@ Option<int> c = a.andThen(divideBy2).andThen(multiplyBy5); // Some(25)
 Option<int> d = b.andThen(divideBy2).andThen(multiplyBy5); // None()
 ```
 
-For nice, ergonomic safety, operations culminating in an `Option` that make use
-of other `Option` values in their logic where the outcome is dependent on those
-`Option` values can benefit from `None` value propagation:
+For safety, operations culminating in an `Option` that make use of other `Option`
+values in their logic where the outcome is dependent on those `Option` values can
+benefit from `None` value propagation via `catchOption()`:
 
 ```dart
 // If user or email is None when unwrapped, the function will exit early, returning None
-Option<String> getUserEmailLowerCase(int id) => ~() {
+Option<String> getUserEmailLowerCase(int id) => catchOption(() {
   Option<User> user = getUser(id);
   // Unwrap user here using ~. Can also be written as:
   // Option<String> email = user.unwrap().email;
   Option<String> email = (~user).email;
 
   return Some((~email).toLowerCase());
-};
+});
 
 Option<String> email = getUserEmailLowerCase(12345);
 
@@ -106,18 +106,19 @@ Result<int, String> e = b.andThen(divideBy2).andThen(multiplyBy5); // Err('divid
 Result<int, String> f = c.andThen(divideBy2).andThen(multiplyBy5); // Err('foo')
 ```
 
-And, you guessed it, like `Option`, `Result` types can benefit from safe propagation
-of their `Err` values by making use of the same ergonomic syntax:
+And, you guessed it, like `Option`, `Result` types can also benefit from safe propagation
+of their `Err` values using `catchResult()`:
 
 ```dart
-Result<String, String> getUserEmailLowerCase(int id) => ~() {
+// If user or email is Err when unwrapped, the function will exit early, returning Err
+Result<String, String> getUserEmailLowerCase(int id) => catchResult(() {
   Result<User, String> user = getUser(id);
   // Unwrap user here using ~. Can also be written as:
   // Result<String, String> email = user.unwrap().getEmail();
   Result<String, String> email = (~user).getEmail();
 
   return Ok((~email).toLowerCase());
-};
+});
 
 Result<String, String> email = getUserEmailLowerCase(12345);
 
@@ -180,7 +181,7 @@ Add the dependency to your `pubspec.yaml` file in your Dart/Flutter project:
 
 ```yaml
 dependencies:
-  option_result: ^1.0.0
+  option_result: ^2.0.0
 ```
 
 Or via git:

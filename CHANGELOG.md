@@ -1,3 +1,9 @@
+## 2.0.1
+
+- Remove work-in-progress message from readme
+  - How did I miss this?
+    - help
+
 ## 2.0.0
 
 ### Breaking changes

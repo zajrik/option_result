@@ -23,8 +23,6 @@ Rust's implementation of these types, carrying over all of the methods for compo
 the use of Dart 3's new exhaustive pattern matching to provide a familiar experience
 while working with `Option` and `Result` type values.
 
-> This package is a work-in-progress.
-
 ## Overview
 
 ### Option
@@ -181,7 +179,7 @@ Add the dependency to your `pubspec.yaml` file in your Dart/Flutter project:
 
 ```yaml
 dependencies:
-  option_result: ^2.0.0
+  option_result: ^2.0.1
 ```
 
 Or via git:

@@ -133,7 +133,14 @@ continue. In Rust this is typically done by returning the
 and the same can be done in Dart with an empty `Record` via `()`.
 
 ```dart
-Result<(), String> failableOperation() => Ok(());
+Result<(), String> failableOperation() {
+  if (someReasonToFail) {
+    return Err('Failure');
+  }
+
+  return Ok(());
+}
+
 Result<(), String> err = failableOperation();
 
 if (err case Err(value: String error)) {
@@ -142,6 +149,27 @@ if (err case Err(value: String error)) {
 }
 
 // No error, continue...
+```
+
+To further support this, the `~` operator is provided on `Result` type values that
+hold `()` for easy propagation of `Err` values when `Result` types are being used
+strictly for error handling purposes.
+
+```dart
+// Here we have two operations that return Result<(), String>. We can wrap them
+// in a catchResult block (async in this case) and use ~ to unwrap them, discarding
+// the unit value if Ok or propagating the Err value otherwise.
+Result<(), String> err = catchResultAsync(() async {
+  ~await failableOperation1();
+  ~failableOperation2();
+
+  return Ok(());
+});
+
+if (err case Err(value: String error)) {
+  print(error);
+  return;
+}
 ```
 
 *Note that just like how `unit` has one value in Rust, empty `Record` values in
@@ -179,7 +207,7 @@ Add the dependency to your `pubspec.yaml` file in your Dart/Flutter project:
 
 ```yaml
 dependencies:
-  option_result: ^2.1.0
+  option_result: ^2.2.0
 ```
 
 Or via git:

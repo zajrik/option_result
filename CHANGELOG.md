@@ -1,3 +1,11 @@
+## 2.2.0
+
+- Un-deprecate `~` operator for `Result<(), E>` type values
+  - This keeps the ergonomics of `~` for unwrapping awaited Results, but only where
+    the value would be discarded anyway, i.e., unwrapping a result that is only used
+    for error handling inside a `catchResult` or `catchResultAsync` block so that the
+    error can propagate.
+
 ## 2.1.0
 
 - Add `Option.call()` to allow calling `Option` values like a function to unwrap

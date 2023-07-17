@@ -35,6 +35,26 @@ void main() {
 			}), equals(None<int>()));
 		});
 
+		test('Should propagate None() using deprecated ~ in catchOption', () {
+			expect(catchOption<int>(() {
+				Option<int> foo = Some(1);
+				Option<int> bar = None();
+
+				// ignore: deprecated_member_use_from_same_package
+				return Some(~foo + ~bar);
+			}), equals(None<int>()));
+		});
+
+		test('Should propagate None() using deprecated ~ in catchOptionAsync', () async {
+			expect(await catchOptionAsync<int>(() {
+				Option<int> foo = Some(1);
+				Option<int> bar = None();
+
+				// ignore: deprecated_member_use_from_same_package
+				return Some(~foo + ~bar);
+			}), equals(None<int>()));
+		});
+
 		test('Should rethrow any other kind of error/exception thrown inside catchOption', () {
 			expect(() => catchOption(() => throw RangeError('foo')), throwsRangeError);
 			expect(() => catchOption(() => throw ArgumentError('bar')), throwsArgumentError);
@@ -87,6 +107,46 @@ void main() {
 				Result<int, String> bar = Err('foo');
 				return Ok(foo() + bar());
 			}), equals(Err<int, String>('foo')));
+		});
+
+		test('Should propagate Err() using deprecated ~ in catchResult', () {
+			expect(catchResult<int, String>(() {
+				Result<int, String> foo = Ok(1);
+				Result<int, String> bar = Err('foo');
+
+				// ignore: deprecated_member_use_from_same_package
+				return Ok(~foo + ~bar);
+			}), equals(Err<int, String>('foo')));
+		});
+
+		test('Should propagate Err() using deprecated ~ in catchResultAsync', () async {
+			expect(await catchResultAsync<int, String>(() {
+				Result<int, String> foo = Ok(1);
+				Result<int, String> bar = Err('foo');
+
+				// ignore: deprecated_member_use_from_same_package
+				return Ok(~foo + ~bar);
+			}), equals(Err<int, String>('foo')));
+		});
+
+		test('Should propagate Err() for () Results using ~ in catchResult', () {
+			Result<(), String> foo() => Err('foo');
+
+			expect(catchResult(() {
+				~foo();
+
+				return Ok(());
+			}), equals(Err('foo')));
+		});
+
+		test('Should propagate Err() for () Results using ~ in catchResultAsync', () async {
+			Future<Result<(), String>> foo() async => Err('foo');
+
+			expect(await catchResultAsync(() async {
+				~await foo();
+
+				return Ok(());
+			}), equals(Err('foo')));
 		});
 
 		test('Should rethrow ResultError when erroring on unwrapErr() on Ok() via catchResult', () {

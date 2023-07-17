@@ -61,47 +61,6 @@ sealed class Result<T, E> {
 		Err(value: E err) => 'Err($err)'
 	};
 
-	/// **Deprecated**: Use `Result.call()` as `value()` to easily unwrap `Result`
-	/// type values instead.
-	///
-	/// Shortcut to call [Result.unwrap()].
-	///
-	/// **Warning**: This is an *unsafe* operation. A [ResultError] will be thrown
-	/// if this operator is used on an [Err] value. You can take advantage of this
-	/// safely via [catchResult]/[catchResultAsync].
-	///
-	/// ```dart
-	/// var foo = Ok(1);
-	/// var bar = Ok(2);
-	///
-	/// print(~foo + ~bar); // prints: 3
-	/// ```
-	///
-	/// **Note**: if you need to access fields or methods on the held value when
-	/// using `~`, you'll need to use parentheses like so:
-	///
-	/// ```dart
-	/// var res = Ok(1);
-	///
-	/// print((~res).toString());
-	/// ```
-	///
-	/// Additionally, If you need to perform a bitwise NOT on the held value of
-	/// a `Result`, you have a few choices:
-	///
-	/// ```dart
-	/// var res = Ok(1);
-	///
-	/// print(~(~res)); // prints: -2
-	/// print(~~res); // prints: -2
-	/// print(~res.unwrap()); // prints: -2;
-	/// ```
-	///
-	/// See also:
-	/// [Rust: `Result::unwrap()`](https://doc.rust-lang.org/std/result/enum.Result.html#method.unwrap)
-	@Deprecated('Use `Result.call()` as `value()` to unwrap `Result` type values instead.')
-	T operator ~() => unwrap();
-
 	/// Shortcut to call [Result.unwrap()].
 	///
 	/// Allows calling a `Result` value like a function as a shortcut to unwrap the
@@ -514,4 +473,81 @@ extension ResultTranspose<T, E> on Result<Option<T>, E> {
 		Ok(value: None()) => None(),
 		Err(value: E value) => Some(Err(value))
 	};
+}
+
+/// Provides the `~` operator for unwrapping [Result] type values.
+///
+/// Usage of `~` on [Result] type values that do not contain `()` is deprecated.
+/// `~` should only be used with [Result] type values that are strictly designated
+/// for error handling as a means to ergonomically propagate their errors inside of
+/// [catchResult]/[catchResultAsync] blocks.
+extension ResultTildeUnwrap<T, E> on Result<T, E> {
+	/// **Deprecated**: Use `Result.call()` as `value()` to easily unwrap `Result`
+	/// type values instead.
+	///
+	/// Shortcut to call [Result.unwrap()].
+	///
+	/// **Warning**: This is an *unsafe* operation. A [ResultError] will be thrown
+	/// if this operator is used on an [Err] value. You can take advantage of this
+	/// safely via [catchResult]/[catchResultAsync].
+	///
+	/// ```dart
+	/// var foo = Ok(1);
+	/// var bar = Ok(2);
+	///
+	/// print(~foo + ~bar); // prints: 3
+	/// ```
+	///
+	/// **Note**: if you need to access fields or methods on the held value when
+	/// using `~`, you'll need to use parentheses like so:
+	///
+	/// ```dart
+	/// var res = Ok(1);
+	///
+	/// print((~res).toString());
+	/// ```
+	///
+	/// Additionally, If you need to perform a bitwise NOT on the held value of
+	/// a `Result`, you have a few choices:
+	///
+	/// ```dart
+	/// var res = Ok(1);
+	///
+	/// print(~(~res)); // prints: -2
+	/// print(~~res); // prints: -2
+	/// print(~res.unwrap()); // prints: -2;
+	/// ```
+	///
+	/// See also:
+	/// [Rust: `Result::unwrap()`](https://doc.rust-lang.org/std/result/enum.Result.html#method.unwrap)
+	@Deprecated('Use `Result.call()` as `value()` to unwrap `Result` type values instead.')
+	T operator ~() => unwrap();
+}
+
+/// Provides the `~` operator to [Result] type values that hold `()` to provide
+/// an ergonomic way to unwrap [Result] type values used strictly for error handling.
+extension ResultUnitUnwrap<E> on Result<(), E> {
+	/// Shortcut to call [Result.unwrap()].
+	///
+	/// **Warning**: This is an *unsafe* operation. A [ResultError] will be thrown
+	/// if this operator is used on an [Err] value. You can take advantage of this
+	/// safely via [catchResult]/[catchResultAsync].
+	///
+	/// ```dart
+	/// Result<(), String> err = catchResultAsync(() async {
+	///   ~await failableOperation1();
+	///   ~failableOperation2();
+	///
+	///   return Ok(());
+	/// });
+	///
+	/// if (err case Err(value: String error)) {
+	///   print(error);
+	///   return;
+	/// }
+	/// ```
+	///
+	/// See also:
+	/// [Rust: `Result::unwrap()`](https://doc.rust-lang.org/std/result/enum.Result.html#method.unwrap)
+	() operator ~() => unwrap();
 }

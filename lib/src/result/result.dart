@@ -61,16 +61,14 @@ sealed class Result<T, E> {
 		Err(value: E err) => 'Err($err)'
 	};
 
+	/// **Deprecated**: Use `Result.call()` as `value()` to easily unwrap `Result`
+	/// type values instead.
+	///
 	/// Shortcut to call [Result.unwrap()].
 	///
 	/// **Warning**: This is an *unsafe* operation. A [ResultError] will be thrown
-	/// if this operator is used on a [None] value. You can take advantage of this
+	/// if this operator is used on an [Err] value. You can take advantage of this
 	/// safely via [catchResult]/[catchResultAsync].
-	///
-	/// This is as close to analagous to Rust's `?` postfix operator for `Result`
-	/// values as Dart can manage. There are no overrideable postfix operators in
-	/// Dart, sadly, so this won't be as ergonomic as Rust but it's still nicer
-	/// than calling [Result.unwrap()].
 	///
 	/// ```dart
 	/// var foo = Ok(1);
@@ -101,7 +99,28 @@ sealed class Result<T, E> {
 	///
 	/// See also:
 	/// [Rust: `Result::unwrap()`](https://doc.rust-lang.org/std/result/enum.Result.html#method.unwrap)
+	@Deprecated('Use `Result.call()` as `value()` to unwrap `Result` type values instead.')
 	T operator ~() => unwrap();
+
+	/// Shortcut to call [Result.unwrap()].
+	///
+	/// Allows calling a `Result` value like a function as a shortcut to unwrap the
+	/// held value of the `Result`.
+	///
+	/// **Warning**: This is an *unsafe* operation. A [ResultError] will be thrown
+	/// if this operation is used on an [Err] value. You can take advantage of this
+	/// safely via [catchResult]/[catchResultAsync].
+	///
+	/// ```dart
+	/// var foo = Ok(1);
+	/// var bar = Ok(2);
+	///
+	/// print(foo() + bar()); // prints: 3
+	/// ```
+	///
+	/// See also:
+	/// [Rust: `Result::unwrap()`](https://doc.rust-lang.org/std/result/enum.Result.html#method.unwrap)
+	T call() => unwrap();
 
 	/// Returns whether or not this `Result` is [Ok].
 	///

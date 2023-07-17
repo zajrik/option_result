@@ -19,19 +19,19 @@ void main() {
 			}), equals(None<int>()));
 		});
 
-		test('Should propagate None() using ~ in catchOption', () {
+		test('Should propagate None() using call() in catchOption', () {
 			expect(catchOption<int>(() {
 				Option<int> foo = Some(1);
 				Option<int> bar = None();
-				return Some(~foo + ~bar);
+				return Some(foo() + bar());
 			}), equals(None<int>()));
 		});
 
-		test('Should propagate None() using ~ in catchOptionAsync', () async {
+		test('Should propagate None() using call() in catchOptionAsync', () async {
 			expect(await catchOptionAsync<int>(() {
 				Option<int> foo = Some(1);
 				Option<int> bar = None();
-				return Some(~foo + ~bar);
+				return Some(foo() + bar());
 			}), equals(None<int>()));
 		});
 
@@ -73,19 +73,19 @@ void main() {
 			}), equals(Err<int, String>('foo bar baz')));
 		});
 
-		test('Should propagate Err() using ~ in catchResult', () {
+		test('Should propagate Err() using call() in catchResult', () {
 			expect(catchResult<int, String>(() {
 				Result<int, String> foo = Ok(1);
 				Result<int, String> bar = Err('foo');
-				return Ok(~foo + ~bar);
+				return Ok(foo() + bar());
 			}), equals(Err<int, String>('foo')));
 		});
 
-		test('Should propagate Err() using ~ in catchResultAsync', () async {
+		test('Should propagate Err() using call() in catchResultAsync', () async {
 			expect(await catchResultAsync<int, String>(() {
 				Result<int, String> foo = Ok(1);
 				Result<int, String> bar = Err('foo');
-				return Ok(~foo + ~bar);
+				return Ok(foo() + bar());
 			}), equals(Err<int, String>('foo')));
 		});
 

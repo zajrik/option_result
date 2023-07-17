@@ -32,7 +32,7 @@ part of result;
 /// value type of the propagated [Err()] does not match the expected `E` value type
 /// of this function, a [ResultError] will be thrown.
 ///
-/// See also: [Result.~]
+/// See also: [Result.call()]
 Result<T, E> catchResult<T, E>(Result<T, E> Function() fn) {
 	try { return fn(); }
 	catch (error) { return _handleResultError(error); }
@@ -46,7 +46,7 @@ Result<T, E> catchResult<T, E>(Result<T, E> Function() fn) {
 /// Behaves identically to [catchResult] but async, returning `Future<Result<T, E>>`
 /// rather than `Result<T, E>`.
 ///
-/// See also: [Result.~]
+/// See also: [Result.call()]
 Future<Result<T, E>> catchResultAsync<T, E>(FutureOr<Result<T, E>> Function() fn) async {
 	try { return await fn(); }
 	catch (error) { return _handleResultError(error); }

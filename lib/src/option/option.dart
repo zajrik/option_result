@@ -56,16 +56,14 @@ sealed class Option<T> {
 		None() => 'None()'
 	};
 
+	/// **Deprecated**: Use `Option.call()` as `value()` to easily unwrap `Option`
+	/// type values instead.
+	///
 	/// Shortcut to call [Option.unwrap()].
 	///
 	/// **Warning**: This is an *unsafe* operation. An [OptionError] will be thrown
 	/// if this operator is used on a [None] value. You can take advantage of this
 	/// safely via [catchOption]/[catchOptionAsync].
-	///
-	/// This is as close to analagous to Rust's `?` postfix operator for `Option`
-	/// values as Dart can manage. There are no overrideable postfix operators in
-	/// Dart, sadly, so this won't be as ergonomic as Rust but it's still nicer
-	/// than calling [Option.unwrap()].
 	///
 	/// ```dart
 	/// var foo = Some(1);
@@ -96,7 +94,28 @@ sealed class Option<T> {
 	///
 	/// See also:
 	/// [Rust: `Option::unwrap()`](https://doc.rust-lang.org/std/option/enum.Option.html#method.unwrap)
+	@Deprecated('Use `Option.call()` as `value()` to unwrap `Option` type values instead.')
 	T operator ~() => unwrap();
+
+	/// Shortcut to call [Option.unwrap()].
+	///
+	/// Allows calling an `Option` value like a function as a shortcut to unwrap the
+	/// held value of the `Option`.
+	///
+	/// **Warning**: This is an *unsafe* operation. An [OptionError] will be thrown
+	/// if this operation is used on a [None] value. You can take advantage of this
+	/// safely via [catchOption]/[catchOptionAsync].
+	///
+	/// ```dart
+	/// var foo = Some(1);
+	/// var bar = Some(2);
+	///
+	/// print(foo() + bar()); // prints: 3
+	/// ```
+	///
+	/// See also:
+	/// [Rust: `Option::unwrap()`](https://doc.rust-lang.org/std/option/enum.Option.html#method.unwrap)
+	T call() => unwrap();
 
 	/// Returns whether or not this `Option` holds a value ([Some]).
 	///

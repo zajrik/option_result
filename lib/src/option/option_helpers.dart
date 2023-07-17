@@ -27,7 +27,7 @@ part of option;
 ///
 /// Note that any other type of thrown error/exception other than [OptionError] will be rethrown.
 ///
-/// See also: [Option.~]
+/// See also: [Option.call()]
 Option<T> catchOption<T>(Option<T> Function() fn) {
 	try { return fn(); }
 	catch (error) { return _handleOptionError(error); }
@@ -41,7 +41,7 @@ Option<T> catchOption<T>(Option<T> Function() fn) {
 /// Behaves identically to [catchOption] but async, returning `Future<Option<T>>`
 /// rather than `Option<T>`.
 ///
-/// See also: [Option.~]
+/// See also: [Option.call()]
 Future<Option<T>> catchOptionAsync<T>(FutureOr<Option<T>> Function() fn) async {
 	try { return await fn(); }
 	catch (error) { return _handleOptionError(error); }

@@ -29,6 +29,13 @@ void main() {
 			expect(Some(['foo', 'bar', 'baz']).unwrap(), equals(['foo', 'bar', 'baz']));
 		});
 
+		test('Should unwrap values via shorthand getters', () {
+			Option<int> foo = Some(1);
+
+			if (foo case Some(:int v)) { expect(v, equals(1)); }
+			if (foo case Some(:int val)) { expect(val, equals(1)); }
+		});
+
 		test('Should create expected Options via Option.from()', () {
 			expect(Option.from('foo'), equals(Some('foo')));
 			expect(Option<int>.from(null), equals(None<int>()));

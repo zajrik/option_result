@@ -44,6 +44,18 @@ void main () {
 			expect(Err(['foo', 42, true]).unwrapErr(), equals(['foo', 42, true]));
 		});
 
+		test('Should unwrap values via shorthand getters', () {
+			Result<int, String> foo = Ok(1);
+			Result<int, String> bar = Err('bar');
+
+			if (foo case Ok(:int v)) { expect(v, equals(1)); }
+			if (foo case Ok(:int val)) { expect(val, equals(1)); }
+			if (bar case Err(:String v)) { expect(v, equals('bar')); }
+			if (bar case Err(:String val)) { expect(val, equals('bar')); }
+			if (bar case Err(:String e)) { expect(e, equals('bar')); }
+			if (bar case Err(:String error)) { expect(error, equals('bar')); }
+		});
+
 		test('Should create expected Results via Result.from()', () {
 			expect(Result.from('foo', 'err'), equals(Ok<String, String>('foo')));
 			expect(Result<String, String>.from(null, 'err'), equals(Err<String, String>('err')));

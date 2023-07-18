@@ -210,7 +210,7 @@ Add the dependency to your `pubspec.yaml` file in your Dart/Flutter project:
 
 ```yaml
 dependencies:
-  option_result: ^3.0.0
+  option_result: ^3.0.1
 ```
 
 Or via git:
@@ -288,15 +288,15 @@ You can accomplish this like so:
 import 'package:option_result/option_result.dart'
   hide
     OptionFutureUnwrap,
-	OptionFutureOrUnwrap,
-	ResultFutureUnwrap,
-	ResultFutureOrUnwrap;
+    OptionFutureOrUnwrap,
+    ResultFutureUnwrap,
+    ResultFutureOrUnwrap;
 
 // Or if you're only importing one of the types from the package:
 import 'package:option_result/option.dart'
   hide
     OptionFutureUnwrap,
-	OptionFutureOrUnwrap;
+    OptionFutureOrUnwrap;
 ```
 
 ## Similar packages

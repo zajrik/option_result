@@ -1,3 +1,7 @@
+## 3.0.1
+
+- Fix README formatting.
+
 ## 3.0.0
 
 - Add `call()` extension for the following types to allow calling them like a function

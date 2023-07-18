@@ -475,79 +475,52 @@ extension ResultTranspose<T, E> on Result<Option<T>, E> {
 	};
 }
 
-/// Provides the `~` operator for unwrapping [Result] type values.
-///
-/// Usage of `~` on [Result] type values that do not contain `()` is deprecated.
-/// `~` should only be used with [Result] type values that are strictly designated
-/// for error handling as a means to ergonomically propagate their errors inside of
-/// [catchResult]/[catchResultAsync] blocks.
-extension ResultTildeUnwrap<T, E> on Result<T, E> {
-	/// **Deprecated**: Use `Result.call()` as `value()` to easily unwrap `Result`
-	/// type values instead.
-	///
-	/// Shortcut to call [Result.unwrap()].
+/// Provides `call` functionality to [Future] values that complete with a [Result]
+/// type value.
+extension ResultFutureUnwrap<T, E> on Future<Result<T, E>> {
+	/// Allows calling a `Future<Result<T, E>>` value like a function, transforming
+	/// it into a [Future] that unwraps the returned `Result` value.
 	///
 	/// **Warning**: This is an *unsafe* operation. A [ResultError] will be thrown
-	/// if this operator is used on an [Err] value. You can take advantage of this
-	/// safely via [catchResult]/[catchResultAsync].
+	/// if this operation is used on a [Future] returning an [Err] value when that
+	/// [Future] completes. You can take advantage of this safely via [catchResultAsync].
 	///
 	/// ```dart
-	/// var foo = Ok(1);
-	/// var bar = Ok(2);
+	/// Future<Result<int, String>> resultReturn() async {
+	///   return Ok(1);
+	/// }
 	///
-	/// print(~foo + ~bar); // prints: 3
-	/// ```
+	/// int foo = await resultReturn()();
 	///
-	/// **Note**: if you need to access fields or methods on the held value when
-	/// using `~`, you'll need to use parentheses like so:
-	///
-	/// ```dart
-	/// var res = Ok(1);
-	///
-	/// print((~res).toString());
-	/// ```
-	///
-	/// Additionally, If you need to perform a bitwise NOT on the held value of
-	/// a `Result`, you have a few choices:
-	///
-	/// ```dart
-	/// var res = Ok(1);
-	///
-	/// print(~(~res)); // prints: -2
-	/// print(~~res); // prints: -2
-	/// print(~res.unwrap()); // prints: -2;
+	/// print(foo) // prints: 1
 	/// ```
 	///
 	/// See also:
 	/// [Rust: `Result::unwrap()`](https://doc.rust-lang.org/std/result/enum.Result.html#method.unwrap)
-	@Deprecated('Use `Result.call()` as `value()` to unwrap `Result` type values instead.')
-	T operator ~() => unwrap();
+	Future<T> call() async => (await this).unwrap();
 }
 
-/// Provides the `~` operator to [Result] type values that hold `()` to provide
-/// an ergonomic way to unwrap [Result] type values used strictly for error handling.
-extension ResultUnitUnwrap<E> on Result<(), E> {
-	/// Shortcut to call [Result.unwrap()].
+/// Provides `call` functionality to [FutureOr] values that complete with a [Result]
+/// type value.
+extension ResultFutureOrUnwrap<T, E> on FutureOr<Result<T, E>> {
+	/// Allows calling a `FutureOr<Result<T, E>>` value like a function, transforming
+	/// it into a [Future] that unwraps the returned `Result` value.
 	///
 	/// **Warning**: This is an *unsafe* operation. A [ResultError] will be thrown
-	/// if this operator is used on an [Err] value. You can take advantage of this
-	/// safely via [catchResult]/[catchResultAsync].
+	/// if this operation is used on a [FutureOr] containing an [Err] value when that
+	/// [FutureOr] completes. You can take advantage of this safely via [catchResultAsync].
 	///
 	/// ```dart
-	/// Result<(), String> err = catchResultAsync(() async {
-	///   ~await failableOperation1();
-	///   ~failableOperation2();
-	///
-	///   return Ok(());
-	/// });
-	///
-	/// if (err case Err(value: String error)) {
-	///   print(error);
-	///   return;
+	/// Future<Result<int, String>> resultReturn() {
+	///   return Ok(1);
 	/// }
+	///
+	/// int foo = await resultReturn()();
+	///
+	/// print(foo) // prints: 1
 	/// ```
 	///
 	/// See also:
 	/// [Rust: `Result::unwrap()`](https://doc.rust-lang.org/std/result/enum.Result.html#method.unwrap)
-	() operator ~() => unwrap();
+	Future<T> call() async => (await this).unwrap();
 }

@@ -76,47 +76,6 @@ sealed class Option<T> {
 	/// [Rust: `Option::unwrap()`](https://doc.rust-lang.org/std/option/enum.Option.html#method.unwrap)
 	T call() => unwrap();
 
-	/// **Deprecated**: Use `Option.call()` as `value()` to easily unwrap `Option`
-	/// type values instead.
-	///
-	/// Shortcut to call [Option.unwrap()].
-	///
-	/// **Warning**: This is an *unsafe* operation. An [OptionError] will be thrown
-	/// if this operator is used on a [None] value. You can take advantage of this
-	/// safely via [catchOption]/[catchOptionAsync].
-	///
-	/// ```dart
-	/// var foo = Some(1);
-	/// var bar = Some(2);
-	///
-	/// print(~foo + ~bar); // prints: 3
-	/// ```
-	///
-	/// **Note**: if you need to access fields or methods on the held value when
-	/// using `~`, you'll need to use parentheses like so:
-	///
-	/// ```dart
-	/// var opt = Some(1);
-	///
-	/// print((~opt).toString());
-	/// ```
-	///
-	/// Additionally, If you need to perform a bitwise NOT on the held value of
-	/// an `Option`, you have a few choices:
-	///
-	/// ```dart
-	/// var opt = Some(1);
-	///
-	/// print(~(~opt)); // prints: -2
-	/// print(~~opt); // prints: -2
-	/// print(~opt.unwrap()); // prints: -2;
-	/// ```
-	///
-	/// See also:
-	/// [Rust: `Option::unwrap()`](https://doc.rust-lang.org/std/option/enum.Option.html#method.unwrap)
-	@Deprecated('Use `Option.call()` as `value()` to unwrap `Option` type values instead.')
-	T operator ~() => unwrap();
-
 	/// Returns whether or not this `Option` holds a value ([Some]).
 	///
 	/// See also:
@@ -513,4 +472,54 @@ extension OptionTranspose<T, E> on Option<Result<T, E>> {
 		Some(value: Err(value: E value)) => Err(value),
 		None() => Ok(None())
 	};
+}
+
+/// Provides `call` functionality to [Future] values that complete with an [Option]
+/// type value.
+extension OptionFutureUnwrap<T> on Future<Option<T>> {
+	/// Allows calling a `Future<Option<T>>` value like a function, transforming it
+	/// into a Future that unwraps the returned `Option` value.
+	///
+	/// **Warning**: This is an *unsafe* operation. An [OptionError] will be thrown
+	/// if this operation is used on a [Future] returning a [None] value when that
+	/// [Future] completes. You can take advantage of this safely via [catchOptionAsync].
+	///
+	/// ```dart
+	/// Future<Option<int>> optionReturn() async {
+	///   return Some(1);
+	/// }
+	///
+	/// int foo = await optionReturn()();
+	///
+	/// print(foo) // prints: 1
+	/// ```
+	///
+	/// See also:
+	/// [Rust: `Option::unwrap()`](https://doc.rust-lang.org/std/option/enum.Option.html#method.unwrap)
+	Future<T> call() async => (await this).unwrap();
+}
+
+/// Provides `call` functionality to [FutureOr] values that complete with an [Option]
+/// type value.
+extension OptionFutureOrUnwrap<T> on FutureOr<Option<T>> {
+	/// Allows calling a `FutureOr<Option<T>>` value like a function, transforming it
+	/// into a Future that unwraps the returned `Option` value.
+	///
+	/// **Warning**: This is an *unsafe* operation. An [OptionError] will be thrown
+	/// if this operation is used on a [FutureOr] returning a [None] value when that
+	/// [FutureOr] completes. You can take advantage of this safely via [catchOptionAsync].
+	///
+	/// ```dart
+	/// FutureOr<Option<int>> optionReturn() {
+	///   return Some(1);
+	/// }
+	///
+	/// int foo = await optionReturn()();
+	///
+	/// print(foo) // prints: 1
+	/// ```
+	///
+	/// See also:
+	/// [Rust: `Option::unwrap()`](https://doc.rust-lang.org/std/option/enum.Option.html#method.unwrap)
+	Future<T> call() async => (await this).unwrap();
 }

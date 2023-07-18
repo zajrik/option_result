@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:test/test.dart';
 import 'package:option_result/option_result.dart';
 
@@ -35,24 +37,29 @@ void main() {
 			}), equals(None<int>()));
 		});
 
-		test('Should propagate None() using deprecated ~ in catchOption', () {
-			expect(catchOption<int>(() {
-				Option<int> foo = Some(1);
-				Option<int> bar = None();
+		test('Should propagate None() from awaited Future using call() in catchOptionAsync', () async {
+			Future<Option<int>> foo() async => None();
 
-				// ignore: deprecated_member_use_from_same_package
-				return Some(~foo + ~bar);
-			}), equals(None<int>()));
+			expect(await catchOptionAsync(() async {
+				await foo()();
+				return Some(1);
+			}), equals(None()));
 		});
 
-		test('Should propagate None() using deprecated ~ in catchOptionAsync', () async {
-			expect(await catchOptionAsync<int>(() {
-				Option<int> foo = Some(1);
-				Option<int> bar = None();
+		test('Should propagate None() from awaited FutureOr using call() in catchOptionAsync', () async {
+			FutureOr<Option<int>> foo() async => None();
+			FutureOr<Option<String>> bar() => None();
 
-				// ignore: deprecated_member_use_from_same_package
-				return Some(~foo + ~bar);
-			}), equals(None<int>()));
+			expect(await catchOptionAsync(() async {
+				await foo()();
+				return Some(1);
+			}), equals(None()));
+
+			// Test awaiting non-async FutureOr
+			expect(await catchOptionAsync(() async {
+				await bar()();
+				return Some('bar');
+			}), equals(None()));
 		});
 
 		test('Should rethrow any other kind of error/exception thrown inside catchOption', () {
@@ -109,44 +116,29 @@ void main() {
 			}), equals(Err<int, String>('foo')));
 		});
 
-		test('Should propagate Err() using deprecated ~ in catchResult', () {
-			expect(catchResult<int, String>(() {
-				Result<int, String> foo = Ok(1);
-				Result<int, String> bar = Err('foo');
-
-				// ignore: deprecated_member_use_from_same_package
-				return Ok(~foo + ~bar);
-			}), equals(Err<int, String>('foo')));
-		});
-
-		test('Should propagate Err() using deprecated ~ in catchResultAsync', () async {
-			expect(await catchResultAsync<int, String>(() {
-				Result<int, String> foo = Ok(1);
-				Result<int, String> bar = Err('foo');
-
-				// ignore: deprecated_member_use_from_same_package
-				return Ok(~foo + ~bar);
-			}), equals(Err<int, String>('foo')));
-		});
-
-		test('Should propagate Err() for () Results using ~ in catchResult', () {
-			Result<(), String> foo() => Err('foo');
-
-			expect(catchResult(() {
-				~foo();
-
-				return Ok(());
-			}), equals(Err('foo')));
-		});
-
-		test('Should propagate Err() for () Results using ~ in catchResultAsync', () async {
-			Future<Result<(), String>> foo() async => Err('foo');
+		test('Should propagate Err() from awaited Future using call() in catchResultAsync', () async {
+			Future<Result<int, String>> foo() async => Err('foo');
 
 			expect(await catchResultAsync(() async {
-				~await foo();
-
-				return Ok(());
+				await foo()();
+				return Ok(1);
 			}), equals(Err('foo')));
+		});
+
+		test('Should propagate Err() from awaited FutureOr using call() in catchResultAsync', () async {
+			FutureOr<Result<int, String>> foo() async => Err('foo');
+			FutureOr<Result<int, String>> bar() => Err('bar');
+
+			expect(await catchResultAsync(() async {
+				await foo()();
+				return Ok(1);
+			}), equals(Err('foo')));
+
+			// Test awaiting non-async FutureOr
+			expect(await catchResultAsync(() async {
+				await bar()();
+				return Ok(1);
+			}), equals(Err('bar')));
 		});
 
 		test('Should rethrow ResultError when erroring on unwrapErr() on Ok() via catchResult', () {

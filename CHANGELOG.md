@@ -1,10 +1,34 @@
+## 3.0.0
+
+- Add `call()` extension for the following types to allow calling them like a function
+  for easy unwrapping of their `Option`/`Result` values:
+  - `Future<Option<T>>`
+  - `FutureOr<Option<T>>`
+  - `Future<Result<T, E>>`
+  - `FutureOr<Result<T, E>>`
+
+### Breaking changes
+
+- Remove deprecated `~` operator for `Option` and `Result` type values.
+- Remove `~` operator for `Result<(), E>` type values.
+  - The only reason this was added was to keep `~await failableOperation()` ergonomic,
+  but this can be accomplished with a `call()` extension on `Future`/`FutureOr`
+  values which keeps the quick method of unwrapping `Option`/`Result` values consistent
+  accross the library.
+
+	- `~a + ~b` became `a() + b()`
+	- `~optionFn()` became `optionFn()()`
+	- `~resultFn()` became `resultFn()()` and now:
+	- `~await optionFnAsync()` becomes `await optionFnAsync()()`
+	- `~await resultFnAsync()` becomes `await resultFnAsync()()`
+
 ## 2.2.0
 
 - Un-deprecate `~` operator for `Result<(), E>` type values
   - This keeps the ergonomics of `~` for unwrapping awaited Results, but only where
-    the value would be discarded anyway, i.e., unwrapping a result that is only used
-    for error handling inside a `catchResult` or `catchResultAsync` block so that the
-    error can propagate.
+  the value would be discarded anyway, i.e., unwrapping a result that is only used
+  for error handling inside a `catchResult` or `catchResultAsync` block so that the
+  error can propagate.
 
 ## 2.1.0
 
@@ -31,7 +55,7 @@
 
 ### Breaking changes
 
-- Remove `~` shortcut for Option/Result propagation.
+- Remove `~` shortcut for prefixing Option/Result propagation functions.
   - I failed to test the most obvious use-case. Due to the lack of generics on operators,
   when both variants of `Option` or `Result` are returned in the same prefixed function,
   the return type is inferred by the compiler to be `Object` and the propagation

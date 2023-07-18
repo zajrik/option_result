@@ -151,17 +151,20 @@ if (err case Err(value: String error)) {
 // No error, continue...
 ```
 
-To further support this, the `~` operator is provided on `Result` type values that
-hold `()` for easy propagation of `Err` values when `Result` types are being used
-strictly for error handling purposes.
+To further support this, just like how you can unwrap `Option` and `Result` values
+by calling them like a function, an extension for `Future<Option<T>>` and `Future<Result<T, E>>`
+is provided to allow calling them like a function as well which will transform the
+future into a future that unwraps the resulting `Option` or `Result` when completing.
+
+*(This also applies to `FutureOr` values.)*
 
 ```dart
-// Here we have two operations that return Result<(), String>. We can wrap them
-// in a catchResult block (async in this case) and use ~ to unwrap them, discarding
-// the unit value if Ok or propagating the Err value otherwise.
+// Here we have two functions that return Result<(), String>, one of which is a Future.
+// We can wrap them in a catchResult block (async in this case) and call them like a function
+// to unwrap them, discarding the unit value if Ok, or propagating the Err value otherwise.
 Result<(), String> err = catchResultAsync(() async {
-  ~await failableOperation1();
-  ~failableOperation2();
+  await failableOperation1()();
+  failableOperation2()();
 
   return Ok(());
 });
@@ -207,7 +210,7 @@ Add the dependency to your `pubspec.yaml` file in your Dart/Flutter project:
 
 ```yaml
 dependencies:
-  option_result: ^2.2.0
+  option_result: ^3.0.0
 ```
 
 Or via git:
@@ -257,6 +260,43 @@ print(switch (email) {
 // will give you warnings/errors to make sure you're providing cases for all potential
 // values for Some()/Ok(), either directly or via a default case, and for None()/Err(),
 // again either directly or via a default case
+```
+
+## Potential extension conflicts
+
+This library provides 4 total class extensions on the following types:
+
+- `Future<Option<T>>`
+- `FutureOr<Option<T>>`
+- `Future<Result<T, E>>`
+- `FutureOr<Result<T, E>>`
+
+These extensions provide a `call()` method to allow calling these types like functions
+to unwrap the underlying `Option` and `Result` types. In the event that any other
+library provides a `call()` method on `Future`/`FutureOr` types that you need to
+make use of instead, you can hide the following extensions from this library:
+
+- `OptionFutureUnwrap`
+- `OptionFutureOrUnwrap`
+- `ResultFutureUnwrap`
+- `ResultFutureOrUnwrap`
+
+You can accomplish this like so:
+
+```dart
+// Whitespace doesn't matter here, just keeping it clean
+import 'package:option_result/option_result.dart'
+  hide
+    OptionFutureUnwrap,
+	OptionFutureOrUnwrap,
+	ResultFutureUnwrap,
+	ResultFutureOrUnwrap;
+
+// Or if you're only importing one of the types from the package:
+import 'package:option_result/option.dart'
+  hide
+    OptionFutureUnwrap,
+	OptionFutureOrUnwrap;
 ```
 
 ## Similar packages

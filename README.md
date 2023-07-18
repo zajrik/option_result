@@ -262,6 +262,67 @@ print(switch (email) {
 // again either directly or via a default case
 ```
 
+## Pattern-matching verbosity
+
+All of the prior examples in this document are using the most verbose syntax for
+pattern matching possible, but Dart does provide some sugar to make our lives as
+developers a little easier and this library provides a bit of its own sugar too.
+
+Consider the following if-case:
+
+```dart
+if (result case Err(value: String value)) {}
+```
+
+This example checks if `result` is `Err` and that its `value` field contains a `String`
+type value, which it binds to the scoped variable of the same name, `value`.
+
+This level of verbosity is necessary if you want to rebind the `value` field to
+a scoped variable of a different name like so:
+
+```dart
+if (result case Err(value: String foo)) {}
+```
+
+But if you're comfortable with your scoped variable being named `value` then you can
+make use of the field-access shorthand that Dart provides:
+
+```dart
+if (result case Err(:String value)) {}
+if (result case Err(:final value)) {}
+if (result case Err(:var value)) {}
+```
+
+These are all functionally identical but the lack of repetition really cleans things up.
+
+To clean things up even further, the `Option` and `Result` types have a few shorthand
+getters you can take advantage of:
+
+```dart
+if (result case Ok(:var v)) {}
+if (result case Ok(:var val)) {}
+if (result case Err(:var e)) {}
+if (result case Err(:var error)) {}
+// Err types also have v, val
+```
+
+These can also be used for rebinding:
+
+```dart
+if (result case Err(e: var foo)) {}
+```
+
+The exhaustive list of `value` field shorthand getters for `Option` and `Result`
+is as follows:
+
+- `Option`
+  - `Some`: `v`, `val`
+- `Result`
+  - `Ok`: `v`, `val`
+  - `Err`: `v`, `val`, `e`, `error`
+    - Ideally `err` would be included but is not possible due to the `err` method
+    found on `Result` types
+
 ## Potential extension conflicts
 
 This library provides 4 total class extensions on the following types:

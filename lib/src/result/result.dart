@@ -27,15 +27,15 @@ sealed class Result<T, E> {
 	/// Creates:
 	/// - [Ok] using the given `T` value if the given `T` value is not null.
 	/// - [Err] using the given `E` value if the given `T` value is null.
-	factory Result.from(T? value, E err) => switch (value) {
-		null => Err(err),
+	factory Result.from(T? value, E error) => switch (value) {
+		null => Err(error),
 		_ => Ok(value)
 	};
 
 	@override
 	int get hashCode => switch (this) {
-		Ok(value: T value) => Object.hash('Ok()', value),
-		Err(value: E err) => Object.hash('Err()', err)
+		Ok(:T v) => Object.hash('Ok()', v),
+		Err(:E e) => Object.hash('Err()', e)
 	};
 
 	/// Compare equality between two `Result` values.
@@ -50,15 +50,15 @@ sealed class Result<T, E> {
 	/// their held values are equatable and their irrelevant types are elided.
 	@override
 	operator ==(Object other) => switch (other) {
-		Ok(value: T value) when isOk() => identical(value, unwrap()) || value == unwrap(),
-		Err(value: E err) when isErr() => identical(err, unwrapErr()) || err == unwrapErr(),
+		Ok(:T v) when isOk() => identical(v, unwrap()) || v == unwrap(),
+		Err(:E e) when isErr() => identical(e, unwrapErr()) || e == unwrapErr(),
 		_ => false
 	};
 
 	@override
 	String toString() => switch (this) {
-		Ok(value: T value) => 'Ok($value)',
-		Err(value: E err) => 'Err($err)'
+		Ok(:T v) => 'Ok($v)',
+		Err(:E e) => 'Err($e)'
 	};
 
 	/// Shortcut to call [Result.unwrap()].
@@ -100,7 +100,7 @@ sealed class Result<T, E> {
 	/// See also:
 	/// [Rust: `Result::is_ok_and()`](https://doc.rust-lang.org/std/result/enum.Result.html#method.is_ok_and)
 	bool isOkAnd(bool Function(T) predicate) => switch (this) {
-		Ok(value: T value) => predicate(value),
+		Ok(:T v) => predicate(v),
 		Err() => false
 	};
 
@@ -121,7 +121,7 @@ sealed class Result<T, E> {
 	/// [Rust: `Result::is_err_and()`](https://doc.rust-lang.org/std/result/enum.Result.html#method.is_err_and)
 	bool isErrAnd(bool Function(E) predicate) => switch (this) {
 		Ok() => false,
-		Err(value: E value) => predicate(value)
+		Err(:E e) => predicate(e)
 	};
 
 	/// Returns the held value of this `Result` if it is [Ok].
@@ -132,8 +132,11 @@ sealed class Result<T, E> {
 	/// See also:
 	/// [Rust: `Result::unwrap()`](https://doc.rust-lang.org/std/result/enum.Result.html#method.unwrap)
 	T unwrap() => switch (this) {
-		Ok(value: T value) => value,
-		Err() => throw ResultError('called `Result#unwrap()` on an `Err` value', original: this)
+		Ok(:T v) => v,
+		Err() => throw ResultError(
+			'called `Result#unwrap()` on an `Err` value',
+			original: this
+		)
 	};
 
 	/// Returns the held value of this `Result` if it is [Ok], or the given value
@@ -142,7 +145,7 @@ sealed class Result<T, E> {
 	/// See also:
 	/// [Rust: `Result::unwrap_or()`](https://doc.rust-lang.org/std/result/enum.Result.html#method.unwrap_or)
 	T unwrapOr(T orValue) => switch (this) {
-		Ok(value: T value) => value,
+		Ok(:T v) => v,
 		Err() => orValue
 	};
 
@@ -152,7 +155,7 @@ sealed class Result<T, E> {
 	/// See also:
 	/// [Rust: `Result::unwrap_or_else()`](https://doc.rust-lang.org/std/result/enum.Result.html#method.unwrap_or_else)
 	T unwrapOrElse(T Function() elseFn) => switch (this) {
-		Ok(value: T value) => value,
+		Ok(:T v) => v,
 		Err() => elseFn()
 	};
 
@@ -164,8 +167,8 @@ sealed class Result<T, E> {
 	/// See also:
 	/// [Rust: `Result::unwrap_err()`](https://doc.rust-lang.org/std/result/enum.Result.html#method.unwrap_err)
 	E unwrapErr() => switch (this) {
-		Ok(value: T value) => throw ResultError(value),
-		Err(value: E value) => value
+		Ok(:T v) => throw ResultError(v),
+		Err(:E e) => e
 	};
 
 	/// Returns the held value of this `Result` if it is [Ok]. Throws a [ResultError]
@@ -174,8 +177,8 @@ sealed class Result<T, E> {
 	/// See also:
 	/// [Rust: `Result::expect()`](https://doc.rust-lang.org/std/result/enum.Result.html#method.expect)
 	T expect(String message) => switch (this) {
-		Ok(value: T value) => value,
-		Err(value: E value) => throw ResultError('$message: $value', isExpected: true)
+		Ok(:T v) => v,
+		Err(:E e) => throw ResultError('$message: $e', isExpected: true)
 	};
 
 	/// Returns the held value of this `Result` if it is [Err]. Throws a [ResultError]
@@ -184,8 +187,8 @@ sealed class Result<T, E> {
 	/// See also:
 	/// [Rust: `Result::expect_err()`](https://doc.rust-lang.org/std/result/enum.Result.html#method.expect_err)
 	E expectErr(String message) => switch (this) {
-		Ok(value: T value) => throw ResultError('$message: $value', isExpected: true),
-		Err(value: E value) => value
+		Ok(:T v) => throw ResultError('$message: $v', isExpected: true),
+		Err(:E e) => e
 	};
 
 	/// Returns an [Iterable] of the held value.
@@ -198,7 +201,7 @@ sealed class Result<T, E> {
 	/// [Rust: `Result::iter()`](https://doc.rust-lang.org/std/result/enum.Result.html#method.iter)
 	Iterable<T> iter() sync* {
 		switch (this) {
-			case Ok(value: T value): yield value;
+			case Ok(:T v): yield v;
 			case Err(): return;
 		}
 	}
@@ -210,7 +213,7 @@ sealed class Result<T, E> {
 	/// [Rust: `Result::and()`](https://doc.rust-lang.org/std/result/enum.Result.html#method.and)
 	Result<U, E> and<U>(Result<U, E> other) => switch (this) {
 		Ok() => other,
-		Err(value: E value) => Err(value)
+		Err(:E e) => Err(e)
 	};
 
 	/// Returns a `Result` value as [Err<U, E>] if this `Result` is [Err<T, E>],
@@ -219,8 +222,8 @@ sealed class Result<T, E> {
 	/// See also:
 	/// [Rust: `Result::and_then()`](https://doc.rust-lang.org/std/result/enum.Result.html#method.and_then)
 	Result<U, E> andThen<U>(Result<U, E> Function(T) fn) => switch (this) {
-		Ok(value: T value) => fn(value),
-		Err(value: E value) => Err(value)
+		Ok(:T v) => fn(v),
+		Err(:E e) => Err(e)
 	};
 
 	/// Returns a `Result` value as [Ok<T, F>] if this `Result` is [Ok<T, E>],
@@ -229,7 +232,7 @@ sealed class Result<T, E> {
 	/// See also:
 	/// [Rust: `Result::or()`](https://doc.rust-lang.org/std/result/enum.Result.html#method.or)
 	Result<T, F> or<F>(Result<T, F> other) => switch (this) {
-		Ok(value: T value) => Ok(value),
+		Ok(:T v) => Ok(v),
 		Err() => other
 	};
 
@@ -239,8 +242,8 @@ sealed class Result<T, E> {
 	/// See also:
 	/// [Rust: `Result::or_else()`](https://doc.rust-lang.org/std/result/enum.Result.html#method.or_else)
 	Result<T, F> orElse<F>(Result<T, F> Function(E) fn) => switch (this) {
-		Ok(value: T value) => Ok(value),
-		Err(value: E value) => fn(value)
+		Ok(:T v) => Ok(v),
+		Err(:E e) => fn(e)
 	};
 
 	/// Calls the provided function with the contained value if this `Result` is [Ok].
@@ -259,7 +262,7 @@ sealed class Result<T, E> {
 	/// See also:
 	/// [Rust: `Result::inspect()`](https://doc.rust-lang.org/std/result/enum.Result.html#method.inspect)
 	Result<T, E> inspect(void Function(T) fn) {
-		if (this case Ok(value: T v)) {
+		if (this case Ok(:T v)) {
 			fn(v);
 		}
 
@@ -283,8 +286,8 @@ sealed class Result<T, E> {
 	/// See also:
 	/// [Rust: `Result::inspect_err()`](https://doc.rust-lang.org/std/result/enum.Result.html#method.inspect_err)
 	Result<T, E> inspectErr(void Function(E) fn) {
-		if (this case Err(value: E v)) {
-			fn(v);
+		if (this case Err(:E e)) {
+			fn(e);
 		}
 
 		return this;
@@ -300,8 +303,8 @@ sealed class Result<T, E> {
 	/// See also:
 	/// [Rust: `Result::map()`](https://doc.rust-lang.org/std/result/enum.Result.html#method.map)
 	Result<U, E> map<U>(U Function(T) mapFn) => switch (this) {
-		Ok(value: T value) => Ok(mapFn(value)),
-		Err(value: E value) => Err(value)
+		Ok(:T v) => Ok(mapFn(v)),
+		Err(:E e) => Err(e)
 	};
 
 	/// Maps a `Result<T, E>` to a `Result<U, E>` using the given function with the
@@ -327,7 +330,7 @@ sealed class Result<T, E> {
 	/// See also:
 	/// [Rust: `Result::map_or()`](https://doc.rust-lang.org/std/result/enum.Result.html#method.map_or)
 	Result<U, E> mapOr<U>(U orValue, U Function(T) mapFn) => switch (this) {
-		Ok(value: T value) => Ok(mapFn(value)),
+		Ok(:T v) => Ok(mapFn(v)),
 		Err() => Ok(orValue)
 	};
 
@@ -353,7 +356,7 @@ sealed class Result<T, E> {
 	/// See also:
 	/// [Rust: `Result::map_or_else()`](https://doc.rust-lang.org/std/result/enum.Result.html#method.map_or_else)
 	Result<U, E> mapOrElse<U>(U Function() orFn, U Function(T) mapFn) => switch (this) {
-		Ok(value: T value) => Ok(mapFn(value)),
+		Ok(:T v) => Ok(mapFn(v)),
 		Err() => Ok(orFn())
 	};
 
@@ -367,8 +370,8 @@ sealed class Result<T, E> {
 	/// See also:
 	/// [Rust: `Result::map_err()`](https://doc.rust-lang.org/std/result/enum.Result.html#method.map_err)
 	Result<T, F> mapErr<F>(F Function(E) mapFn) => switch (this) {
-		Ok(value: T value) => Ok(value),
-		Err(value: E value) => Err(mapFn(value))
+		Ok(:T v) => Ok(v),
+		Err(:E e) => Err(mapFn(e))
 	};
 
 	/// Converts this `Result<T, E>` into an [Option<T>], discarding the held error
@@ -381,7 +384,7 @@ sealed class Result<T, E> {
 	/// See also:
 	/// [Rust: `Result::ok()`](https://doc.rust-lang.org/std/result/enum.Result.html#method.ok)
 	Option<T> ok() => switch (this) {
-		Ok(value: T value) => Some(value),
+		Ok(:T v) => Some(v),
 		Err() => None()
 	};
 
@@ -396,7 +399,7 @@ sealed class Result<T, E> {
 	/// [Rust: `Result::err()`](https://doc.rust-lang.org/std/result/enum.Result.html#method.err)
 	Option<E> err() => switch (this) {
 		Ok() => None(),
-		Err(value: E value) => Some(value)
+		Err(:E e) => Some(e)
 	};
 }
 
@@ -415,6 +418,9 @@ class Ok<T, E> extends Result<T, E> {
 	final T value;
 
 	const Ok(this.value);
+
+	T get v => value;
+	T get val => value;
 }
 
 /// A type that represents the failure [Result] of something.
@@ -432,6 +438,12 @@ class Err<T, E> extends Result<T, E> {
 	final E value;
 
 	const Err(this.value);
+
+	E get v => value;
+	E get val => value;
+
+	E get e => value;
+	E get error => value;
 }
 
 /// Provides the `flatten()` method to [Result] type values that hold another [Result].
@@ -445,8 +457,8 @@ extension ResultFlatten<T, E> on Result<Result<T, E>, E> {
 	/// See also:
 	/// [Rust: `Result::flatten()`](https://doc.rust-lang.org/std/result/enum.Result.html#method.flatten)
 	Result<T, E> flatten() => switch (this) {
-		Ok(value: Result<T, E> value) => value,
-		Err(value: E value) => Err(value)
+		Ok(:Result<T, E> v) => v,
+		Err(:E e) => Err(e)
 	};
 }
 
@@ -469,9 +481,9 @@ extension ResultTranspose<T, E> on Result<Option<T>, E> {
 	/// See also:
 	/// [Rust: `Result::transpose()`](https://doc.rust-lang.org/std/result/enum.Result.html#method.transpose)
 	Option<Result<T, E>> transpose() => switch (this) {
-		Ok(value: Some(value: T value)) => Some(Ok(value)),
-		Ok(value: None()) => None(),
-		Err(value: E value) => Some(Err(value))
+		Ok(v: Some(:T v)) => Some(Ok(v)),
+		Ok(v: None()) => None(),
+		Err(:E e) => Some(Err(e))
 	};
 }
 

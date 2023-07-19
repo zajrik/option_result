@@ -389,12 +389,25 @@ as well as an `Either` type, which is like a `Result` type with extra steps.
 Has a cool name.
 <br><br>
 
-- [dartz](https://pub.dev/packages/dartz) - The quintessential Dart functional programming
-library. Provides `Option`, `Either`, and so many other monadic types. Definitely
-worth taking a peek at if you like functional programming practices.
-<br><br>
-  With the addition of proper pattern matching and tuples in the form of `Record`
-in Dart 3, I foresee a major overhaul to Dartz in the near future. It might just
-get even cooler.
+- [fpdart](https://pub.dev/packages/fpdart) - Functional programming in Dart. Very
+thorougly documented. Provides `Option` and `Either` types and so much more. `sealed`
+type support is in the works so expect proper pattern matching soon. 😎
+
+- [dartz](https://pub.dev/packages/dartz) - Another functional programming library.
+Predates `fpdart` but appears to no longer be receiving updates. Provides `Option`,
+and `Either` types as well.
 <br><br>
   Also has a cool name.
+
+## Final thoughts
+
+I've had a lot of fun writing this library. I haven't had a good project to work on
+in quite some time so even if I'm the only person to ever end up using this, I'm still
+content that I took the time to write it and put it out there. It was a nice exercise.
+
+Functional programming in Dart is not my goal and never really was. I just like `Option`
+and `Result` types for null/error handling. I always find myself thinking about them
+whenever I try new languages without a similar concept.
+
+With all of that said, if you're reading this: Thank you for taking the time to explore
+this library, even if it's not what you need for your projects.

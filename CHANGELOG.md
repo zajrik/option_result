@@ -1,7 +1,11 @@
+## 3.1.1
+
+- Update README.
+
 ## 3.1.0
 
-- Add `value` field shorthand getters for `Option` types
-- Add `value` field shorthand getters for `Result` types
+- Add `value` field shorthand getters for `Option` types.
+- Add `value` field shorthand getters for `Result` types.
 
 ## 3.0.1
 

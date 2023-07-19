@@ -210,7 +210,7 @@ Add the dependency to your `pubspec.yaml` file in your Dart/Flutter project:
 
 ```yaml
 dependencies:
-  option_result: ^3.1.0
+  option_result: ^3.1.1
 ```
 
 Or via git:
@@ -392,6 +392,7 @@ Has a cool name.
 - [fpdart](https://pub.dev/packages/fpdart) - Functional programming in Dart. Very
 thorougly documented. Provides `Option` and `Either` types and so much more. `sealed`
 type support is in the works so expect proper pattern matching soon. 😎
+<br><br>
 
 - [dartz](https://pub.dev/packages/dartz) - Another functional programming library.
 Predates `fpdart` but appears to no longer be receiving updates. Provides `Option`,

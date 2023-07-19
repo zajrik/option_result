@@ -1,6 +1,6 @@
 name: option_result
 description: A lightweight Dart library for Rust-like Option/Result types. Supports exhaustive pattern matching and provides helpers for None()/Err() propagation
-version: 3.1.0
+version: 3.1.1
 repository: https://github.com/zajrik/option_result
 issue_tracker: https://github.com/zajrik/option_result/issues
 

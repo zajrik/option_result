@@ -47,10 +47,12 @@ Option<int> divideBy2(int i) => switch (i) {
 };
 
 Option<int> a = Some(10);
-Option<int> b = None();
+Option<int> b = Some(0);
+Option<int> c = None();
 
-Option<int> c = a.andThen(divideBy2).andThen(multiplyBy5); // Some(25)
-Option<int> d = b.andThen(divideBy2).andThen(multiplyBy5); // None()
+Option<int> d = a.andThen(divideBy2).andThen(multiplyBy5); // Some(25)
+Option<int> e = b.andThen(divideBy2).andThen(multiplyBy5); // None()
+Option<int> f = c.andThen(divideBy2).andThen(multiplyBy5); // None()
 ```
 
 For safety, operations culminating in an `Option` that make use of other `Option`

@@ -1,0 +1,4 @@
+dartdoc:
+  linkToSource:
+    root: .
+    uriTemplate: https://github.com/zajrik/option_result/tree/main/%f%#L%l%

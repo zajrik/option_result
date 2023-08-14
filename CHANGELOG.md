@@ -1,6 +1,6 @@
 ## 3.1.2
 
-- Update README.
+- Clean up `flatten()` implementations.
 - Add source links to docs.
 
 ## 3.1.1

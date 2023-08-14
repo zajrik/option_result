@@ -446,10 +446,7 @@ extension OptionFlatten<T> on Option<Option<T>> {
 	///
 	/// See also:
 	/// [Rust: `Option::flatten()`](https://doc.rust-lang.org/std/option/enum.Option.html#method.flatten)
-	Option<T> flatten() => switch (this) {
-		Some(:Option<T> v) => v,
-		None() => None()
-	};
+	Option<T> flatten() => andThen(identity);
 }
 
 /// Provides the `transpose()` method to [Option] type values that hold a [Result].

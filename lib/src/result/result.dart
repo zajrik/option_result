@@ -456,10 +456,7 @@ extension ResultFlatten<T, E> on Result<Result<T, E>, E> {
 	///
 	/// See also:
 	/// [Rust: `Result::flatten()`](https://doc.rust-lang.org/std/result/enum.Result.html#method.flatten)
-	Result<T, E> flatten() => switch (this) {
-		Ok(:Result<T, E> v) => v,
-		Err(:E e) => Err(e)
-	};
+	Result<T, E> flatten() => andThen(identity);
 }
 
 /// Provides the `transpose()` method to [Result] type values that hold an [Option] value.

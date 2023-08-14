@@ -1,3 +1,8 @@
+## 3.1.2
+
+- Update README.
+- Add source links to docs.
+
 ## 3.1.1
 
 - Update README.

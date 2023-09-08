@@ -1,3 +1,7 @@
+## 3.1.3
+
+- Fix code snippet in readme.
+
 ## 3.1.2
 
 - Clean up `flatten()` implementations.

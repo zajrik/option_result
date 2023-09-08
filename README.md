@@ -164,7 +164,7 @@ future into a future that unwraps the resulting `Option` or `Result` when comple
 // Here we have two functions that return Result<(), String>, one of which is a Future.
 // We can wrap them in a catchResult block (async in this case) and call them like a function
 // to unwrap them, discarding the unit value if Ok, or propagating the Err value otherwise.
-Result<(), String> err = catchResultAsync(() async {
+Result<(), String> err = await catchResultAsync(() async {
   await failableOperation1()();
   failableOperation2()();
 
@@ -212,7 +212,7 @@ Add the dependency to your `pubspec.yaml` file in your Dart/Flutter project:
 
 ```yaml
 dependencies:
-  option_result: ^3.1.2
+  option_result: ^3.1.3
 ```
 
 Or via git:

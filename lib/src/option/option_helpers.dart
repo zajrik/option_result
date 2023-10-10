@@ -61,3 +61,13 @@ Option<T> _handleOptionError<T>(dynamic error) {
 
 	throw error;
 }
+
+/// Represents a [Future] that completes with an [Option] of the given type `T`.
+///
+/// This is simply a convenience typedef to save a couple characters.
+typedef FutureOption<T> = Future<Option<T>>;
+
+/// Represents a [FutureOr] that is or completes with an [Option] of the given type `T`.
+///
+/// This is simply a convenience typedef to save a couple characters.
+typedef FutureOrOption<T> = FutureOr<Option<T>>;

@@ -85,3 +85,13 @@ Result<T, E> _handleResultError<T, E>(dynamic error) {
 	// Rethrow any other kind of error
 	throw error;
 }
+
+/// Represents a [Future] that completes with a [Result] of the given types `T`, `E`.
+///
+/// This is simply a convenience typedef to save a couple characters.
+typedef FutureResult<T, E> = Future<Result<T, E>>;
+
+/// Represents a [FutureOr] that is or completes with a [Result] of the given types `T`, `E`.
+///
+/// This is simply a convenience typedef to save a couple characters.
+typedef FutureOrResult<T, E> = FutureOr<Result<T, E>>;

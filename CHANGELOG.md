@@ -1,3 +1,10 @@
+## 3.2.0
+
+- Add `FutureOption<T>` typedef.
+- Add `FutureOrOption<T>` typedef.
+- Add `FutureResult<T, E>` typedef.
+- Add `FutureOrResult<T, E>` typedef.
+
 ## 3.1.3
 
 - Fix code snippet in readme.

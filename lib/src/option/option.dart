@@ -396,7 +396,7 @@ sealed class Option<T> {
 ///   print(bar);
 /// }
 /// ```
-class Some<T> extends Option<T> {
+final class Some<T> extends Option<T> {
 	final T value;
 
 	const Some(this.value);
@@ -416,7 +416,7 @@ class Some<T> extends Option<T> {
 ///   print('No value!');
 /// }
 /// ```
-class None<T> extends Option<T> {
+final class None<T> extends Option<T> {
 	const None();
 }
 

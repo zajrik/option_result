@@ -16,7 +16,7 @@ part of result;
 /// // return Ok(value? / 2);
 ///
 /// Result<int, String> divideByTwo(Result<int, String> value) => catchResult(() {
-///   return Ok(value.unwrap() ~/ 2);
+///   return value.unwrap() ~/ 2;
 /// });
 ///
 /// Result<int, String> foo = Ok(42);
@@ -33,8 +33,8 @@ part of result;
 /// of this function, a [ResultError] will be thrown.
 ///
 /// See also: [Result.call()]
-Result<T, E> catchResult<T, E>(Result<T, E> Function() fn) {
-	try { return fn(); }
+Result<T, E> catchResult<T extends Object, E extends Object>(T Function() fn) {
+	try { return Ok(fn()); }
 	catch (error) { return _handleResultError(error); }
 }
 
@@ -47,15 +47,15 @@ Result<T, E> catchResult<T, E>(Result<T, E> Function() fn) {
 /// rather than `Result<T, E>`.
 ///
 /// See also: [Result.call()]
-Future<Result<T, E>> catchResultAsync<T, E>(FutureOr<Result<T, E>> Function() fn) async {
-	try { return await fn(); }
+Future<Result<T, E>> catchResultAsync<T extends Object, E extends Object>(FutureOr<T> Function() fn) async {
+	try { return Ok(await fn()); }
 	catch (error) { return _handleResultError(error); }
 }
 
 /// Attempt to propagate the given error if it is a ResultError, otherwise rethrow.
-Result<T, E> _handleResultError<T, E>(dynamic error) {
+Result<T, E> _handleResultError<T extends Object, E extends Object>(Object error) {
 	// Attempt to propagate original Err()
-	if (error is ResultError) {
+	if (error is ResultError<T, E>) {
 		// If the error came from unwrapErr() on an Ok() result, rethrow
 		if (error.original case Ok()) {
 			throw error;
@@ -89,9 +89,9 @@ Result<T, E> _handleResultError<T, E>(dynamic error) {
 /// Represents a [Future] that completes with a [Result] of the given types `T`, `E`.
 ///
 /// This is simply a convenience typedef to save a couple characters.
-typedef FutureResult<T, E> = Future<Result<T, E>>;
+typedef FutureResult<T extends Object, E extends Object> = Future<Result<T, E>>;
 
 /// Represents a [FutureOr] that is or completes with a [Result] of the given types `T`, `E`.
 ///
 /// This is simply a convenience typedef to save a couple characters.
-typedef FutureOrResult<T, E> = FutureOr<Result<T, E>>;
+typedef FutureOrResult<T extends Object, E extends Object> = FutureOr<Result<T, E>>;

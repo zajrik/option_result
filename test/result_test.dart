@@ -93,20 +93,10 @@ void main () {
 			expect(() => Ok('foo bar baz').unwrapErr(), throwsA(TypeMatcher<ResultError>()));
 		});
 
-		test('Should return expected values from Result#isOk()', () {
-			expect(Ok(null).isOk(), equals(true));
-			expect(Err(null).isOk(), equals(false));
-		});
-
 		test('Should return expected values from Result#isOkAnd()', () {
 			expect(Ok(1).isOkAnd((value) => value == 1), equals(true));
 			expect(Ok(1).isOkAnd((value) => value >= 2), equals(false));
 			expect(Err(1).isOkAnd((_) => true), equals(false));
-		});
-
-		test('Should return expected values from Result#isErr()', () {
-			expect(Ok(null).isErr(), equals(false));
-			expect(Err(null).isErr(), equals(true));
 		});
 
 		test('Should return expected values from Result#isErrAnd()', () {

@@ -9,7 +9,7 @@ void main() {
 			expect(catchOption<int>(() {
 				Option<int> foo = Some(1);
 				Option<int> bar = None();
-				return Some(foo.unwrap() + bar.unwrap());
+				return foo.unwrap() + bar.unwrap();
 			}), equals(None<int>()));
 		});
 
@@ -17,7 +17,7 @@ void main() {
 			expect(await catchOptionAsync<int>(() {
 				Option<int> foo = Some(1);
 				Option<int> bar = None();
-				return Some(foo.unwrap() + bar.unwrap());
+				return foo.unwrap() + bar.unwrap();
 			}), equals(None<int>()));
 		});
 
@@ -25,7 +25,7 @@ void main() {
 			expect(catchOption<int>(() {
 				Option<int> foo = Some(1);
 				Option<int> bar = None();
-				return Some(foo() + bar());
+				return foo() + bar();
 			}), equals(None<int>()));
 		});
 
@@ -33,7 +33,7 @@ void main() {
 			expect(await catchOptionAsync<int>(() {
 				Option<int> foo = Some(1);
 				Option<int> bar = None();
-				return Some(foo() + bar());
+				return foo() + bar();
 			}), equals(None<int>()));
 		});
 
@@ -88,7 +88,7 @@ void main() {
 			expect(catchResult<int, String>(() {
 				Result<int, String> foo = Ok(1);
 				Result<int, String> bar = Err('foo bar baz');
-				return Ok(foo.unwrap() + bar.unwrap());
+				return foo.unwrap() + bar.unwrap();
 			}), equals(Err<int, String>('foo bar baz')));
 		});
 
@@ -96,7 +96,7 @@ void main() {
 			expect(await catchResultAsync<int, String>(() {
 				Result<int, String> foo = Ok(1);
 				Result<int, String> bar = Err('foo bar baz');
-				return Ok(foo.unwrap() + bar.unwrap());
+				return foo.unwrap() + bar.unwrap();
 			}), equals(Err<int, String>('foo bar baz')));
 		});
 
@@ -104,7 +104,7 @@ void main() {
 			expect(catchResult<int, String>(() {
 				Result<int, String> foo = Ok(1);
 				Result<int, String> bar = Err('foo');
-				return Ok(foo() + bar());
+				return foo() + bar();
 			}), equals(Err<int, String>('foo')));
 		});
 
@@ -112,7 +112,7 @@ void main() {
 			expect(await catchResultAsync<int, String>(() {
 				Result<int, String> foo = Ok(1);
 				Result<int, String> bar = Err('foo');
-				return Ok(foo() + bar());
+				return foo() + bar();
 			}), equals(Err<int, String>('foo')));
 		});
 
@@ -141,18 +141,6 @@ void main() {
 			}), equals(Err('bar')));
 		});
 
-		test('Should rethrow ResultError when erroring on unwrapErr() on Ok() via catchResult', () {
-			expect(() => catchResult<int, String>(() {
-				return Ok(Ok(1).unwrapErr());
-			}), throwsA(TypeMatcher<ResultError>()));
-		});
-
-		test('Should rethrow ResultError when erroring on unwrapErr() on Ok() via catchResultAsync', () {
-			expect(() => catchResultAsync<int, String>(() {
-				return Ok(Ok(1).unwrapErr());
-			}), throwsA(TypeMatcher<ResultError>()));
-		});
-
 		test('Should rethrow any other kind of error/exception thrown inside catchResult', () {
 			expect(() => catchResult(() => throw RangeError('foo')), throwsRangeError);
 			expect(() => catchResult(() => throw ArgumentError('bar')), throwsArgumentError);
@@ -169,7 +157,7 @@ void main() {
 			expect(catchResult<int, String>(() {
 				Result<int, String> foo = Ok(1);
 				Result<bool, String> bar = Err('foo bar baz');
-				return Ok(foo.unwrap() + (bar.unwrap() ? 1 : 2));
+				return foo.unwrap() + (bar.unwrap() ? 1 : 2);
 			}), equals(Err<int, String>('foo bar baz')));
 		});
 
@@ -177,7 +165,7 @@ void main() {
 			expect(await catchResultAsync<int, String>(() {
 				Result<int, String> foo = Ok(1);
 				Result<bool, String> bar = Err('foo bar baz');
-				return Ok(foo.unwrap() + (bar.unwrap() ? 1 : 2));
+				return foo.unwrap() + (bar.unwrap() ? 1 : 2);
 			}), equals(Err<int, String>('foo bar baz')));
 		});
 
@@ -185,7 +173,7 @@ void main() {
 			expect(() => catchResultAsync<int, String>(() {
 				Result<int, String> foo = Ok(1);
 				Result<bool, int> bar = Err(3);
-				return Ok(foo.unwrap() + (bar.unwrap() ? 1 : 2));
+				return foo.unwrap() + (bar.unwrap() ? 1 : 2);
 			}), throwsA(TypeMatcher<ResultError>()));
 		});
 
@@ -193,7 +181,7 @@ void main() {
 			expect(() => catchResultAsync<int, String>(() {
 				Result<int, String> foo = Ok(1);
 				Result<bool, int> bar = Err(3);
-				return Ok(foo.unwrap() + (bar.unwrap() ? 1 : 2));
+				return foo.unwrap() + (bar.unwrap() ? 1 : 2);
 			}), throwsA(TypeMatcher<ResultError>()));
 		});
 

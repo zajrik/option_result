@@ -64,8 +64,7 @@ void main() {
 		});
 
 		test('Should return expected values from Option#isSome()', () {
-			expect(Some(null).isSome(), equals(true));
-			expect(None().isSome(), equals(false));
+      expect(None().isSome(), equals(false));
 		});
 
 		test('Should return expected values from Option#isSomeAnd()', () {
@@ -75,7 +74,6 @@ void main() {
 		});
 
 		test('Should return expected values from Option#isNone()', () {
-			expect(Some(null).isNone(), equals(false));
 			expect(None().isNone(), equals(true));
 		});
 

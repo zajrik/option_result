@@ -94,7 +94,7 @@ Again, like `Option`, this helps promote clean, concise, and safe code.
 Result<int, String> multiplyBy5(int i) => Ok(i * 5);
 Result<int, String> divideBy2(int i) => switch (i) {
   0 => Err('divided by 0'),
-  _ => Ok(i ~/ 2)
+  _ => Ok(i ~/ 2),
 };
 
 Result<int, String> a = Ok(10);
@@ -123,8 +123,8 @@ Result<String, String> getUserEmailLowerCase(int id) => catchResult(() {
 Result<String, String> email = getUserEmailLowerCase(12345);
 
 switch (email) {
-  case Ok(value: String value): print('User email: $value');
-  case Err(value: String err): print('Error fetching email: $err');
+  case Ok(:String v): print('User email: $v');
+  case Err(:String e): print('Error fetching email: $e');
 }
 ```
 
@@ -145,7 +145,7 @@ Result<(), String> failableOperation() {
 
 Result<(), String> err = failableOperation();
 
-if (err case Err(value: String error)) {
+if (err case Err(e: String error)) {
   print(error);
   return;
 }
@@ -171,7 +171,7 @@ Result<(), String> err = await catchResultAsync(() async {
   return Ok(());
 });
 
-if (err case Err(value: String error)) {
+if (err case Err(e: String error)) {
   print(error);
   return;
 }
@@ -238,7 +238,7 @@ import 'package:option_result/result.dart';
 // Assume getUser() returns some sort of User object
 Result<User, String> user = await getUser(id: 12345);
 
-if (user case Err(value: String error)) {
+if (user case Err(e: String error)) {
   print('Error retrieving user: $error');
   return;
 }
@@ -246,7 +246,7 @@ if (user case Err(value: String error)) {
 // Assume the User object has an email field of type Option<String>
 Option<String> email = user.unwrap().email;
 
-if (email case Some(value: String address)) {
+if (email case Some(v: String address)) {
   print('User email: $address');
 } else {
   print('User has no email set.');
@@ -254,7 +254,7 @@ if (email case Some(value: String address)) {
 
 // Alternative to the above using a switch expression for pattern matching
 print(switch (email) {
-  Some(value: String address) => 'User email: $address',
+  Some(v: String address) => 'User email: $address',
   None() => 'User has no email set.'
 });
 
@@ -273,57 +273,27 @@ developers a little easier and this library provides a bit of its own sugar too.
 Consider the following if-case:
 
 ```dart
-if (result case Err(value: String value)) {}
+if (result case Err(e: String value)) {}
 ```
 
-This example checks if `result` is `Err` and that its `value` field contains a `String`
+This example checks if `result` is `Err` and that its `e` field contains a `String`
 type value, which it binds to the scoped variable of the same name, `value`.
 
-This level of verbosity is necessary if you want to rebind the `value` field to
+This level of verbosity is necessary if you want to rebind the `e` field to
 a scoped variable of a different name like so:
 
 ```dart
-if (result case Err(value: String foo)) {}
+if (result case Err(e: String foo)) {}
 ```
 
-But if you're comfortable with your scoped variable being named `value` then you can
+But if you're comfortable with your scoped variable being named `e` then you can
 make use of the field-access shorthand that Dart provides:
 
 ```dart
-if (result case Err(:String value)) {}
-if (result case Err(:final value)) {}
-if (result case Err(:var value)) {}
-```
-
-These are all functionally identical but the lack of repetition really cleans things up.
-
-To clean things up even further, the `Option` and `Result` types have a few shorthand
-getters you can take advantage of:
-
-```dart
-if (result case Ok(:var v)) {}
-if (result case Ok(:var val)) {}
+if (result case Err(:String e)) {}
+if (result case Err(:final e)) {}
 if (result case Err(:var e)) {}
-if (result case Err(:var error)) {}
-// Err types also have v, val
 ```
-
-These can also be used for rebinding:
-
-```dart
-if (result case Err(e: var foo)) {}
-```
-
-The exhaustive list of `value` field shorthand getters for `Option` and `Result`
-is as follows:
-
-- `Option`
-  - `Some`: `v`, `val`
-- `Result`
-  - `Ok`: `v`, `val`
-  - `Err`: `v`, `val`, `e`, `error`
-    - Ideally `err` would be included but is not possible due to the `err` method
-    found on `Result` types
 
 ## Potential extension conflicts
 

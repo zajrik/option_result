@@ -1,7 +1,7 @@
 part of result;
 
 /// Represents an error thrown by a mishandled [Result] type value.
-class ResultError<T, E> extends Error {
+class ResultError<T extends Object, E extends Object> extends Error {
 	/// The message this `ResultError` was created with.
 	final dynamic message;
 

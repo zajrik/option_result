@@ -15,7 +15,7 @@ part of option;
 ///
 /// See also:
 /// [Rust: `Option`](https://doc.rust-lang.org/std/option/enum.Option.html)
-sealed class Option<T> {
+sealed class Option<T extends Object> {
 	/// The `Option` class cannot be instantiated directly. use [Some()], [None()],
 	/// or [Option.from()] to create instances of `Option` variants.
 	const Option();
@@ -166,7 +166,7 @@ sealed class Option<T> {
 	///
 	/// See also:
 	/// [Rust: `Option::and()`](https://doc.rust-lang.org/std/option/enum.Option.html#method.and)
-	Option<U> and<U>(Option<U> other) => switch (this) {
+	Option<U> and<U extends Object>(Option<U> other) => switch (this) {
 		Some() => other,
 		None() => None()
 	};
@@ -176,7 +176,7 @@ sealed class Option<T> {
 	///
 	/// See also:
 	/// [Rust: `Option::and_then()`](https://doc.rust-lang.org/std/option/enum.Option.html#method.and_then)
-	Option<U> andThen<U>(Option<U> Function(T) fn) => switch (this) {
+	Option<U> andThen<U extends Object>(Option<U> Function(T) fn) => switch (this) {
 		Some(:T v) => fn(v),
 		None() => None()
 	};
@@ -265,7 +265,7 @@ sealed class Option<T> {
 	///
 	/// See also:
 	/// [Rust: `Option::map()`](https://doc.rust-lang.org/std/option/enum.Option.html#method.map)
-	Option<U> map<U>(U Function(T) mapFn) => switch (this) {
+	Option<U> map<U extends Object>(U Function(T) mapFn) => switch (this) {
 		Some(:T v) => Some(mapFn(v)),
 		None() => None()
 	};
@@ -292,7 +292,7 @@ sealed class Option<T> {
 	///
 	/// See also:
 	/// [Rust: `Option::map_or()`](https://doc.rust-lang.org/std/option/enum.Option.html#method.map_or)
-	Option<U> mapOr<U>(U orValue, U Function(T) mapFn) => switch (this) {
+	Option<U> mapOr<U extends Object>(U orValue, U Function(T) mapFn) => switch (this) {
 		Some(:T v) => Some(mapFn(v)),
 		None() => Some(orValue)
 	};
@@ -318,7 +318,7 @@ sealed class Option<T> {
 	///
 	/// See also:
 	/// [Rust: `Option::map_or_else()`](https://doc.rust-lang.org/std/option/enum.Option.html#method.map_or_else)
-	Option<U> mapOrElse<U>(U Function() orFn, U Function(T) mapFn) => switch (this) {
+	Option<U> mapOrElse<U extends Object>(U Function() orFn, U Function(T) mapFn) => switch (this) {
 		Some(:T v) => Some(mapFn(v)),
 		None() => Some(orFn())
 	};
@@ -334,7 +334,7 @@ sealed class Option<T> {
 	///
 	/// See also:
 	/// [Rust: `Option::zip()`](https://doc.rust-lang.org/std/option/enum.Option.html#method.zip)
-	Option<(T, U)> zip<U>(Option<U> other) => switch ((this, other)) {
+	Option<(T, U)> zip<U extends Object>(Option<U> other) => switch ((this, other)) {
 		(Some(v: T a), Some(v: U b)) => Some((a, b)),
 		_ => None()
 	};
@@ -347,7 +347,7 @@ sealed class Option<T> {
 	///
 	/// See also:
 	/// [Rust: `Option::zip_with()`](https://doc.rust-lang.org/std/option/enum.Option.html#method.zip_with)
-	Option<V> zipWith<U, V>(Option<U> other, V Function(T, U) zipFn) => switch ((this, other)) {
+	Option<V> zipWith<U extends Object, V extends Object>(Option<U> other, V Function(T, U) zipFn) => switch ((this, other)) {
 		(Some(v: T a), Some(v: U b)) => Some(zipFn(a, b)),
 		_ => None()
 	};
@@ -363,7 +363,7 @@ sealed class Option<T> {
 	///
 	/// See also:
 	/// [Rust: `Option::ok_or()`](https://doc.rust-lang.org/std/option/enum.Option.html#method.ok_or)
-	Result<T, E> okOr<E>(E err) => switch (this) {
+	Result<T, E> okOr<E extends Object>(E err) => switch (this) {
 		Some(:T v) => Ok(v),
 		None() => Err(err)
 	};
@@ -379,7 +379,7 @@ sealed class Option<T> {
 	///
 	/// See also:
 	/// [Rust: `Option::ok_or_else()`](https://doc.rust-lang.org/std/option/enum.Option.html#method.ok_or_else)
-	Result<T, E> okOrElse<E>(E Function() elseFn) => switch (this) {
+	Result<T, E> okOrElse<E extends Object>(E Function() elseFn) => switch (this) {
 		Some(:T v) => Ok(v),
 		None() => Err(elseFn())
 	};
@@ -396,7 +396,7 @@ sealed class Option<T> {
 ///   print(bar);
 /// }
 /// ```
-class Some<T> extends Option<T> {
+class Some<T extends Object> extends Option<T> {
 	final T value;
 
 	const Some(this.value);
@@ -416,12 +416,12 @@ class Some<T> extends Option<T> {
 ///   print('No value!');
 /// }
 /// ```
-class None<T> extends Option<T> {
+class None<T extends Object> extends Option<T> {
 	const None();
 }
 
 /// Provides the `unzip()` method to [Option] type values that hold a [Record] of two values.
-extension OptionUnzip<T, U> on Option<(T, U)> {
+extension OptionUnzip<T extends Object, U extends Object> on Option<(T, U)> {
 	/// Unzips this `Option` if this `Option` holds a [Record] of two values.
 	///
 	/// Returns:
@@ -437,7 +437,7 @@ extension OptionUnzip<T, U> on Option<(T, U)> {
 }
 
 /// Provides the `flatten()` method to [Option] type values that hold another [Option].
-extension OptionFlatten<T> on Option<Option<T>> {
+extension OptionFlatten<T extends Object> on Option<Option<T>> {
 	/// Flattens a nested `Option` type value one level.
 	///
 	/// Returns:
@@ -450,7 +450,7 @@ extension OptionFlatten<T> on Option<Option<T>> {
 }
 
 /// Provides the `transpose()` method to [Option] type values that hold a [Result].
-extension OptionTranspose<T, E> on Option<Result<T, E>> {
+extension OptionTranspose<T extends Object, E extends Object> on Option<Result<T, E>> {
 	/// Transposes this [Option<Result<T, E>>] into a [Result<Option<T>, E>].
 	///
 	/// Returns:
@@ -476,7 +476,7 @@ extension OptionTranspose<T, E> on Option<Result<T, E>> {
 
 /// Provides `call` functionality to [Future] values that complete with an [Option]
 /// type value.
-extension OptionFutureUnwrap<T> on Future<Option<T>> {
+extension OptionFutureUnwrap<T extends Object> on Future<Option<T>> {
 	/// Allows calling a `Future<Option<T>>` value like a function, transforming it
 	/// into a Future that unwraps the returned `Option` value.
 	///
@@ -501,7 +501,7 @@ extension OptionFutureUnwrap<T> on Future<Option<T>> {
 
 /// Provides `call` functionality to [FutureOr] values that complete with an [Option]
 /// type value.
-extension OptionFutureOrUnwrap<T> on FutureOr<Option<T>> {
+extension OptionFutureOrUnwrap<T extends Object> on FutureOr<Option<T>> {
 	/// Allows calling a `FutureOr<Option<T>>` value like a function, transforming it
 	/// into a Future that unwraps the returned `Option` value.
 	///

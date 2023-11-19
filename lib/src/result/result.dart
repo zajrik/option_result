@@ -17,7 +17,7 @@ part of result;
 ///
 /// See also:
 /// [Rust: `Result`](https://doc.rust-lang.org/std/result/enum.Result.html)
-sealed class Result<T, E> {
+sealed class Result<T extends Object, E extends Object> {
 	/// The `Result` class cannot be instantiated directly. use [Ok()], [Err()],
 	/// or [Result.from()] to create instances of `Result` variants.
 	const Result();
@@ -211,7 +211,7 @@ sealed class Result<T, E> {
 	///
 	/// See also:
 	/// [Rust: `Result::and()`](https://doc.rust-lang.org/std/result/enum.Result.html#method.and)
-	Result<U, E> and<U>(Result<U, E> other) => switch (this) {
+	Result<U, E> and<U extends Object>(Result<U, E> other) => switch (this) {
 		Ok() => other,
 		Err(:E e) => Err(e)
 	};
@@ -221,7 +221,7 @@ sealed class Result<T, E> {
 	///
 	/// See also:
 	/// [Rust: `Result::and_then()`](https://doc.rust-lang.org/std/result/enum.Result.html#method.and_then)
-	Result<U, E> andThen<U>(Result<U, E> Function(T) fn) => switch (this) {
+	Result<U, E> andThen<U extends Object>(Result<U, E> Function(T) fn) => switch (this) {
 		Ok(:T v) => fn(v),
 		Err(:E e) => Err(e)
 	};
@@ -231,7 +231,7 @@ sealed class Result<T, E> {
 	///
 	/// See also:
 	/// [Rust: `Result::or()`](https://doc.rust-lang.org/std/result/enum.Result.html#method.or)
-	Result<T, F> or<F>(Result<T, F> other) => switch (this) {
+	Result<T, F> or<F extends Object>(Result<T, F> other) => switch (this) {
 		Ok(:T v) => Ok(v),
 		Err() => other
 	};
@@ -241,7 +241,7 @@ sealed class Result<T, E> {
 	///
 	/// See also:
 	/// [Rust: `Result::or_else()`](https://doc.rust-lang.org/std/result/enum.Result.html#method.or_else)
-	Result<T, F> orElse<F>(Result<T, F> Function(E) fn) => switch (this) {
+	Result<T, F> orElse<F extends Object>(Result<T, F> Function(E) fn) => switch (this) {
 		Ok(:T v) => Ok(v),
 		Err(:E e) => fn(e)
 	};
@@ -302,7 +302,7 @@ sealed class Result<T, E> {
 	///
 	/// See also:
 	/// [Rust: `Result::map()`](https://doc.rust-lang.org/std/result/enum.Result.html#method.map)
-	Result<U, E> map<U>(U Function(T) mapFn) => switch (this) {
+	Result<U, E> map<U extends Object>(U Function(T) mapFn) => switch (this) {
 		Ok(:T v) => Ok(mapFn(v)),
 		Err(:E e) => Err(e)
 	};
@@ -329,7 +329,7 @@ sealed class Result<T, E> {
 	///
 	/// See also:
 	/// [Rust: `Result::map_or()`](https://doc.rust-lang.org/std/result/enum.Result.html#method.map_or)
-	Result<U, E> mapOr<U>(U orValue, U Function(T) mapFn) => switch (this) {
+	Result<U, E> mapOr<U extends Object>(U orValue, U Function(T) mapFn) => switch (this) {
 		Ok(:T v) => Ok(mapFn(v)),
 		Err() => Ok(orValue)
 	};
@@ -355,7 +355,7 @@ sealed class Result<T, E> {
 	///
 	/// See also:
 	/// [Rust: `Result::map_or_else()`](https://doc.rust-lang.org/std/result/enum.Result.html#method.map_or_else)
-	Result<U, E> mapOrElse<U>(U Function() orFn, U Function(T) mapFn) => switch (this) {
+	Result<U, E> mapOrElse<U extends Object>(U Function() orFn, U Function(T) mapFn) => switch (this) {
 		Ok(:T v) => Ok(mapFn(v)),
 		Err() => Ok(orFn())
 	};
@@ -369,7 +369,7 @@ sealed class Result<T, E> {
 	///
 	/// See also:
 	/// [Rust: `Result::map_err()`](https://doc.rust-lang.org/std/result/enum.Result.html#method.map_err)
-	Result<T, F> mapErr<F>(F Function(E) mapFn) => switch (this) {
+	Result<T, F> mapErr<F extends Object>(F Function(E) mapFn) => switch (this) {
 		Ok(:T v) => Ok(v),
 		Err(:E e) => Err(mapFn(e))
 	};
@@ -414,7 +414,7 @@ sealed class Result<T, E> {
 ///   print('Ok value: $bar');
 /// }
 /// ```
-class Ok<T, E> extends Result<T, E> {
+class Ok<T extends Object, E extends Object> extends Result<T, E> {
 	final T value;
 
 	const Ok(this.value);
@@ -434,7 +434,7 @@ class Ok<T, E> extends Result<T, E> {
 ///   print('Error value: $err');
 /// }
 /// ```
-class Err<T, E> extends Result<T, E> {
+class Err<T extends Object, E extends Object> extends Result<T, E> {
 	final E value;
 
 	const Err(this.value);
@@ -447,7 +447,7 @@ class Err<T, E> extends Result<T, E> {
 }
 
 /// Provides the `flatten()` method to [Result] type values that hold another [Result].
-extension ResultFlatten<T, E> on Result<Result<T, E>, E> {
+extension ResultFlatten<T extends Object, E extends Object> on Result<Result<T, E>, E> {
 	/// Flattens a nested `Result` type value one level.
 	///
 	/// Returns:
@@ -460,7 +460,7 @@ extension ResultFlatten<T, E> on Result<Result<T, E>, E> {
 }
 
 /// Provides the `transpose()` method to [Result] type values that hold an [Option] value.
-extension ResultTranspose<T, E> on Result<Option<T>, E> {
+extension ResultTranspose<T extends Object, E extends Object> on Result<Option<T>, E> {
 	/// Transposes this `Result<Option<T>, E>` into an [Option<Result<T, E>>].
 	///
 	/// Returns:
@@ -486,7 +486,7 @@ extension ResultTranspose<T, E> on Result<Option<T>, E> {
 
 /// Provides `call` functionality to [Future] values that complete with a [Result]
 /// type value.
-extension ResultFutureUnwrap<T, E> on Future<Result<T, E>> {
+extension ResultFutureUnwrap<T extends Object, E extends Object> on Future<Result<T, E>> {
 	/// Allows calling a `Future<Result<T, E>>` value like a function, transforming
 	/// it into a [Future] that unwraps the returned `Result` value.
 	///
@@ -511,7 +511,7 @@ extension ResultFutureUnwrap<T, E> on Future<Result<T, E>> {
 
 /// Provides `call` functionality to [FutureOr] values that complete with a [Result]
 /// type value.
-extension ResultFutureOrUnwrap<T, E> on FutureOr<Result<T, E>> {
+extension ResultFutureOrUnwrap<T extends Object, E extends Object> on FutureOr<Result<T, E>> {
 	/// Allows calling a `FutureOr<Result<T, E>>` value like a function, transforming
 	/// it into a [Future] that unwraps the returned `Result` value.
 	///

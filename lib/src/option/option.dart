@@ -94,10 +94,8 @@ sealed class Option<T> {
   ///
   /// See also:
   /// [Rust: `Option::is_some_and()`](https://doc.rust-lang.org/std/option/enum.Option.html#method.is_some_and)
-  bool isSomeAnd(bool Function(T) predicate) => switch (this) {
-        Some(:T v) => predicate(v),
-        None() => false,
-      };
+  bool isSomeAnd(bool Function(T v) predicate) =>
+      switch (this) { Some(:T v) => predicate(v), None() => false };
 
   /// Returns whether or not this `Option` holds no value ([None]).
   ///
@@ -179,10 +177,8 @@ sealed class Option<T> {
   ///
   /// See also:
   /// [Rust: `Option::and_then()`](https://doc.rust-lang.org/std/option/enum.Option.html#method.and_then)
-  Option<U> andThen<U>(Option<U> Function(T) fn) => switch (this) {
-        Some(:T v) => fn(v),
-        None() => None(),
-      };
+  Option<U> andThen<U>(Option<U> Function(T v) fn) =>
+      switch (this) { Some(:T v) => fn(v), None() => None() };
 
   /// Returns this `Option` if this `Option` is [Some<T>], otherwise returns `other`.
   ///
@@ -236,11 +232,10 @@ sealed class Option<T> {
   ///
   /// See also:
   /// [Rust: `Option::inspect()`](https://doc.rust-lang.org/std/option/enum.Option.html#method.inspect)
-  Option<T> inspect(void Function(T) fn) {
+  Option<T> inspect(void Function(T v) fn) {
     if (this case Some(:T v)) {
       fn(v);
     }
-
     return this;
   }
 
@@ -254,7 +249,7 @@ sealed class Option<T> {
   ///
   /// See also:
   /// [Rust: `Option::filter()`](https://doc.rust-lang.org/std/option/enum.Option.html#method.filter)
-  Option<T> where(bool Function(T) predicate) => switch (this) {
+  Option<T> where(bool Function(T v) predicate) => switch (this) {
         Some(:T v) => predicate(v) ? this : None(),
         None() => this,
       };
@@ -268,7 +263,7 @@ sealed class Option<T> {
   ///
   /// See also:
   /// [Rust: `Option::map()`](https://doc.rust-lang.org/std/option/enum.Option.html#method.map)
-  Option<U> map<U>(U Function(T) mapFn) => switch (this) {
+  Option<U> map<U>(U Function(T v) mapFn) => switch (this) {
         Some(:T v) => Some(mapFn(v)),
         None() => None(),
       };
@@ -295,7 +290,7 @@ sealed class Option<T> {
   ///
   /// See also:
   /// [Rust: `Option::map_or()`](https://doc.rust-lang.org/std/option/enum.Option.html#method.map_or)
-  Option<U> mapOr<U>(U orValue, U Function(T) mapFn) => switch (this) {
+  Option<U> mapOr<U>(U orValue, U Function(T v) mapFn) => switch (this) {
         Some(:T v) => Some(mapFn(v)),
         None() => Some(orValue),
       };
@@ -321,7 +316,7 @@ sealed class Option<T> {
   ///
   /// See also:
   /// [Rust: `Option::map_or_else()`](https://doc.rust-lang.org/std/option/enum.Option.html#method.map_or_else)
-  Option<U> mapOrElse<U>(U Function() orFn, U Function(T) mapFn) =>
+  Option<U> mapOrElse<U>(U Function() orFn, U Function(T v) mapFn) =>
       switch (this) {
         Some(:T v) => Some(mapFn(v)),
         None() => Some(orFn()),
@@ -351,7 +346,7 @@ sealed class Option<T> {
   ///
   /// See also:
   /// [Rust: `Option::zip_with()`](https://doc.rust-lang.org/std/option/enum.Option.html#method.zip_with)
-  Option<V> zipWith<U, V>(Option<U> other, V Function(T, U) zipFn) =>
+  Option<V> zipWith<U, V>(Option<U> other, V Function(T v, U o) zipFn) =>
       switch ((this, other)) {
         (Some(v: T a), Some(v: U b)) => Some(zipFn(a, b)),
         _ => None(),
@@ -419,7 +414,7 @@ final class Some<T> extends Option<T> {
 /// ```
 
 final class None<T> extends Option<T> {
-	const None();
+  const None();
 }
 
 /// Provides the `unzip()` method to [Option] type values that hold a [Record] of two values.

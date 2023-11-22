@@ -99,7 +99,7 @@ sealed class Result<T, E> {
   ///
   /// See also:
   /// [Rust: `Result::is_ok_and()`](https://doc.rust-lang.org/std/result/enum.Result.html#method.is_ok_and)
-  bool isOkAnd(bool Function(T) predicate) => switch (this) {
+  bool isOkAnd(bool Function(T v) predicate) => switch (this) {
         Ok(:T v) => predicate(v),
         Err() => false,
       };
@@ -119,7 +119,7 @@ sealed class Result<T, E> {
   ///
   /// See also:
   /// [Rust: `Result::is_err_and()`](https://doc.rust-lang.org/std/result/enum.Result.html#method.is_err_and)
-  bool isErrAnd(bool Function(E) predicate) => switch (this) {
+  bool isErrAnd(bool Function(E e) predicate) => switch (this) {
         Ok() => false,
         Err(:E e) => predicate(e),
       };
@@ -229,7 +229,7 @@ sealed class Result<T, E> {
   ///
   /// See also:
   /// [Rust: `Result::and_then()`](https://doc.rust-lang.org/std/result/enum.Result.html#method.and_then)
-  Result<U, E> andThen<U>(Result<U, E> Function(T) fn) => switch (this) {
+  Result<U, E> andThen<U>(Result<U, E> Function(T v) fn) => switch (this) {
         Ok(:T v) => fn(v),
         Err(:E e) => Err(e),
       };
@@ -249,7 +249,7 @@ sealed class Result<T, E> {
   ///
   /// See also:
   /// [Rust: `Result::or_else()`](https://doc.rust-lang.org/std/result/enum.Result.html#method.or_else)
-  Result<T, F> orElse<F>(Result<T, F> Function(E) fn) => switch (this) {
+  Result<T, F> orElse<F>(Result<T, F> Function(E e) fn) => switch (this) {
         Ok(:T v) => Ok(v),
         Err(:E e) => fn(e),
       };
@@ -269,7 +269,7 @@ sealed class Result<T, E> {
   ///
   /// See also:
   /// [Rust: `Result::inspect()`](https://doc.rust-lang.org/std/result/enum.Result.html#method.inspect)
-  Result<T, E> inspect(void Function(T) fn) {
+  Result<T, E> inspect(void Function(T v) fn) {
     if (this case Ok(:T v)) {
       fn(v);
     }
@@ -293,7 +293,7 @@ sealed class Result<T, E> {
   ///
   /// See also:
   /// [Rust: `Result::inspect_err()`](https://doc.rust-lang.org/std/result/enum.Result.html#method.inspect_err)
-  Result<T, E> inspectErr(void Function(E) fn) {
+  Result<T, E> inspectErr(void Function(E e) fn) {
     if (this case Err(:E e)) {
       fn(e);
     }
@@ -310,7 +310,7 @@ sealed class Result<T, E> {
   ///
   /// See also:
   /// [Rust: `Result::map()`](https://doc.rust-lang.org/std/result/enum.Result.html#method.map)
-  Result<U, E> map<U>(U Function(T) mapFn) => switch (this) {
+  Result<U, E> map<U>(U Function(T v) mapFn) => switch (this) {
         Ok(:T v) => Ok(mapFn(v)),
         Err(:E e) => Err(e),
       };
@@ -337,7 +337,7 @@ sealed class Result<T, E> {
   ///
   /// See also:
   /// [Rust: `Result::map_or()`](https://doc.rust-lang.org/std/result/enum.Result.html#method.map_or)
-  Result<U, E> mapOr<U>(U orValue, U Function(T) mapFn) => switch (this) {
+  Result<U, E> mapOr<U>(U orValue, U Function(T v) mapFn) => switch (this) {
         Ok(:T v) => Ok(mapFn(v)),
         Err() => Ok(orValue),
       };
@@ -363,7 +363,7 @@ sealed class Result<T, E> {
   ///
   /// See also:
   /// [Rust: `Result::map_or_else()`](https://doc.rust-lang.org/std/result/enum.Result.html#method.map_or_else)
-  Result<U, E> mapOrElse<U>(U Function() orFn, U Function(T) mapFn) =>
+  Result<U, E> mapOrElse<U>(U Function() orFn, U Function(T v) mapFn) =>
       switch (this) {
         Ok(:T v) => Ok(mapFn(v)),
         Err() => Ok(orFn()),
@@ -378,7 +378,7 @@ sealed class Result<T, E> {
   ///
   /// See also:
   /// [Rust: `Result::map_err()`](https://doc.rust-lang.org/std/result/enum.Result.html#method.map_err)
-  Result<T, F> mapErr<F>(F Function(E) mapFn) => switch (this) {
+  Result<T, F> mapErr<F>(F Function(E e) mapFn) => switch (this) {
         Ok(:T v) => Ok(v),
         Err(:E e) => Err(mapFn(e)),
       };

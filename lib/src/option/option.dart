@@ -401,9 +401,8 @@ sealed class Option<T> {
 ///   print(bar);
 /// }
 /// ```
-class Some<T> extends Option<T> {
+final class Some<T> extends Option<T> {
   final T v;
-
   const Some(this.v);
 }
 
@@ -418,8 +417,9 @@ class Some<T> extends Option<T> {
 ///   print('No value!');
 /// }
 /// ```
-class None<T> extends Option<T> {
-  const None();
+
+final class None<T> extends Option<T> {
+	const None();
 }
 
 /// Provides the `unzip()` method to [Option] type values that hold a [Record] of two values.

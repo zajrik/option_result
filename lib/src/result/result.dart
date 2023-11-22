@@ -423,9 +423,8 @@ sealed class Result<T, E> {
 ///   print('Ok value: $bar');
 /// }
 /// ```
-class Ok<T, E> extends Result<T, E> {
+final class Ok<T, E> extends Result<T, E> {
   final T v;
-
   const Ok(this.v);
 }
 
@@ -440,9 +439,8 @@ class Ok<T, E> extends Result<T, E> {
 ///   print('Error value: $err');
 /// }
 /// ```
-class Err<T, E> extends Result<T, E> {
+final class Err<T, E> extends Result<T, E> {
   final E e;
-
   const Err(this.e);
 }
 

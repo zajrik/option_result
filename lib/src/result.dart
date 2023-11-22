@@ -18,8 +18,8 @@ import 'dart:async';
 
 import 'option.dart';
 
-import 'src/util.dart';
+import 'util.dart';
 
-part 'src/result/result.dart';
-part 'src/result/result_error.dart';
-part 'src/result/result_helpers.dart';
+part 'result/result.dart';
+part 'result/result_error.dart';
+part 'result/result_helpers.dart';

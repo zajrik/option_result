@@ -227,9 +227,6 @@ Then run `dart pub get` or `flutter pub get` and import the library:
 
 ```dart
 import 'package:option_result/option_result.dart';
-// or import the separate types individually:
-import 'package:option_result/option.dart';
-import 'package:option_result/result.dart';
 ```
 
 ## Basic Usage
@@ -324,12 +321,6 @@ import 'package:option_result/option_result.dart'
     OptionFutureOrUnwrap,
     ResultFutureUnwrap,
     ResultFutureOrUnwrap;
-
-// Or if you're only importing one of the types from the package:
-import 'package:option_result/option.dart'
-  hide
-    OptionFutureUnwrap,
-    OptionFutureOrUnwrap;
 ```
 
 ## Similar packages

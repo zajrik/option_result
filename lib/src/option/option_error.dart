@@ -1,7 +1,7 @@
 part of option;
 
 /// Represents an error thrown by a mishandled [Option] type value.
-class OptionError extends Error {
+final class OptionError extends Error {
 	/// The message this `OptionError` was created with.
 	final dynamic message;
 

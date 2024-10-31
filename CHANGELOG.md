@@ -1,3 +1,8 @@
+## 3.2.1
+
+- Update source file formatting
+  - I've finally learned to appreciate dart format
+
 ## 3.2.0
 
 - Add `FutureOption<T>` typedef.

@@ -29,8 +29,11 @@ part of option;
 ///
 /// See also: [Option.call()]
 Option<T> catchOption<T>(Option<T> Function() fn) {
-	try { return fn(); }
-	catch (error) { return _handleOptionError(error); }
+  try {
+    return fn();
+  } catch (error) {
+    return _handleOptionError(error);
+  }
 }
 
 /// Executes the given function asynchronously, returning the returned [Option] value.
@@ -43,23 +46,26 @@ Option<T> catchOption<T>(Option<T> Function() fn) {
 ///
 /// See also: [Option.call()]
 Future<Option<T>> catchOptionAsync<T>(FutureOr<Option<T>> Function() fn) async {
-	try { return await fn(); }
-	catch (error) { return _handleOptionError(error); }
+  try {
+    return await fn();
+  } catch (error) {
+    return _handleOptionError(error);
+  }
 }
 
 /// Propagate `None()` on `OptionError` unless the error came from `expect()`.
 Option<T> _handleOptionError<T>(dynamic error) {
-	if (error is OptionError) {
-		// If the error is expected (came from expect()), rethrow it
-		if (error.isExpected) {
-			throw error;
-		}
+  if (error is OptionError) {
+    // If the error is expected (came from expect()), rethrow it
+    if (error.isExpected) {
+      throw error;
+    }
 
-		// Otherwise return None()
-		return None();
-	}
+    // Otherwise return None()
+    return None();
+  }
 
-	throw error;
+  throw error;
 }
 
 /// Represents a [Future] that completes with an [Option] of the given type `T`.

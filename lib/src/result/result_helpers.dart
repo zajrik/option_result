@@ -34,8 +34,11 @@ part of result;
 ///
 /// See also: [Result.call()]
 Result<T, E> catchResult<T, E>(Result<T, E> Function() fn) {
-	try { return fn(); }
-	catch (error) { return _handleResultError(error); }
+  try {
+    return fn();
+  } catch (error) {
+    return _handleResultError(error);
+  }
 }
 
 /// Executes the given function asynchronously, returning the returned [Result] value.
@@ -48,42 +51,49 @@ Result<T, E> catchResult<T, E>(Result<T, E> Function() fn) {
 ///
 /// See also: [Result.call()]
 Future<Result<T, E>> catchResultAsync<T, E>(FutureOr<Result<T, E>> Function() fn) async {
-	try { return await fn(); }
-	catch (error) { return _handleResultError(error); }
+  try {
+    return await fn();
+  } catch (error) {
+    return _handleResultError(error);
+  }
 }
 
 /// Attempt to propagate the given error if it is a ResultError, otherwise rethrow.
 Result<T, E> _handleResultError<T, E>(dynamic error) {
-	// Attempt to propagate original Err()
-	if (error is ResultError) {
-		// If the error came from unwrapErr() on an Ok() result, rethrow
-		if (error.original case Ok()) {
-			throw error;
-		}
+  // Attempt to propagate original Err()
+  if (error is ResultError) {
+    // If the error came from unwrapErr() on an Ok() result, rethrow
+    if (error.original case Ok()) {
+      throw error;
+    }
 
-		// Rethrow if this error is from Result#expect()/expectErr(), or if we don't
-		// have an original Err() (should only happen from unwrapErr on Ok or from
-		// expect/expectErr)
-		if (error.isExpected || error.original == null) {
-			throw error;
-		}
+    // Rethrow if this error is from Result#expect()/expectErr(), or if we don't
+    // have an original Err() (should only happen from unwrapErr on Ok or from
+    // expect/expectErr)
+    if (error.isExpected || error.original == null) {
+      throw error;
+    }
 
-		// Try to repackage the original Err() to match the expected return type
-		try {
-			return Err(error.original!.unwrapErr());
-		}
+    // Try to repackage the original Err() to match the expected return type
+    try {
+      return Err(error.original!.unwrapErr());
+    }
 
-		// Throw a ResultError if there's a TypeError returning the repackaged Err()
-		on TypeError catch (e) {
-			throw ResultError('Failed to repackage Err() as expected propagation type: ${e.toString()}');
-		}
+    // Throw a ResultError if there's a TypeError returning the repackaged Err()
+    on TypeError catch (e) {
+      throw ResultError(
+        'Failed to repackage Err() as expected propagation type: ${e.toString()}',
+      );
+    }
 
-		// Rethrow anything else
-		catch (_) { rethrow; }
-	}
+    // Rethrow anything else
+    catch (_) {
+      rethrow;
+    }
+  }
 
-	// Rethrow any other kind of error
-	throw error;
+  // Rethrow any other kind of error
+  throw error;
 }
 
 /// Represents a [Future] that completes with a [Result] of the given types `T`, `E`.

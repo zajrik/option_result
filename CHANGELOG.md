@@ -1,3 +1,10 @@
+## 3.3.0
+
+- Add `Option.some()` const factory constructor.
+- Add `Option.none()` const factory constructor.
+- Add `Result.ok()` const factory constructor.
+- Add `Result.err()` const factory constructor.
+
 ## 3.2.1
 
 - Update source file formatting

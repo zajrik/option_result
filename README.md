@@ -212,7 +212,7 @@ Add the dependency to your `pubspec.yaml` file in your Dart/Flutter project:
 
 ```yaml
 dependencies:
-  option_result: ^3.2.0
+  option_result: ^3.3.0
 ```
 
 Or via git:

@@ -16,9 +16,21 @@ part of option;
 /// See also:
 /// [Rust: `Option`](https://doc.rust-lang.org/std/option/enum.Option.html)
 sealed class Option<T> {
-  /// The `Option` class cannot be instantiated directly. use [Some()], [None()],
-  /// or [Option.from()] to create instances of `Option` variants.
+  /// The `Option` class cannot be instantiated directly.
+  ///
+  /// See also:
+  /// - [Some]
+  /// - [None]
+  /// - [Option.some]
+  /// - [Option.none]
+  /// - [Option.from]
   const Option();
+
+  /// Constructs a [Some] option from the given [value].
+  const factory Option.some(T value) = Some;
+
+  /// Constructs a [None] option.
+  const factory Option.none() = None;
 
   /// Creates an `Option` from the given nullable `T` value.
   ///

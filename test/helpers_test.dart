@@ -105,14 +105,14 @@ void main() {
       },
     );
 
-    test('Should rethrow OptionErrors thrown by Option#expect() inside catchOption', () {
+    test('Should rethrow OptionErrors thrown by Option.expect() inside catchOption', () {
       expect(
         () => catchOption(() => None().expect('foo')),
         throwsA(TypeMatcher<OptionError>()),
       );
     });
 
-    test('Should rethrow OptionErrors thrown by Option#expect() inside catchOptionAsync', () {
+    test('Should rethrow OptionErrors thrown by Option.expect() inside catchOptionAsync', () {
       expect(
         () => catchOptionAsync(() => None().expect('foo')),
         throwsA(TypeMatcher<OptionError>()),
@@ -297,21 +297,21 @@ void main() {
       },
     );
 
-    test('Should rethrow ResultErrors thrown by Result#expect() inside catchOption', () {
+    test('Should rethrow ResultErrors thrown by Result.expect() inside catchOption', () {
       expect(
         () => catchResult(() => Err('foo').expect('bar')),
         throwsA(TypeMatcher<ResultError>()),
       );
     });
 
-    test('Should rethrow ResultErrors thrown by Result#expect() inside catchOptionAsync', () {
+    test('Should rethrow ResultErrors thrown by Result.expect() inside catchOptionAsync', () {
       expect(
         () => catchResultAsync(() => Err('foo').expect('bar')),
         throwsA(TypeMatcher<ResultError>()),
       );
     });
 
-    test('Should rethrow ResultErrors thrown by Result#expectErr() inside catchOption', () {
+    test('Should rethrow ResultErrors thrown by Result.expectErr() inside catchOption', () {
       expect(
         () => catchResult(() => Ok('foo').expectErr('bar')),
         throwsA(TypeMatcher<ResultError>()),
@@ -319,7 +319,7 @@ void main() {
     });
 
     test(
-      'Should rethrow ResultErrors thrown by Result#expectErr() inside catchOptionAsync',
+      'Should rethrow ResultErrors thrown by Result.expectErr() inside catchOptionAsync',
       () {
         expect(
           () => catchResultAsync(() => Ok('foo').expectErr('bar')),

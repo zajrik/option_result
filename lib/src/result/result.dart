@@ -18,9 +18,21 @@ part of result;
 /// See also:
 /// [Rust: `Result`](https://doc.rust-lang.org/std/result/enum.Result.html)
 sealed class Result<T, E> {
-  /// The `Result` class cannot be instantiated directly. use [Ok()], [Err()],
-  /// or [Result.from()] to create instances of `Result` variants.
+  /// The `Result` class cannot be instantiated directly.
+  ///
+  /// See also:
+  /// - [Ok]
+  /// - [Err]
+  /// - [Result.ok]
+  /// - [Result.err]
+  /// - [Result.from]
   const Result();
+
+  /// Constructs an [OK] result from the given [value].
+  const factory Result.ok(T value) = Ok;
+
+  /// Constructs an [Err] result from the given [error].
+  const factory Result.err(E error) = Err;
 
   /// Creates a `Result` from the given nullable `T` value.
   ///
